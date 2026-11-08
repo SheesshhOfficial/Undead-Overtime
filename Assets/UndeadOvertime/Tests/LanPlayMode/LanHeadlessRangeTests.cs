@@ -40,12 +40,14 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(root.GetComponentsInChildren<BoxCollider>(true).Length, Is.EqualTo(5));
             Assert.That(root.GetComponentsInChildren<SphereCollider>(true).Length, Is.EqualTo(3));
             var avatars = root.GetComponentsInChildren<CapsuleCollider>(true);
-            Assert.That(avatars.Length, Is.EqualTo(10));
-            foreach (var avatar in avatars) Assert.That(avatar.enabled, Is.False);
+            Assert.That(avatars.Length, Is.EqualTo(11));
+            foreach (var avatar in avatars)
+                if (avatar.name.StartsWith("Station ")) Assert.That(avatar.enabled, Is.False);
+                else Assert.That(avatar.gameObject.activeSelf, Is.False);
             Assert.That(range.IsBusy, Is.False); Assert.That(NetworkManager.Singleton, Is.Null);
             range.Build(range.WorldCamera); // Idempotent: cannot re-enable graphics after construction.
             Assert.That(range.PresentationEnabled, Is.False);
-            Assert.That(root.GetComponentsInChildren<Collider>(true).Length, Is.EqualTo(18));
+            Assert.That(root.GetComponentsInChildren<Collider>(true).Length, Is.EqualTo(19));
             Physics.SyncTransforms();
             Vector3 origin = LanRange.Station(0), aim = (new Vector3(0, 1.6f, 10) - origin).normalized;
             Assert.That(Physics.Raycast(origin, aim, out RaycastHit hit, 100), Is.True);

@@ -21,7 +21,7 @@ The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderP
 
 Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
 
-Run all suites after pulling: **94 authored EditMode cases and 22 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md).
+Run all suites after pulling: **104 authored EditMode cases and 26 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md). The infected encounter adds ten core cases and four more PlayMode cases; see [LAN_INFECTED.md](LAN_INFECTED.md).
 
 Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
 
@@ -53,7 +53,8 @@ Host and client each assert their side of the flow:
 3. The client reloads. Both observe reload start/completion. A deliberate upward miss acknowledges that the client actually received the refilled magazine before the host changes phase.
 4. The host returns to lobby. The client disconnects and rejoins; the host must observe the departure and a different connection identity on return.
 5. Round two restores targets/ammunition. The assigned spawn position is restored. One client shot produces 75 HP on the left target, replicated back to that client. A reload request acknowledges receipt.
-6. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
+6. The host starts the optional infected encounter. The client receives pursuing enemy movement and damage to its own health, then fires four shots and receives the enemy kill/Cleared state. A reload request acknowledges that result.
+7. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
 
 Unexpected Unity Error/Exception/Assert log messages observed during the test fail the per-process result. Warnings are counted and retained for review; they are not automatically declared harmless. Timeout, extra peers, missing/mismatched reports, wrong process IDs, a nonzero process exit or missing terminal steps fail the launcher.
 
@@ -110,3 +111,17 @@ Local execution reported exact source `4be3f12c6c0841cacba167604ee06388187c34ea`
 No player process remained. Editor was ready/stopped; all nine preserved generated files remained byte-for-byte unchanged. Full logs were not entirely free of diagnostic failures: host.log had five and client.log four Curl error 7 messages to unreachable Unity cloud/telemetry endpoints. Those lines were not counted by the game's Unity log callback. No cloud/security setting was changed, and this pass does not establish telemetry connectivity.
 
 This validates only the fixed-station two-process loopback baseline. The current protocol-v2 movement extension must pass a newly rebuilt run with the additional movement/expiry markers. Real LAN, ten-player capacity/performance and manual visual/control acceptance remain open.
+
+## 2026-11-08: moving-client baseline passed
+
+Exact revision `0f78c51a78ce8cd0d9bec6d77336d187fcd0d868`: compilation clean, 94/94 EditMode and 22/22 PlayMode passed via the Unity CLI result evidence; Windows player rebuilt. The runner did not find exported XML in the documented Logs directory, so do not claim an XML artifact exists for this run. The latest PlayMode result was available in the local pipeline status artifact.
+
+Run `d64b1f1213ba4bb49a5b7d12691c6b80`, port 59445, UTC `2026-11-08T12:54:49.6313925Z` through `2026-11-08T12:54:57.9490606Z`, host PID 26384/client PID 13452: script and both processes exited 0. All 13 host and 10 client steps completed, including movement/expiry and the existing lifecycle/combat checks. Rejoin identity changed from 2 to 3. Both JSON reports counted zero Unity runtime errors/warnings; each full player log nevertheless contained five Curl error 7 messages to Unity cloud endpoints. No other Error/Exception/Assert/Warning matches were reported in that log review.
+
+Gameplay build hashes recorded by the runner:
+- Core.dll (24,576 bytes): `1ccfd8ddc37894c346ecd4fabe6095373932d8a386c8115b95414abb15611fee`
+- LanPrototype.dll (40,960 bytes): `13914d12ec46e81335bdb75202647e97523ec35fda4e6c184fd6a6b07044be10`
+- Prototype.dll (30,208 bytes): `97d6ca08a4ddc36792ff7688beba98a7e802d7403e3ddfbfa450869a50e254a4`
+- Player EXE (667,136 bytes): `b70442f90f50cd91f7af7bf2272602645fc5d02c4d3156fb221fc27c328d2436`
+
+No player remained; the editor was ready/stopped and nine generated-file hashes stayed identical. This passes moving-client loopback only. The current infected extension requires a fresh build and its additional encounter markers; it is not covered by this baseline result.

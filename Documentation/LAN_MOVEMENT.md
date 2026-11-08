@@ -4,7 +4,7 @@
 
 The separate LanRange scene now advances from fixed firing stations to walking players in its flat greybox arena. The existing solo SurvivalYard, original range, game settings and production assets remain separate. This is the movement foundation for future co-op infected, not the complete multiplayer zombie game.
 
-Current state: cloud-authored candidate. Static/source review can validate structure; Unity tests and a fresh two-process run are required before calling this runtime-tested. Previous fixed-station revision 4be3f12 passed the documented loopback gate.
+Movement baseline 0f78c51 passed local compilation, 94 EditMode / 22 PlayMode, rebuilt Windows player and automated two-process loopback. The later [infected milestone](LAN_INFECTED.md) extends this behavior and changes the protocol to v3; its runtime acceptance is separate. Real LAN, capacity and polished visuals remain unverified.
 
 ## Authority contract
 
@@ -18,13 +18,13 @@ Current state: cloud-authored candidate. Static/source review can validate struc
 - Host snapshots carry finite bounded position for each member. Camera and remote capsules use those replicated positions; local body remains hidden. There is no prediction or smoothing, so movement can visibly step at the 10 Hz snapshot cadence. This limitation is deliberate and must not be mistaken for polished movement.
 - Esc/focus loss submits a stop where possible and releases controls. Missing stop messages still expire. Return-to-lobby destroys the movement gate. A new round resets all positions to assigned spawns; rejoined connection identities cannot reuse old movement state.
 
-## Protocol
+## Original movement protocol (v2 baseline)
 
 Version 2 and named-message suffix v2 reject the old handshake. Command size remains 44 bytes: action 3 uses the same three-float vector field for planar movement, while fire/reload keep their existing aim semantics. Member snapshots grow from 19 to 31 bytes by adding three position floats; maximum snapshot size is 347 bytes for ten members. Strict length, finite values, bounded arena positions and unique member/slot checks apply before accepting a snapshot.
 
 All clients and host must be built from the same current revision. No package upgrade, NetworkTransform, NetworkObject prefab, online lobby, authentication, encryption, firewall or security-setting change was introduced.
 
-## Tests and local execution
+## Movement-baseline tests and execution
 
 Expected source inventory: 94 EditMode and 22 PlayMode cases. New coverage includes packet flood versus host tick, fixed speed/diagonal normalization, expiry/stop, clock and step caps, stale/disconnected tickets, wire stop/rejection, position snapshot bounds, host walking and shooting from a moved origin, round spawn reset and capsule collision/sliding.
 
@@ -34,4 +34,4 @@ Manual checks when native controls are available: WASD forward/back/strafe relat
 
 ## Next gate
 
-After moving-client acceptance, add a bounded host-owned infected encounter with replicated health/death and player damage. Reuse this authority boundary; do not attach the solo zombie scripts to every client and call that co-op. Production characters, animation/aim integration, revive, city progression and performance remain later documented slices.
+Moving-client acceptance passed. The next bounded host-owned infected encounter with replicated health/death and player damage is described in [LAN_INFECTED.md](LAN_INFECTED.md). Reuse this authority boundary; do not attach the solo zombie scripts to every client and call that co-op. Production characters, animation/aim integration, revive, city progression and performance remain later documented slices.

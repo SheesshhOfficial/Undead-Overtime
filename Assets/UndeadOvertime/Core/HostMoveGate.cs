@@ -29,6 +29,7 @@ namespace UndeadOvertime.Core
             public ulong Sequence;
             public double ReceivedAt, PendingReceivedAt;
             public bool HasInput, HasPending;
+            public bool CanMove = true;
         }
         public HostMoveGate(LanSession session, double hostTime)
         {
@@ -52,7 +53,7 @@ namespace UndeadOvertime.Core
         public bool TrySetIntent(PlayerTicket sender, long requestSession, long requestRound, ulong sequence, AimVector input, double hostTime)
         {
             if (!Current || requestSession != sessionId || requestRound != roundId || !session.IsCurrent(sender) ||
-                !inputs.TryGetValue(sender, out InputState state) || !Clock(hostTime) || sequence == 0 || sequence <= state.Sequence) return false;
+                !inputs.TryGetValue(sender, out InputState state) || !state.CanMove || !Clock(hostTime) || sequence == 0 || sequence <= state.Sequence) return false;
             state.Sequence = sequence;
             if (!ValidIntent(input)) return false;
             double divisor = Math.Max(1d, Math.Sqrt(input.LengthSquared));
@@ -60,6 +61,13 @@ namespace UndeadOvertime.Core
             state.PendingReceivedAt = hostTime; state.HasPending = true;
             // An explicit stop cancels held intent immediately; it cannot add any travel.
             if (input.LengthSquared == 0) { state.Intent = default; state.HasInput = false; state.HasPending = false; }
+            return true;
+        }
+        public bool SetCanMoveFromHost(PlayerTicket player, bool canMove)
+        {
+            if (!Current || !session.IsCurrent(player) || !inputs.TryGetValue(player, out InputState state)) return false;
+            state.CanMove = canMove;
+            if (!canMove) { state.Intent = default; state.HasInput = false; state.HasPending = false; }
             return true;
         }
         public bool TryStepFromHost(double hostTime, out MoveStep[] steps)
@@ -70,7 +78,7 @@ namespace UndeadOvertime.Core
             var rows = new List<MoveStep>();
             foreach (PlayerTicket player in session.SnapshotMembers())
             {
-                if (!inputs.TryGetValue(player, out InputState state)) continue;
+                if (!inputs.TryGetValue(player, out InputState state) || !state.CanMove) continue;
                 if (state.HasInput && hostTime - state.ReceivedAt < InputLifetime)
                     rows.Add(new MoveStep(player, new AimVector(state.Intent.X * Speed * duration, 0, state.Intent.Z * Speed * duration)));
                 // Intent changes take effect at the tick boundary, after the prior intent's step.

@@ -108,6 +108,16 @@ namespace UndeadOvertime.LanPrototype
             // Client sends reload only after seeing the replicated 75 HP result, acting as a receipt.
             while (!Remote().Reloading) yield return null;
             Record("second-round-replication-acknowledged");
+            Require(range.StartEncounter(), "Host could not start the infected encounter."); Record("infected-encounter-started");
+            while (Remote().Health == 100) { Require(range.MemberCount == 2, "Client left before infected contact."); yield return null; }
+            Require(Remote().Health > 0, "Client was downed before the planned encounter shot test.");
+            Record("remote-player-injured");
+            while (range.CurrentSnapshot.Encounter.Phase != EncounterPhase.Cleared)
+            { Require(range.CurrentSnapshot.Encounter.Phase == EncounterPhase.Active, "Encounter failed before kill."); yield return null; }
+            Require(range.CurrentSnapshot.Encounter.Health == 0 && Remote().Health > 0, "Host kill/health result mismatch.");
+            Record("infected-killed");
+            while (!Remote().Reloading) yield return null;
+            Record("infected-result-acknowledged");
             range.StopSession("Automated loopback host shutdown.");
             while (range.IsBusy) yield return null;
             Record("host-shutdown-completed");
@@ -163,6 +173,24 @@ namespace UndeadOvertime.LanPrototype
             while (range.CurrentSnapshot.TargetHealth(0) != 75 || Local().Ammo != 11) yield return null;
             Record("second-round-damage-received"); yield return new WaitForSecondsRealtime(.05f);
             Require(range.SendAction(RangeAction.Reload, AimAt(0)), "Could not acknowledge second-round result.");
+            while (range.CurrentSnapshot.Encounter.Phase != EncounterPhase.Active) yield return null;
+            Record("infected-encounter-received");
+            while (Local().Health == 100) yield return null;
+            Require(Local().Health > 0, "Client downed before the scripted response.");
+            Require((range.CurrentSnapshot.Encounter.Position - HostInfectedEncounter.Spawn).LengthSquared > 1,
+                "Infected contact occurred without replicated pursuit.");
+            Record("replicated-player-injury");
+            for (int i = 0; i < 4; i++)
+            {
+                AimVector enemy = range.CurrentSnapshot.Encounter.Position, eye = Local().Position;
+                Vector3 aim = new Vector3((float)(enemy.X - eye.X), (float)(enemy.Y - eye.Y), (float)(enemy.Z - eye.Z)).normalized;
+                Require(range.SendAction(RangeAction.Fire, aim), "Could not submit infected shot.");
+                yield return new WaitForSecondsRealtime(.25f);
+            }
+            while (range.CurrentSnapshot.Encounter.Phase != EncounterPhase.Cleared) yield return null;
+            Require(range.CurrentSnapshot.Encounter.Health == 0 && Local().Health > 0, "Client infected kill/health mismatch.");
+            Record("replicated-infected-kill");
+            Require(range.SendAction(RangeAction.Reload, AimAt(0)), "Could not acknowledge infected result.");
             while (range.IsBusy || range.IsConnected) yield return null;
             Require(range.MemberCount == 0 && range.Phase == SessionPhase.Stopped, "Host shutdown left stale client membership.");
             Record("host-shutdown-observed");
