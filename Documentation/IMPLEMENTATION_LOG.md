@@ -249,3 +249,10 @@ Actual unchanged core run passed 310/310. Static/syntax checks passed; independe
 Extended the accepted original concrete treatment to renderer-only coincident copies of the four outer walls during a rendered mission. Existing source meshes/materials/colliders remain unchanged and prior renderer visibility is restored on lobby, disposal and constructor failure. Ownership attaches while active before mirroring inactive sources; headless creation is bypassed. No PC or imported asset/settings change.
 
 Source review passed; static validation covers 88 source/assets, nine assemblies, 103 GUIDs, 48 attribute assertions and 15 importer fixtures; syntax-only 65 files passed. Production core hashes remain identical to the actual prior 310/310 run, not a new execution. Three new native cases plus expanded existing integration tests are authored. Combined expected 334 EditMode /77 PlayMode and all native/visual stages remain pending for the user's requested later batch.
+
+
+## 2026-11-08: original depot cabinet and measured proxy candidate
+
+Selected the independently authored AST-GEO-PROP-009 utility cabinet after verifying original source provenance, exact atlas bytes and three Blender FBX round trips. Added only six runtime binaries with valid explicit import metadata and narrow ordinary-Git exceptions. Runtime rendering uses a disposable clone of the accepted Lit variant; no accepted floor/concrete material is modified or saved. Headless peers load no cabinet art.
+
+The approved physical change replaces the oversized console cube with the measured scaled bounds (0.741 × 1.180075 × 0.4238 m), identical in rendered/headless modes. The interaction point and host hold/range/LOS rules remain unchanged. Source review passed after closing inactive-parent ownership cleanup. Six EditMode and five PlayMode regression cases are authored, not executed. The combined expected inventory is 340/82; native import, suites, build, two-process regression, art/collision/manual review remain pending in the requested later batch. See DEPOT_CONSOLE.md, packet, provenance and check receipt. No PC operation or unrelated local-file change occurred.

@@ -1,0 +1,44 @@
+{
+  "asset_id": "AST-GEO-PROP-009",
+  "source_blend_sha256": "37198a4c7968afb133dd87f1ceda039b2f0ffaf21005e4c318882f922470ed26",
+  "scope": "Six selected original cabinet runtime files; no source, reference image, third-party raw asset or extra texture.",
+  "offline_validation": "Blender round-trip and exact source texture/channel checks passed; native Unity import unrun.",
+  "files": [
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD0.fbx",
+      "bytes": 1120556,
+      "sha256": "d8b097be43f44b88ed3a2ac46ee718edb59bdeda5b9b132d68800b3c3024d700",
+      "git_blob_sha1": "cf2e39f1ae30cc6826e0f16c5fd1226ca90df4f2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD1.fbx",
+      "bytes": 660076,
+      "sha256": "781833afca77791a99b8cb85039489ef651aac07f1553080f5888f03f51b01e4",
+      "git_blob_sha1": "0bd1083cc48080b5cdca067b7683906000eebe73"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD2.fbx",
+      "bytes": 123852,
+      "sha256": "c3efdff0771a3815281c98eb8fbdbbf556bafdce90b93106a6d7be1debfcaa80",
+      "git_blob_sha1": "9923c3c2a5da5836611235e32ba18d866f4cee66"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_basecolor.png",
+      "bytes": 1058809,
+      "sha256": "6a9cb92d1e00f1e542e1fb96eeb811a83d71a5dc70c2e87536ef966bf297c807",
+      "git_blob_sha1": "fc364e557a6baf7665551c507f12070d312a8733"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_normal_opengl.png",
+      "bytes": 507395,
+      "sha256": "6c22bbb3d502825d8de65367b4897aff1ac4f2f5a45c159eb5f3c58270494750",
+      "git_blob_sha1": "6032f8cef9045b31f4d8b26cd7d8c84fbe87dd0f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_metallic_smoothness.png",
+      "bytes": 708685,
+      "sha256": "eb6c1968285bca92e246352f3eb616041ac319cce01967836cc8e80d1ecf2c59",
+      "git_blob_sha1": "0261e7ef4c7ce33f203aaef6b6a1a681abd9bcc4"
+    }
+  ]
+}

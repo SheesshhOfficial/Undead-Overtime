@@ -6,7 +6,8 @@ namespace UndeadOvertime.LanPrototype
 {
     /// <summary>Original flat-depot objective geometry, not a scene activation or network authority.
     /// Host applies its current mission snapshot; clients apply only validated current-host replica state.
-    /// Supplied materials are shared and owned by the caller. No asset loads, file saves or shader lookup.</summary>
+    /// Supplied materials remain caller-owned. Rendered architecture may load selected cabinet resources
+    /// and own a cloned material; headless physics performs no asset loads. No file saves or shader lookup.</summary>
     public sealed class DepotMissionPresentation : IDisposable
     {
         public static AimVector PowerControl => new AimVector(-9, HostMoveGate.EyeHeight, -5);
@@ -53,7 +54,13 @@ namespace UndeadOvertime.LanPrototype
                     AddGateRelief(partitionMaterial, controlMaterial);
                 }
                 // Eye-level interaction point lies above and just in front of the physical control pedestal.
-                Part("Mission power console", new Vector3(-9, .6f, -5.6f), new Vector3(1.2f, 1.2f, .8f), controlMaterial, true);
+                GameObject console = Part("Mission power console", DepotConsolePresentation.CollisionCenter,
+                    DepotConsolePresentation.CollisionSize, controlMaterial, true);
+                if (ArchitecturalDetailsEnabled)
+                {
+                    DepotConsolePresentation.Create(Root, concreteMaterial);
+                    console.GetComponent<Renderer>().enabled = false;
+                }
                 // This is a marker, never a second floor or blocking/trigger collision surface.
                 Part("Mission extraction marker", new Vector3(0, .025f, 12), new Vector3(4, .025f, 4), extractionMaterial, false);
                 Physics.SyncTransforms();

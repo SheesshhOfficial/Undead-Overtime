@@ -181,3 +181,11 @@ Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_normal_opengl
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_basecolor.png -filter -diff -merge -text
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_metallic_smoothness.png -filter -diff -merge -text
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_normal_opengl.png -filter -diff -merge -text
+
+# Selected original depot console runtime packet uses ordinary Git, never LFS filters.
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD0.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD1.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD2.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_basecolor.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_normal_opengl.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_metallic_smoothness.png -filter -diff -merge -text

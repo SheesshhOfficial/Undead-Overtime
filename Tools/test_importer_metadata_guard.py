@@ -10,6 +10,7 @@ import runpy
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "Tools/validate_prototype.py"
 PACKET = json.loads((ROOT / "Documentation/DEPOT_FLOOR_PACKET.json").read_text())
+PACKET["files"] += json.loads((ROOT / "Documentation/DEPOT_CONSOLE_PACKET.json").read_text())["files"]
 read_text = Path.read_text
 checks = 0
 for entry in PACKET["files"]:
@@ -19,7 +20,7 @@ for entry in PACKET["files"]:
     bad_cases = [(guid_lines, "Missing/unsupported")]
     if entry["path"].endswith(".png"):
         assert "  textureShape: 1\n" in actual
-        bad_cases.append((actual.replace("  textureShape: 1\n", "  textureShape: 2\n"), "Floor texture must explicitly import as Texture2D"))
+        bad_cases.append((actual.replace("  textureShape: 1\n", "  textureShape: 2\n"), "Runtime texture must explicitly import as Texture2D"))
     for replacement, expected in bad_cases:
         def fake_read(path, *args, **kwargs):
             return replacement if path == meta else read_text(path, *args, **kwargs)
@@ -32,4 +33,4 @@ for entry in PACKET["files"]:
         else:
             raise AssertionError("Validator accepted malformed importer metadata: " + str(meta))
         checks += 1
-print(f"PASS: {checks} malformed importer fixtures rejected (nine GUID-only, six cubemap); no file writes or Unity execution.")
+print(f"PASS: {checks} malformed importer fixtures rejected (fifteen GUID-only, nine cubemap); no file writes or Unity execution.")

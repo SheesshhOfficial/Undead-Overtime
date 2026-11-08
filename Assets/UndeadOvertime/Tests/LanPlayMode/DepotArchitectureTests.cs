@@ -113,7 +113,7 @@ namespace UndeadOvertime.LanPrototype.Tests
         public void RenderedPartitionsAndShutterPreserveCollidersAndOpenState()
         {
             layout = Rendered(); Material concrete = DepotFloorPresentation.LoadConcreteMaterial();
-            Assert.That(layout.ArchitecturalDetailsEnabled, Is.True); Assert.That(layout.Root.childCount, Is.EqualTo(5));
+            Assert.That(layout.ArchitecturalDetailsEnabled, Is.True); Assert.That(layout.Root.childCount, Is.EqualTo(6));
             Assert.That(layout.Root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(2));
             foreach (string name in new[] { "Mission west partition", "Mission east partition" })
             {

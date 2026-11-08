@@ -174,7 +174,7 @@ namespace UndeadOvertime.LanPrototype
                 CoopMissionSnapshot state = missionFrame.Mission;
                 switch (state.Phase)
                 {
-                    case CoopMissionPhase.RestorePower: return "POWER: approach the orange console and hold F while stationary. " + Math.Floor(state.HoldSeconds / 3 * 100) + "%";
+                    case CoopMissionPhase.RestorePower: return "POWER: approach the electrical cabinet and hold F while stationary. " + Math.Floor(state.HoldSeconds / 3 * 100) + "%";
                     case CoopMissionPhase.DefendDepot: return "DEFEND: clear all three waves. The central gate is open for backtracking.";
                     case CoopMissionPhase.ReachExtraction: return "EXTRACT: gather every living survivor on the blue north marker. " + Math.Floor(state.HoldSeconds / 2 * 100) + "%";
                     case CoopMissionPhase.Completed: return "MISSION COMPLETE. Everyone escaped the depot. Host can return to lobby.";

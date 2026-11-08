@@ -1,0 +1,221 @@
+{
+  "base": "12873870e64bd9cdd4f4eb52fedbe233d45a69e9",
+  "scope": "Offline asset verification, cloud source review, static consistency and syntax only; native Unity acceptance not run.",
+  "static": {
+    "source_assets": 98,
+    "assemblies": 9,
+    "metadata_guids": 114,
+    "attribute_assertions": 72,
+    "malformed_importer_fixtures": 24,
+    "csharp9_syntax_files": 69,
+    "csharp9_syntax_errors": 0
+  },
+  "unchanged_core_evidence": {
+    "result_file": "DEPOT_ARCHITECTURE_CORE_RESULT.json",
+    "passed": 310,
+    "source_and_lock_entries_matched": 32,
+    "all_hashes_match": true,
+    "new_core_execution": false
+  },
+  "offline_asset_checks": {
+    "blender_version": "4.3.2",
+    "roundtrip_passed": true,
+    "triangles": [
+      7748,
+      4028,
+      702
+    ],
+    "max_vertex_position_error_metres": 1.7881393432617188e-07,
+    "max_uv_error": 0,
+    "single_atlas_slot": true,
+    "uv0_used_by_all_original_maps": true,
+    "packed_texture_pixels_checked": 1048576,
+    "selected_texture_source_bytes_unchanged": true,
+    "png_private_absolute_path_or_text_chunks_found": false,
+    "fbx_private_absolute_path_markers_found": false,
+    "blender_visual_review": "Front all three LODs and rear coherent; not engine evidence. Final tight proxy supersedes staging proposal to retain padded old collider."
+  },
+  "source_review": "Passed after inactive-parent ownership guard and native regression were added.",
+  "native_expected": {
+    "EditMode": 340,
+    "PlayMode": 82
+  },
+  "native_status": "Not run; combined acceptance required.",
+  "sources": [
+    {
+      "path": ".gitattributes",
+      "bytes": 6846,
+      "sha256": "f909372165eb331aefa91d0efdfef3479d4f70a1a251579ed6a3e037304c1cd9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4685,
+      "sha256": "4e7ab887fa39bc7cec38517f91d1bf7b042549c65aea1c2b7b3c9fa2224be7c4"
+    },
+    {
+      "path": "Documentation/IMPLEMENTATION_LOG.md",
+      "bytes": 41026,
+      "sha256": "56e6924b45b396894fa922381b754cae9c25c5f9148c0ca5d320b85bc6ad142e"
+    },
+    {
+      "path": "Documentation/DEPOT_CONSOLE.md",
+      "bytes": 7210,
+      "sha256": "45686039454c57a1ac43637ac29365ded2d76b973ab8026a933a01683d83a02d"
+    },
+    {
+      "path": "Documentation/DEPOT_CONSOLE_PROVENANCE.md",
+      "bytes": 3234,
+      "sha256": "fc9ca35a530f7feb83527e79ace1b3d672db7679132e6aaa821f3ab7f4deca6a"
+    },
+    {
+      "path": "Documentation/DEPOT_CONSOLE_DEJAVU_NOTICE.txt",
+      "bytes": 3859,
+      "sha256": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+    },
+    {
+      "path": "Documentation/DEPOT_CONSOLE_PACKET.json",
+      "bytes": 2130,
+      "sha256": "42e30bf3e52aa44282996ad3e49e9e8d049e6402ed7ea879a9c5fead013676d5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotConsolePresentation.cs",
+      "bytes": 6520,
+      "sha256": "f8237eca815d816a0233bbfcd646a7ed26cbea9d3f3eabdc2dc2ea3d70c4b947"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotConsolePresentation.cs.meta",
+      "bytes": 60,
+      "sha256": "8b5995d3f3dd0b9dd31b7fbad3202c77ccb07574392e14b108a0b524d5e3973e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotMissionPresentation.cs",
+      "bytes": 10594,
+      "sha256": "c6dfae458e5d3ad2a3cc76a4a5ed3439a296db8d4fedc8c210cee35db03cb54a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/LanRange.Mission.cs",
+      "bytes": 12335,
+      "sha256": "cee23e22e1f7b8b6fcd9c79a4507ed6871031b32958a9894bb9034f1f552d2bd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanEditor/DepotConsoleImport.cs",
+      "bytes": 3551,
+      "sha256": "ffc44d62745d5fdb615ea7fe73efbebcb0d1cb59c3629d28bc3a71081267bc6d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanEditor/DepotConsoleImport.cs.meta",
+      "bytes": 60,
+      "sha256": "02084fbf57aaa48a089789ce0481ccceb1c223f71105d3e6704aa9e414e67c0a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanEditor/LanRangeBuild.cs",
+      "bytes": 1293,
+      "sha256": "e97d4814a8263b175d5e4ce0e048a780eaf338c52846fd36d95d31168196d827"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanEditMode/DepotConsoleImportTests.cs",
+      "bytes": 4402,
+      "sha256": "0fb54a2263cc4ce11c032accd03f14b2af2055684863416deea0c00864ae13d3"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanEditMode/DepotConsoleImportTests.cs.meta",
+      "bytes": 60,
+      "sha256": "7b8d309f21252c8bacb770b25df18e1c3a63781c89592de31a672c7208a2a350"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotConsoleTests.cs",
+      "bytes": 7629,
+      "sha256": "5ea4e65261790c16b95881b3c72612094f60db206419d4afe3142aaa9fb6a072"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotConsoleTests.cs.meta",
+      "bytes": 60,
+      "sha256": "e4c8764487d386c91f9656adf779d8e7537cc9d3500b5f929a99c3f013feba15"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotArchitectureTests.cs",
+      "bytes": 12711,
+      "sha256": "f0b0c4e1fd7599aedf1df12f8cc63d77a4e7546a635bc0eeea275f4ebb4f383d"
+    },
+    {
+      "path": "Tools/validate_prototype.py",
+      "bytes": 8331,
+      "sha256": "80e8f4798e1377fc459fa378fb5180f04581fea0f5ca0cf3a5383deaf45607c9"
+    },
+    {
+      "path": "Tools/validate_gitattributes.py",
+      "bytes": 1973,
+      "sha256": "59debfd365af15bf25916f4d8699306f682e539e1fdd158fb3b15f0eb5023263"
+    },
+    {
+      "path": "Tools/test_importer_metadata_guard.py",
+      "bytes": 1774,
+      "sha256": "567766de9a387a80838e3b527e7c3849a3918c90c5aa6e929fe8ae27c986b107"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole.meta",
+      "bytes": 172,
+      "sha256": "52ad36af27b6bef655177aa54e2a695c0c329870e9dae21456606b8ba0c865b2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD0.fbx",
+      "bytes": 1120556,
+      "sha256": "d8b097be43f44b88ed3a2ac46ee718edb59bdeda5b9b132d68800b3c3024d700"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD0.fbx.meta",
+      "bytes": 3081,
+      "sha256": "59280a07053df1d52a9c1b934e0cf0fa6bc6a37b65aa907a5da1153ed9c3e6fd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD1.fbx",
+      "bytes": 660076,
+      "sha256": "781833afca77791a99b8cb85039489ef651aac07f1553080f5888f03f51b01e4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD1.fbx.meta",
+      "bytes": 3081,
+      "sha256": "d5d7ac15465834d591dd22f7132b87e37d724d8863208a69bfba28057ffe28e3"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD2.fbx",
+      "bytes": 123852,
+      "sha256": "c3efdff0771a3815281c98eb8fbdbbf556bafdce90b93106a6d7be1debfcaa80"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD2.fbx.meta",
+      "bytes": 3081,
+      "sha256": "03ea6899cf2b879b15834bb552646480c09578eb95a61b6696f318add6c4c206"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_basecolor.png",
+      "bytes": 1058809,
+      "sha256": "6a9cb92d1e00f1e542e1fb96eeb811a83d71a5dc70c2e87536ef966bf297c807"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_basecolor.png.meta",
+      "bytes": 2384,
+      "sha256": "86a796c9d7fcc4edd4daf851875b93a3240c7099e0cdd389b2936e70fc29399a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_metallic_smoothness.png",
+      "bytes": 708685,
+      "sha256": "eb6c1968285bca92e246352f3eb616041ac319cce01967836cc8e80d1ecf2c59"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_metallic_smoothness.png.meta",
+      "bytes": 2384,
+      "sha256": "d7c885d28bc0c231832913678f5fdfa94835f50c5c1aef3d74d2af03a44a5d59"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_normal_opengl.png",
+      "bytes": 507395,
+      "sha256": "6c22bbb3d502825d8de65367b4897aff1ac4f2f5a45c159eb5f3c58270494750"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_normal_opengl.png.meta",
+      "bytes": 2384,
+      "sha256": "1ba5549d28946e95f7212356fc6871d35c9b3b95da05ab94997fc9d994d262c7"
+    }
+  ]
+}
