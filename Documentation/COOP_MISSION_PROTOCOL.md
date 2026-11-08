@@ -1,5 +1,7 @@
 # Bounded mission protocol candidate
 
+**Status update, 2026-11-08:** This document retains the original slice's scope and historical status below. The combined components subsequently passed native acceptance at [802ce58](NATIVE_ACCEPTANCE_802CE58.md). The new [playable mission integration candidate](PLAYABLE_DEPOT_MISSION.md) wires them into opt-in LanRange sessions but has not yet passed its own native acceptance. Earlier pending-material/inactive-mode statements describe the original publication, not the latest candidate.
+
 ## Status and compatibility boundary
 
 This adds an inactive transport-independent codec and view-only receiver guard. It does not register an NGO handler, change the active range v5 handshake, alter controls or scenes, or send any traffic. The host mission coordinator is still not connected to the current range. The two local material files and pending material validation operation are untouched.

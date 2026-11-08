@@ -5,6 +5,8 @@ param(
     [Parameter(Mandatory = $true)]
     [ValidatePattern('^[0-9a-fA-F]{40}$')]
     [string]$Revision,
+    [ValidateSet("range", "mission")]
+    [string]$Mode = "range",
     [string]$Player = (Join-Path $PSScriptRoot '..\Builds\LanRange\UndeadOvertimeLanRange.exe'),
     [ValidateRange(0, 65535)]
     [int]$Port = 0
@@ -38,6 +40,7 @@ try {
         [ordered]@{ file = $_.Substring($playerDirectory.Length + 1); sha256 = (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant(); bytes = (Get-Item -LiteralPath $_).Length }
     })
     $common = '-batchmode -nographics -uo-smoke-run ' + $run + ' -uo-smoke-port ' + $Port + ' -uo-smoke-revision ' + $Revision.ToLowerInvariant()
+    $common += ' -uo-smoke-mode ' + $Mode
     $hostArguments = $common + ' -uo-smoke-role host -logFile "' + (Join-Path $directory 'host.log') + '"'
     $clientArguments = $common + ' -uo-smoke-role client -logFile "' + (Join-Path $directory 'client.log') + '"'
     $watch = [Diagnostics.Stopwatch]::StartNew()
@@ -59,6 +62,7 @@ try {
     $clientReport = Get-Content -LiteralPath (Join-Path $directory 'client.json') -Raw | ConvertFrom-Json
     foreach ($report in @($hostReport, $clientReport)) {
         if ($report.runId -ne $run -or $report.requestedRevision -ne $Revision.ToLowerInvariant() -or $report.port -ne $Port) { throw 'Report identity does not match this launched test.' }
+        if ($report.scenario -ne $Mode) { throw 'Report scenario does not match the requested smoke mode.' }
         if ($report.formatVersion -ne 1) { throw 'Unexpected report format.' }
         if ($report.runtimeErrorCount -ne 0) { throw ($report.role + ' reported Unity runtime errors: ' + $report.firstRuntimeError) }
         if (!$report.success) { throw ($report.role + ' failed: ' + $report.error) }
@@ -67,14 +71,23 @@ try {
         $hostReport.processId -ne $hostProcess.Id -or $clientReport.processId -ne $clientProcess.Id -or
         $hostProcess.Id -eq $clientProcess.Id) { throw 'Reports do not prove two distinct launched processes.' }
     if ($hostReport.steps -notcontains 'host-shutdown-completed' -or $clientReport.steps -notcontains 'host-shutdown-observed') { throw 'A terminal lifecycle check is missing.' }
+    if ($Mode -eq 'range') {
     if ($hostReport.steps -notcontains 'remote-movement-observed' -or $clientReport.steps -notcontains 'replicated-movement-and-expiry') { throw 'The movement/expiry check is missing.' }
     if ($hostReport.steps -notcontains 'infected-result-acknowledged' -or $clientReport.steps -notcontains 'replicated-infected-kill') { throw 'The infected encounter check is missing.' }
     if ($hostReport.steps -notcontains 'revived-client-action-acknowledged' -or $clientReport.steps -notcontains 'revived-client-actions-replicated') { throw 'The co-op revive check is missing.' }
     if ($hostReport.steps -notcontains 'revived-client-reload-completed' -or $clientReport.steps -notcontains 'revived-client-reload-completion-received') { throw 'The restored-action reload confirmation is missing.' }
     if ($hostReport.steps -notcontains 'wave-result-acknowledged' -or $clientReport.steps -notcontains 'replicated-three-waves-cleared' -or $clientReport.steps -notcontains 'wave-reload-completion-received') { throw 'The complete co-op wave acknowledgment is missing.' }
+    } else {
+        foreach ($step in @('mission-round-started', 'remote-power-opened-gate', 'host-mission-shot-replicated', 'host-mission-reload-started', 'host-mission-reload-completed', 'mission-three-waves-cleared', 'mission-extracted', 'client-completion-acknowledged')) {
+            if ($hostReport.steps -notcontains $step) { throw ('Missing host mission step: ' + $step) }
+        }
+        foreach ($step in @('mission-round-received', 'client-power-held', 'replicated-mission-gate-open', 'client-mission-shot-replicated', 'client-mission-reload-started', 'client-mission-reload-completed', 'replicated-mission-three-waves', 'replicated-mission-completed')) {
+            if ($clientReport.steps -notcontains $step) { throw ('Missing client mission step: ' + $step) }
+        }
+    }
     if ($hostProcess.ExitCode -ne 0 -or $clientProcess.ExitCode -ne 0) { throw 'A test player returned a nonzero exit code.' }
     $summary = [ordered]@{
-        formatVersion = 1; success = $true; runId = $run; requestedRevision = $Revision.ToLowerInvariant()
+        formatVersion = 1; scenario = $Mode; success = $true; runId = $run; requestedRevision = $Revision.ToLowerInvariant()
         playerSha256 = $playerHash; buildFiles = $fingerprints; hostProcessId = $hostProcess.Id; clientProcessId = $clientProcess.Id
         port = $Port; startedUtc = $started.ToString('O'); finishedUtc = [DateTime]::UtcNow.ToString('O')
         hostExitCode = $hostProcess.ExitCode; clientExitCode = $clientProcess.ExitCode

@@ -13,7 +13,7 @@ namespace UndeadOvertime.LanPrototype
     /// Opt-in direct-IP transport/authority test. Players use host-resolved planar walking.
     /// No client-controlled positions or hit reports. Opt-in single infected or bounded waves; no production art.
     /// </summary>
-    public sealed class LanRange : MonoBehaviour
+    public sealed partial class LanRange : MonoBehaviour
     {
         private const string CommandMessage = "uo.range.command.v5", SnapshotMessage = "uo.range.snapshot.v5";
         [SerializeField] private Camera worldCamera;
@@ -99,6 +99,7 @@ namespace UndeadOvertime.LanPrototype
             Material wall = Material("Range wall", new Color(.38f, .42f, .44f));
             Material target = Material("Shared targets", new Color(.95f, .35f, .1f));
             Material body = Material("Remote stations", new Color(.15f, .6f, .8f));
+            missionPartitionMaterial = wall; missionControlMaterial = target; missionExtractionMaterial = body;
             Material infected = Material("Placeholder infected", new Color(.35f, .55f, .15f));
             GameObject ground = Primitive(PrimitiveType.Cube, "Ground", new Vector3(0, -.25f, 0), new Vector3(32, .5f, 32), floor);
             if (PresentationEnabled)
@@ -175,19 +176,12 @@ namespace UndeadOvertime.LanPrototype
                 GameObject root = new GameObject("Undead Overtime LAN manager");
                 root.SetActive(false);
                 transport = root.AddComponent<UnityTransport>(); manager = root.AddComponent<NetworkManager>();
-                manager.NetworkConfig = new NetworkConfig
-                {
-                    NetworkTransport = transport, ConnectionApproval = true, EnableSceneManagement = false,
-                    ForceSamePrefabs = false, ProtocolVersion = LanRangeProtocol.Version,
-                    ConnectionData = LanRangeProtocol.Handshake, ClientConnectionBufferTimeout = 8,
-                    PlayerPrefab = null, TickRate = 30
-                };
                 transport.ConnectTimeoutMS = 1000; transport.MaxConnectAttempts = 5; transport.DisconnectTimeoutMS = 5000;
                 manager.ConnectionApprovalCallback = Approve;
                 manager.OnClientConnectedCallback += Connected; manager.OnClientDisconnectCallback += Disconnected;
                 manager.OnClientStopped += ClientStopped; manager.OnTransportFailure += TransportFailed;
-                root.SetActive(true);
             }
+            ConfigureSessionProtocol(); manager.gameObject.SetActive(true); ResetMissionSession();
             stopping = false; snapshot = null; localSlot = -1; sequence = 0; connectDeadline = 0;
             members.Clear(); fireGate = null; moveGate = null; encounter = null; nextSnapshotAt = 0; handlersRegistered = false;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
@@ -217,13 +211,14 @@ namespace UndeadOvertime.LanPrototype
         {
             manager.CustomMessagingManager.RegisterNamedMessageHandler(CommandMessage, ReceiveCommand);
             manager.CustomMessagingManager.RegisterNamedMessageHandler(SnapshotMessage, ReceiveSnapshot);
+            if (MissionMode) RegisterMissionHandlers();
             handlersRegistered = true;
         }
         private void Approve(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
             response.CreatePlayerObject = false; response.Pending = false; response.Approved = false;
             if (request.ClientNetworkId == NetworkManager.ServerClientId) { response.Approved = true; return; }
-            if (stopping || !LanRangeProtocol.AcceptHandshake(request.Payload)) { response.Reason = "Wrong range protocol."; return; }
+            if (stopping || !AcceptSessionHandshake(request.Payload)) { response.Reason = "Wrong session mode/protocol. Both peers must select the same mode."; return; }
             JoinResult result = session.TryJoin(request.ClientNetworkId, LanRangeProtocol.Version, out PlayerTicket ticket);
             if (result != JoinResult.Accepted) { response.Reason = result == JoinResult.Full ? "Range full (10 includes host)." : "Join only while host is in lobby."; return; }
             byte slot = 0;
@@ -262,11 +257,13 @@ namespace UndeadOvertime.LanPrototype
             status = reason; ReleaseControls(); stopping = manager != null && (manager.IsListening || manager.ShutdownInProgress);
             connectDeadline = 0;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
+            ClearMissionRound();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; ApplyVisuals();
             if (manager != null)
             {
                 if (handlersRegistered && manager.CustomMessagingManager != null)
                 {
+                    UnregisterMissionHandlers();
                     manager.CustomMessagingManager.UnregisterNamedMessageHandler(CommandMessage);
                     manager.CustomMessagingManager.UnregisterNamedMessageHandler(SnapshotMessage);
                 }
@@ -279,24 +276,31 @@ namespace UndeadOvertime.LanPrototype
         {
             connectDeadline = 0; stopping = false; ReleaseControls();
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
+            ClearMissionRound();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; ApplyVisuals();
         }
         public bool BeginRound()
         {
-            if (!IsHosting) return false;
+            if (!IsHosting || session.Phase != SessionPhase.Lobby) return false;
             foreach (MemberState member in members.Values) if (!member.Connected) return false;
+            if (MissionMode) PublishSnapshot(); // Ordered lobby binding precedes the first mission frame.
             if (!session.TryBeginRound(session.Host)) return false;
             for (int i = 0; i < health.Length; i++) health[i] = 100;
             double now = Time.realtimeSinceStartupAsDouble;
             fireGate = new HostFireGate(session, now); moveGate = new HostMoveGate(session, now); encounter = new HostInfectedEncounter(session, now);
             foreach (MemberState member in members.Values)
             { member.LastSequence = 0; member.NextCommandAt = member.NextReloadAt = member.NextMoveAt = member.NextReviveAt = 0; member.Position = Station(member.Slot); }
+            if (MissionMode)
+            {
+                try { BeginMissionRound(now); }
+                catch { StopSession("Mission initialization failed; inspect the reported exception."); throw; }
+            }
             status = "Round started. Capture controls: WASD move, mouse aim/fire, R reload.";
             PublishSnapshot(); return true;
         }
         public bool StartEncounter()
         {
-            if (!IsHosting || encounter == null) return false;
+            if (MissionMode || !IsHosting || encounter == null) return false;
             foreach (MemberState member in members.Values)
                 if (member.Connected) encounter.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position));
             if (!encounter.StartFromHost(Time.realtimeSinceStartupAsDouble)) return false;
@@ -305,7 +309,7 @@ namespace UndeadOvertime.LanPrototype
         }
         public bool StartWaves()
         {
-            if (!IsHosting || encounter == null) return false;
+            if (MissionMode || !IsHosting || encounter == null) return false;
             foreach (MemberState member in members.Values)
                 if (member.Connected) encounter.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position));
             if (!encounter.StartWavesFromHost(Time.realtimeSinceStartupAsDouble)) return false;
@@ -340,6 +344,7 @@ namespace UndeadOvertime.LanPrototype
         public bool ReturnToLobby()
         {
             if (!IsHosting || !session.TryReturnToLobby(session.Host)) return false;
+            ClearMissionRound();
             fireGate = null; moveGate = null; encounter = null; ReleaseControls(); status = "Lobby. Peers may join; start a new round to reset targets.";
             PublishSnapshot(); return true;
         }
@@ -356,7 +361,7 @@ namespace UndeadOvertime.LanPrototype
                 foreach (ulong peer in expired)
                 { session.Disconnect(members[peer].Ticket); members.Remove(peer); manager.DisconnectClient(peer, "Connection setup expired."); }
                 fireGate?.AdvanceReloadsFromHost(now);
-                if (now >= nextSnapshotAt) { PublishSnapshot(); nextSnapshotAt = now + .1; }
+                if (hostMission == null && now >= nextSnapshotAt) { PublishSnapshot(); nextSnapshotAt = now + .1; }
             }
             if (!captured || !IsConnected || Phase != SessionPhase.Playing) return;
             Keyboard keyboard = Keyboard.current; Mouse mouse = Mouse.current;
@@ -375,6 +380,7 @@ namespace UndeadOvertime.LanPrototype
                 input = Quaternion.Euler(0, yaw, 0) * Vector3.ClampMagnitude(input, 1);
                 SendAction(RangeAction.Move, input);
                 SendAction(RangeAction.Revive, keyboard != null && keyboard.eKey.isPressed ? Vector3.forward : Vector3.zero);
+                if (MissionMode) SendPowerIntent(keyboard != null && keyboard.fKey.isPressed);
             }
             if (mouse == null) return;
             if (!mouse.leftButton.isPressed) waitForRelease = false;
@@ -415,14 +421,20 @@ namespace UndeadOvertime.LanPrototype
             foreach (MoveStep step in steps)
                 if (members.TryGetValue(step.Player.PeerId, out MemberState member) && member.Connected && member.Ticket.Equals(step.Player))
                     member.Position = ResolvePlanarMovement(member.Position, ToUnity(step.Displacement));
-            StepEncounter(Time.realtimeSinceStartupAsDouble);
+            double now = Time.realtimeSinceStartupAsDouble;
+            StepEncounter(now);
+            if (hostMission != null && now >= nextSnapshotAt) { PublishMissionFrame(); nextSnapshotAt = now + .1; }
         }
         private void StepEncounter(double now)
         {
             if (encounter == null) return;
             foreach (MemberState member in members.Values)
-                if (member.Connected) encounter.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position));
-            if (encounter.AdvanceWavesFromHost(now)) PlaceWaveFromHost();
+                if (member.Connected)
+                {
+                    if (hostMission != null) hostMission.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position), now);
+                    else encounter.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position));
+                }
+            if (hostMission == null && encounter.AdvanceWavesFromHost(now)) PlaceWaveFromHost();
             // Activate freshly placed waves before queries, so other enemies remain physical obstacles.
             for (int i = 0; i < infectedObjects.Length; i++)
             {
@@ -439,7 +451,10 @@ namespace UndeadOvertime.LanPrototype
                 infectedColliders[i].enabled = false;
                 try
                 {
-                    Vector3 position = ResolvePlanarMovement(ToUnity(enemy.Position), ToUnity(displacement));
+                    Vector3 delta = ToUnity(displacement);
+                    if (hostMission != null && members.TryGetValue(target.PeerId, out MemberState chased) && chased.Ticket.Equals(target))
+                        delta = MissionChaseStep(ToUnity(enemy.Position), chased.Position, delta);
+                    Vector3 position = ResolvePlanarMovement(ToUnity(enemy.Position), delta);
                     encounter.SetEnemyPositionFromHost(enemy.Id, ToCore(position));
                     infectedObjects[i].transform.position = position - Vector3.up * .7f;
                     if (members.TryGetValue(target.PeerId, out MemberState victim) && victim.Ticket.Equals(target))
@@ -458,9 +473,10 @@ namespace UndeadOvertime.LanPrototype
                     bool clear = !Physics.Linecast(member.Position, victim.Position, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
                     encounter.AdvanceReviveFromHost(member.Ticket, downed, now, clear);
                 }
+            AdvanceMission(now);
             foreach (MemberState member in members.Values)
             {
-                bool alive = encounter.PlayerHealth(member.Ticket) > 0;
+                bool alive = encounter.PlayerHealth(member.Ticket) > 0 && !MissionTerminal;
                 fireGate?.SetAliveFromHost(member.Ticket, alive); moveGate?.SetCanMoveFromHost(member.Ticket, alive);
             }
         }
@@ -489,13 +505,13 @@ namespace UndeadOvertime.LanPrototype
         public void CaptureControls()
         {
             if (!PresentationEnabled || !IsConnected || Phase != SessionPhase.Playing || localSlot < 0 ||
-                !TryGetLocalMember(out RangeMember player) || player.Health == 0) return;
+                !TryGetLocalMember(out RangeMember player) || player.Health == 0 || MissionTerminal) return;
             captured = true; waitForRelease = true; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
         }
         public void ReleaseControls()
         {
             if (captured && IsConnected && Phase == SessionPhase.Playing)
-            { SendAction(RangeAction.Move, Vector3.zero); SendAction(RangeAction.Revive, Vector3.zero); }
+            { SendAction(RangeAction.Move, Vector3.zero); SendAction(RangeAction.Revive, Vector3.zero); if (MissionMode) SendPowerIntent(false); }
             captured = false; waitForRelease = true;
             if (PresentationEnabled) { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
         }
@@ -503,7 +519,7 @@ namespace UndeadOvertime.LanPrototype
         private void OnDisable() { if (IsBuilt) StopSession("Range disabled."); }
         public bool SendAction(RangeAction action, Vector3 aim)
         {
-            if (!IsConnected || snapshot == null || Phase != SessionPhase.Playing || sequence == ulong.MaxValue) return false;
+            if (!IsConnected || snapshot == null || Phase != SessionPhase.Playing || MissionTerminal || sequence == ulong.MaxValue) return false;
             var direction = new AimVector(aim.x, aim.y, aim.z);
             if (action == RangeAction.Move ? !HostMoveGate.ValidIntent(direction) :
                 action == RangeAction.Revive ? !HostInfectedEncounter.ValidReviveIntent(direction) : !direction.IsUnit) return false;
@@ -520,12 +536,15 @@ namespace UndeadOvertime.LanPrototype
         }
         private void HandleCommand(ulong sender, RangeCommand command)
         {
-            if (!IsHosting || fireGate == null || !members.TryGetValue(sender, out MemberState member) || !member.Connected ||
+            if (!IsHosting || MissionTerminal || fireGate == null || !members.TryGetValue(sender, out MemberState member) || !member.Connected ||
                 command.SessionId != session.SessionId || command.RoundId != session.RoundId ||
                 command.Sequence == 0 || command.Sequence <= member.LastSequence ||
                 (command.Action == RangeAction.Move ? !HostMoveGate.ValidIntent(command.Aim) :
                     command.Action == RangeAction.Revive ? !HostInfectedEncounter.ValidReviveIntent(command.Aim) : !command.Aim.IsUnit)) return;
             member.LastSequence = command.Sequence;
+            if (command.Action == RangeAction.Fire || command.Action == RangeAction.Reload ||
+                (command.Action == RangeAction.Move && command.Aim.LengthSquared > 0) ||
+                (command.Action == RangeAction.Revive && command.Aim.Z == 1)) hostMission?.CancelPowerFromHost(member.Ticket);
             double now = Time.realtimeSinceStartupAsDouble;
             if (command.Action == RangeAction.Revive)
             {
@@ -593,6 +612,7 @@ namespace UndeadOvertime.LanPrototype
         private void PublishSnapshot()
         {
             if (!IsHosting || session.Phase == SessionPhase.Stopped) return;
+            if (MissionMode && session.Phase == SessionPhase.Playing) { PublishMissionFrame(); return; }
             var rows = new List<RangeMember>();
             foreach (PlayerTicket ticket in session.SnapshotMembers())
                 if (members.TryGetValue(ticket.PeerId, out MemberState m) && m.Connected)
@@ -610,11 +630,11 @@ namespace UndeadOvertime.LanPrototype
                 encounter?.HordeAt(Time.realtimeSinceStartupAsDouble) ?? HordeSnapshot.Disabled);
             ApplySnapshot(state); byte[] bytes = LanRangeProtocol.Encode(state);
             foreach (var row in rows) if (row.PeerId != manager.LocalClientId)
-                Send(SnapshotMessage, row.PeerId, bytes, NetworkDelivery.ReliableSequenced);
+                Send(MissionMode ? MissionSnapshotMessage : SnapshotMessage, row.PeerId, bytes, NetworkDelivery.ReliableSequenced);
         }
         private void ReceiveSnapshot(ulong sender, FastBufferReader reader)
         {
-            if (manager == null || manager.IsServer || stopping || sender != NetworkManager.ServerClientId ||
+            if (MissionMode || manager == null || manager.IsServer || stopping || sender != NetworkManager.ServerClientId ||
                 !TryReadPayload(reader, LanRangeProtocol.SnapshotHeaderBytes, LanRangeProtocol.MaximumBytes, out byte[] bytes)) return;
             if (LanRangeProtocol.TrySnapshot(bytes, out RangeSnapshot state)) ApplySnapshot(state);
         }
@@ -624,7 +644,7 @@ namespace UndeadOvertime.LanPrototype
         {
             bytes = null;
             int remaining = reader.Length - reader.Position;
-            if (minimum < 0 || maximum > LanRangeProtocol.MaximumBytes || remaining < minimum || remaining > maximum) return false;
+            if (minimum < 0 || maximum > CoopMissionProtocol.MaximumFrameBytes || remaining < minimum || remaining > maximum) return false;
             bytes = new byte[remaining]; reader.ReadBytesSafe(ref bytes, remaining); return true;
         }
         private void Send(string name, ulong peer, byte[] bytes, NetworkDelivery delivery)
@@ -643,7 +663,7 @@ namespace UndeadOvertime.LanPrototype
             snapshot = state; localSlot = -1;
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId == manager.LocalClientId) localSlot = state.Member(i).Slot;
             if (changed) { sequence = 0; yaw = 0; pitch = 0; nextLocalShotAt = nextLocalMoveAt = 0; ReleaseControls(); }
-            if (state.Phase != SessionPhase.Playing) ReleaseControls();
+            if (state.Phase != SessionPhase.Playing || MissionTerminal) ReleaseControls();
             for (int i = 0; i < 3; i++) health[i] = state.TargetHealth(i);
             ApplyVisuals();
             if (TryGetLocalMember(out RangeMember local) && local.Health == 0) ReleaseControls();
@@ -668,13 +688,13 @@ namespace UndeadOvertime.LanPrototype
                 infectedObjects[i].SetActive(exists && snapshot.Enemy(i).Health > 0 && snapshot.Encounter.Phase == EncounterPhase.Active);
             }
         }
-        private void ApplyTarget(int index) { if (targets[index] != null) targets[index].SetActive(health[index] > 0); }
+        private void ApplyTarget(int index) { if (targets[index] != null) targets[index].SetActive(!MissionMode && health[index] > 0); }
         private void OnGUI()
         {
             if (!IsBuilt || !PresentationEnabled) return;
             if (captured && TryGetLocalMember(out RangeMember hud))
             {
-                GUILayout.BeginArea(new Rect(14, 14, 430, 150), GUI.skin.box);
+                GUILayout.BeginArea(new Rect(14, 14, 590, 180), GUI.skin.box);
                 GUILayout.Label("UNDEAD OVERTIME | " + (viewMode == PlayerViewMode.FirstPerson ? "FIRST PERSON" : "THIRD PERSON"));
                 GUILayout.Label("Health " + hud.Health + "/100  |  Ammo " + hud.Ammo + "/12" + (hud.Reloading ? "  RELOADING" : ""));
                 if (snapshot.Horde.Phase != HordePhase.Disabled)
@@ -682,18 +702,21 @@ namespace UndeadOvertime.LanPrototype
                         (snapshot.Horde.Phase == HordePhase.Intermission ? "  " + Math.Ceiling(snapshot.Horde.IntermissionSeconds) + "s" : ""));
                 else GUILayout.Label("Encounter " + snapshot.Encounter.Phase);
                 if (hud.ReviveTargetSlot != 255) GUILayout.Label("Reviving teammate " + (hud.ReviveTargetSlot + 1) + "  " + hud.ReviveProgress + "%");
-                GUILayout.Label("WASD move | Mouse shoot | R reload | E revive | V view | Esc menu");
+                if (MissionMode) GUILayout.Label(MissionObjectiveText);
+                GUILayout.Label("WASD move | Mouse shoot | R reload | E revive | F power | V view | Esc menu");
                 GUILayout.EndArea();
                 GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
                 return;
             }
-            GUILayout.BeginArea(new Rect(14, 14, 650, 440), GUI.skin.box);
-            GUILayout.Label("UNDEAD OVERTIME | LAN transport firing range");
+            GUILayout.BeginArea(new Rect(14, 14, 760, 500), GUI.skin.box);
+            GUILayout.Label(MissionMode ? "UNDEAD OVERTIME | DEPOT ESCAPE MISSION" : "UNDEAD OVERTIME | LAN transport firing range");
+            if (MissionMode) GUILayout.Label(MissionObjectiveText);
             GUILayout.Label("Host-owned walking, targets, infected and bounded co-op waves. Prototype art.");
             GUILayout.Label(status);
             if (!IsBusy)
             {
                 GUILayout.Label("Host binds this exact local IP. Client enters host IP. Default is loopback.");
+                SetMissionMode(GUILayout.Toggle(MissionMode, "Depot mission (all peers must choose the same mode)"));
                 address = GUILayout.TextField(address, 15); portText = GUILayout.TextField(portText, 5);
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Host") && LanEndpoint.TryParse(address, portText, out ushort hp)) StartHosting(address, hp);
@@ -720,10 +743,10 @@ namespace UndeadOvertime.LanPrototype
                     GUILayout.Label("Reviving slot " + (local.ReviveTargetSlot + 1) + ": " + local.ReviveProgress + "%");
                 GUILayout.BeginHorizontal();
                 if (IsHosting && Phase == SessionPhase.Lobby && GUILayout.Button("Start round")) BeginRound();
-                if (IsHosting && Phase == SessionPhase.Playing && snapshot.Encounter.Phase == EncounterPhase.Dormant && GUILayout.Button("Start infected")) StartEncounter();
-                if (IsHosting && Phase == SessionPhase.Playing && snapshot.Encounter.Phase == EncounterPhase.Dormant && GUILayout.Button("Start waves")) StartWaves();
+                if (!MissionMode && IsHosting && Phase == SessionPhase.Playing && snapshot.Encounter.Phase == EncounterPhase.Dormant && GUILayout.Button("Start infected")) StartEncounter();
+                if (!MissionMode && IsHosting && Phase == SessionPhase.Playing && snapshot.Encounter.Phase == EncounterPhase.Dormant && GUILayout.Button("Start waves")) StartWaves();
                 if (IsHosting && Phase == SessionPhase.Playing && GUILayout.Button("Return to lobby")) ReturnToLobby();
-                if (Phase == SessionPhase.Playing && !captured && GUILayout.Button("Capture mouse to aim/fire")) CaptureControls();
+                if (Phase == SessionPhase.Playing && !MissionTerminal && !captured && GUILayout.Button("Capture mouse to aim/fire")) CaptureControls();
                 if (GUILayout.Button("Disconnect")) StopSession();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
@@ -735,7 +758,7 @@ namespace UndeadOvertime.LanPrototype
                 if (TryGetLocalMember(out RangeMember player) && player.Health == 0)
                     GUILayout.Label("DOWNED: a living teammate must hold E nearby to revive you. After rescue, capture controls again.");
                 GUILayout.Label("WASD walk | Mouse shoot | R reload | Hold E revive | V first/third person | Esc menu.");
-                GUILayout.Label("Start: Host/Join, host Start round, choose Start waves or Start infected, then Capture mouse.");
+                GUILayout.Label(MissionMode ? "Mission: Host/Join, Start round, capture controls, approach console and hold F. Clear waves, then gather at the blue exit." : "Start: Host/Join, host Start round, choose Start waves or Start infected, then Capture mouse.");
                 GUILayout.Label("Flat ground only; no jump/prediction yet. Teammates and infected are placeholder capsules.");
             }
             GUILayout.EndArea();

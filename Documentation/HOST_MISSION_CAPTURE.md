@@ -1,5 +1,7 @@
 # Coherent host mission frame capture
 
+**Status update, 2026-11-08:** This document retains the original slice's scope and historical status below. The combined components subsequently passed native acceptance at [802ce58](NATIVE_ACCEPTANCE_802CE58.md). The new [playable mission integration candidate](PLAYABLE_DEPOT_MISSION.md) wires them into opt-in LanRange sessions but has not yet passed its own native acceptance. Earlier pending-material/inactive-mode statements describe the original publication, not the latest candidate.
+
 ## Scope
 
 `HostCoopMission.TryCaptureFrame` is the small read-only sampling seam for later Unity/network wiring. It assembles one immutable mission/combat frame and its encoded payload from the coordinator's owned host state, rather than requiring the Unity adapter to duplicate health, pose, revive and wave assembly. It does not send traffic, register handlers, change the current v5 range, create a scene or save any local material.

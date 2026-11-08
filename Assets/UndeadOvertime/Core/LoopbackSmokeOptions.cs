@@ -8,6 +8,7 @@ namespace UndeadOvertime.Core
     public sealed class LoopbackSmokeOptions
     {
         public bool Host { get; private set; }
+        public bool Mission { get; private set; }
         public ushort Port { get; private set; }
         public string RunId { get; private set; }
         public string Revision { get; private set; }
@@ -26,18 +27,20 @@ namespace UndeadOvertime.Core
             {
                 string key = args[i];
                 if (key == null || !key.StartsWith("-uo-smoke-", StringComparison.Ordinal)) continue;
-                if (key != "-uo-smoke-role" && key != "-uo-smoke-port" && key != "-uo-smoke-run" && key != "-uo-smoke-revision")
+                if (key != "-uo-smoke-role" && key != "-uo-smoke-port" && key != "-uo-smoke-run" && key != "-uo-smoke-revision" && key != "-uo-smoke-mode")
                 { error = "Unknown smoke-test flag."; return false; }
                 if (values.ContainsKey(key) || i + 1 >= args.Length || string.IsNullOrEmpty(args[i + 1]) || args[i + 1].StartsWith("-", StringComparison.Ordinal))
                 { error = "Duplicate or missing smoke-test value."; return false; }
                 values.Add(key, args[++i]);
             }
-            if (values.Count != 4 || !values.TryGetValue("-uo-smoke-role", out string role) || (role != "host" && role != "client") ||
+            if ((values.Count != 4 && values.Count != 5) || !values.TryGetValue("-uo-smoke-role", out string role) || (role != "host" && role != "client") ||
                 !values.TryGetValue("-uo-smoke-port", out string portText) || !ushort.TryParse(portText, NumberStyles.None, CultureInfo.InvariantCulture, out ushort port) || port < 1024 ||
                 !values.TryGetValue("-uo-smoke-run", out string run) || !Hex(run, 32) ||
                 !values.TryGetValue("-uo-smoke-revision", out string revision) || !Hex(revision, 40))
             { error = "Expected host/client role, port 1024-65535, 32-hex run ID and exact 40-hex revision."; return false; }
-            options = new LoopbackSmokeOptions { Host = role == "host", Port = port, RunId = run.ToLowerInvariant(), Revision = revision.ToLowerInvariant() };
+            if (values.TryGetValue("-uo-smoke-mode", out string mode) && mode != "range" && mode != "mission")
+            { error = "Smoke mode must be range or mission."; return false; }
+            options = new LoopbackSmokeOptions { Mission = mode == "mission", Host = role == "host", Port = port, RunId = run.ToLowerInvariant(), Revision = revision.ToLowerInvariant() };
             return true;
         }
         private static bool Hex(string value, int length)

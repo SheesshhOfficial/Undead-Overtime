@@ -20,7 +20,7 @@ namespace UndeadOvertime.Core
         { Sequence = sequence; Range = range; Mission = mission; }
     }
 
-    /// <summary>Inactive mission-channel codec candidate, distinct from the running range v5 protocol.
+    /// <summary>Mission-channel codec, distinct from the optional range v5 session protocol.
     /// Fixed little-endian fields; at most 465 bytes, no strings or unbounded array prefixes.
     /// Syntax validation is not authentication: only transport-authenticated host packets may feed the replica.</summary>
     public static class CoopMissionProtocol

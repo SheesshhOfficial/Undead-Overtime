@@ -1,5 +1,7 @@
 # Revive continuity correction
 
+**Status update, 2026-11-08:** This document retains the original slice's scope and historical status below. The combined components subsequently passed native acceptance at [802ce58](NATIVE_ACCEPTANCE_802CE58.md). The new [playable mission integration candidate](PLAYABLE_DEPOT_MISSION.md) wires them into opt-in LanRange sessions but has not yet passed its own native acceptance. Earlier pending-material/inactive-mode statements describe the original publication, not the latest candidate.
+
 ## Scope and executed result
 
 This is a correction to the existing host-owned revive rules, not a new game feature or scene integration. It changes `HostInfectedEncounter` and forwards invalid pose observations through its `HostCoopMission` owner, plus tests/documentation. Base: `253b43879fc65a61c1bb69cf485d0deafb9d1756`.

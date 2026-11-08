@@ -207,3 +207,10 @@ No VENOM files were touched. Native material acceptance remains pinned to 4b7e1a
 - Independent review found and reproduced two more coordinator-path cases; HostCoopMission now forwards invalid pose observations into its owned encounter. The intermediate propagation run had 262 passes and two failures before this fix.
 - Actual final cloud run **264/264** passed, with 0 compile errors/warnings and 0 skips/inconclusive cases. Static checks covered 77 source/assets, nine assemblies and 92 GUIDs; 48 attribute assertions and 15 importer fixtures passed. See `REVIVE_CONTINUITY.md` and result JSON for evidence and limits.
 - No local Unity action, material save, scene/wiring change, package/settings edit or branch change. The separately pinned material candidate is unchanged. This modifies active revive core behavior, so current-main native regression remains required on an explicitly selected candidate.
+
+
+## 2026-11-08: opt-in playable depot mission integration candidate
+
+Recorded exact native acceptance of 802ce58 (288 EditMode, 56 PlayMode, Windows build and two-process range regression), with preserved local state and native telemetry caveats. Wired the mission owner, physical gate/console/extraction presentation and coherent state capture into an opt-in LanRange session. Added a distinct negotiated protocol, host-only power input, session/round replica guard, F controls/objective HUD, terminal/lifecycle cleanup and a bounded gate pursuit waypoint. Training targets are disabled in mission mode. Default range behavior remains separate.
+
+Cloud core: 281/281 passed; C# 9 syntax parsing does not claim Unity API compilation. Added nine authored native mission cases and a separate two-process mission smoke scenario with a client completion receipt; these new paths are unrun pending exact-revision native acceptance. No material, import metadata, scene, package, project settings or local file changes. See PLAYABLE_DEPOT_MISSION.md and its core result record.

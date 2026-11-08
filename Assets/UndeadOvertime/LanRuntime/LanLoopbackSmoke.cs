@@ -13,7 +13,7 @@ namespace UndeadOvertime.LanPrototype
     /// Opt-in standalone automated loopback peer. No GUI automation, editor execution, firewall change,
     /// public/LAN address, arbitrary output path, or additional process launch from game code.
     /// </summary>
-    public sealed class LanLoopbackSmoke : MonoBehaviour
+    public sealed partial class LanLoopbackSmoke : MonoBehaviour
     {
         private LanRange range;
         private LoopbackSmokeOptions options;
@@ -26,7 +26,7 @@ namespace UndeadOvertime.LanPrototype
         private sealed class SmokeReport
         {
             public int formatVersion = 1;
-            public string role, runId, requestedRevision, unityVersion, applicationVersion, startedUtc, finishedUtc;
+            public string scenario, role, runId, requestedRevision, unityVersion, applicationVersion, startedUtc, finishedUtc;
             public int processId, port, warningCount, runtimeErrorCount;
             public string firstRuntimeError;
             public bool success;
@@ -49,13 +49,13 @@ namespace UndeadOvertime.LanPrototype
         {
             report = new SmokeReport
             {
-                role = options.Host ? "host" : "client", runId = options.RunId, requestedRevision = options.Revision,
+                scenario = options.Mission ? "mission" : "range", role = options.Host ? "host" : "client", runId = options.RunId, requestedRevision = options.Revision,
                 unityVersion = Application.unityVersion, applicationVersion = Application.version,
                 startedUtc = DateTime.UtcNow.ToString("O"), processId = Process.GetCurrentProcess().Id, port = options.Port
             };
             Application.logMessageReceived += ObserveLog;
             deadline = Time.realtimeSinceStartupAsDouble + 90;
-            StartCoroutine(Guarded(options.Host ? HostRun() : ClientRun()));
+            StartCoroutine(Guarded(options.Mission ? (options.Host ? HostMissionRun() : ClientMissionRun()) : (options.Host ? HostRun() : ClientRun())));
         }
         private IEnumerator Guarded(IEnumerator work)
         {

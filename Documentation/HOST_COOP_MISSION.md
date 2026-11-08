@@ -1,5 +1,7 @@
 # Host mission coordinator candidate
 
+**Status update, 2026-11-08:** This document retains the original slice's scope and historical status below. The combined components subsequently passed native acceptance at [802ce58](NATIVE_ACCEPTANCE_802CE58.md). The new [playable mission integration candidate](PLAYABLE_DEPOT_MISSION.md) wires them into opt-in LanRange sessions but has not yet passed its own native acceptance. Earlier pending-material/inactive-mode statements describe the original publication, not the latest candidate.
+
 ## Scope and status
 
 This slice connects the engine-independent mission rules to a real `HostInfectedEncounter` and current `LanSession` membership. It is an integration seam for the next opt-in gameplay mode, not an active scene feature. The existing LAN range, wire protocol v5, player controls, snapshots, materials, import settings and local acceptance candidate are unchanged.

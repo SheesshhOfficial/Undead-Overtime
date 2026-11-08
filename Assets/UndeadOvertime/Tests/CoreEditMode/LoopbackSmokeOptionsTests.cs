@@ -11,7 +11,20 @@ namespace UndeadOvertime.Core.Tests
         public void ExplicitRoleFlagsParseWithoutAHostAddressOrOutputPath(string role, bool host)
         {
             Assert.That(LoopbackSmokeOptions.TryParse(Args(role), out var options, out _), Is.True);
-            Assert.That(options.Host, Is.EqualTo(host)); Assert.That(options.Port, Is.EqualTo(7777));
+            Assert.That(options.Mission, Is.False); Assert.That(options.Host, Is.EqualTo(host)); Assert.That(options.Port, Is.EqualTo(7777));
+        }
+        [TestCase("range", false)] [TestCase("mission", true)]
+        public void ExplicitSupportedScenarioIsBounded(string mode, bool mission)
+        {
+            var args = new System.Collections.Generic.List<string>(Args()); args.Add("-uo-smoke-mode"); args.Add(mode);
+            Assert.That(LoopbackSmokeOptions.TryParse(args.ToArray(), out var options, out _), Is.True);
+            Assert.That(options.Mission, Is.EqualTo(mission));
+        }
+        [TestCase("anything")] [TestCase("Mission")] [TestCase("../file")]
+        public void InvalidScenarioIsRejected(string mode)
+        {
+            var args = new System.Collections.Generic.List<string>(Args()); args.Add("-uo-smoke-mode"); args.Add(mode);
+            Assert.That(LoopbackSmokeOptions.TryParse(args.ToArray(), out _, out _), Is.False);
         }
         [Test]
         public void NormalPlayerArgumentsDoNotEnableAutomation()

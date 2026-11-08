@@ -1,5 +1,7 @@
 # Depot mission geometry and physics adapter
 
+**Status update, 2026-11-08:** This document retains the original slice's scope and historical status below. The combined components subsequently passed native acceptance at [802ce58](NATIVE_ACCEPTANCE_802CE58.md). The new [playable mission integration candidate](PLAYABLE_DEPOT_MISSION.md) wires them into opt-in LanRange sessions but has not yet passed its own native acceptance. Earlier pending-material/inactive-mode statements describe the original publication, not the latest candidate.
+
 ## Status
 
 This adds reusable original objective geometry and a host/state-validated presentation adapter, plus 14 authored PlayMode cases. It is not instantiated by the existing LanRange yet. No scene file, active transport handler, existing control, saved material, asset import or local project setting changes in this slice. Pending material validation remains independent.
