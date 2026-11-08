@@ -43,7 +43,11 @@ for path in ASSETS.rglob("*.asmdef"):
     assembly_names.add(data["name"])
     if "Tests" in path.parts:
         check("TestAssemblies" in data.get("optionalUnityReferences", []), f"Missing test marker: {path}")
-        check("UndeadOvertime.Prototype" in data["references"], f"Missing runtime reference: {path}")
+        expected = "UndeadOvertime.Core" if "CoreEditMode" in path.parts else "UndeadOvertime.Prototype"
+        check(expected in data["references"], f"Missing runtime reference: {path}")
+    elif data["name"] == "UndeadOvertime.Core":
+        check(data.get("noEngineReferences") is True, "Core must remain engine independent")
+        check(not data["references"], "Core must not acquire package dependencies")
     else:
         check("Unity.InputSystem" in data["references"], "Missing Input System assembly reference")
 
@@ -71,3 +75,4 @@ if errors:
     raise SystemExit("STATIC CHECK FAILED\n" + "\n".join(errors))
 print(f"Static consistency PASS: {len(files)} source/assets, {len(assembly_names)} assemblies, {len(seen)} metadata GUIDs checked.")
 print("Unity compilation, EditMode/PlayMode results, rendering, player build, and LAN behavior are NOT verified by this script.")
+

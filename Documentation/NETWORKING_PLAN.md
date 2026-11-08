@@ -28,3 +28,8 @@ Keep transport and gameplay concerns separate from input and visuals. Reuse the 
 6. Any required OS firewall/security prompt is reported for authorization; do not silently open ports or change network policy.
 
 Production art, a city block, moving zombies, and a wave loop follow the verified session foundation. They are not prerequisites for proving the local mechanics range.
+
+
+## Implemented preparatory slice (2026-11-08)
+
+A transport-independent host lifecycle and fire-admission core now exists in `Assets/UndeadOvertime/Core`, with separate EditMode test sources. Read [LAN_HOST_CORE.md](LAN_HOST_CORE.md) for integration rules and current verification limits. It does not activate networking, change the solo range or replace the real-process acceptance gates above. Local Unity compilation/tests remain required before transport wiring.

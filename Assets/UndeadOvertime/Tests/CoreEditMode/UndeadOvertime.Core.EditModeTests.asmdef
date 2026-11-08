@@ -1,0 +1,8 @@
+{
+  "name": "UndeadOvertime.Core.EditModeTests",
+  "rootNamespace": "UndeadOvertime.Core.Tests",
+  "references": ["UndeadOvertime.Core"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
+}

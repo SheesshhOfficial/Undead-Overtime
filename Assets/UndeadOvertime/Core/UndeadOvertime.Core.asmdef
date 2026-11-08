@@ -1,0 +1,6 @@
+{
+  "name": "UndeadOvertime.Core",
+  "rootNamespace": "UndeadOvertime.Core",
+  "references": [],
+  "noEngineReferences": true
+}
