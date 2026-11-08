@@ -121,6 +121,26 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
         }
         [UnityTest]
+        public IEnumerator ImmediateReloadAfterShotIsAcceptedAndRetriesDoNotRestartIt()
+        {
+            Vector3 aim = (new Vector3(0, 1.6f, 10) - LanRange.Station(0)).normalized;
+            Assert.That(range.SendAction(RangeAction.Fire, aim), Is.True);
+            Assert.That(range.SendAction(RangeAction.Reload, aim), Is.True); // No frame/delay between distinct inputs.
+            yield return new WaitForSecondsRealtime(.1f);
+            Assert.That(range.CurrentSnapshot.Member(0).Reloading, Is.True);
+            Assert.That(range.CurrentSnapshot.Member(0).Ammo, Is.EqualTo(11));
+            Assert.That(range.CurrentSnapshot.TargetHealth(1), Is.EqualTo(75));
+            double until = Time.realtimeSinceStartupAsDouble + 1.7;
+            while (Time.realtimeSinceStartupAsDouble < until)
+            {
+                range.SendAction(RangeAction.Reload, aim);
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            Assert.That(range.CurrentSnapshot.Member(0).Reloading, Is.False);
+            Assert.That(range.CurrentSnapshot.Member(0).Ammo, Is.EqualTo(12));
+            Assert.That(range.CurrentSnapshot.TargetHealth(1), Is.EqualTo(75));
+        }
+        [UnityTest]
         public IEnumerator ReviveWithoutADownedTeammateCannotHealOrBlockWeaponInput()
         {
             Assert.That(range.SendAction(RangeAction.Revive, Vector3.forward), Is.True);

@@ -62,7 +62,7 @@ namespace UndeadOvertime.LanPrototype
             public PlayerTicket Ticket;
             public byte Slot;
             public bool Connected;
-            public double Deadline, NextCommandAt, NextMoveAt, NextReviveAt;
+            public double Deadline, NextCommandAt, NextReloadAt, NextMoveAt, NextReviveAt;
             public Vector3 Position;
             public ulong LastSequence;
         }
@@ -265,7 +265,7 @@ namespace UndeadOvertime.LanPrototype
             double now = Time.realtimeSinceStartupAsDouble;
             fireGate = new HostFireGate(session, now); moveGate = new HostMoveGate(session, now); encounter = new HostInfectedEncounter(session, now);
             foreach (MemberState member in members.Values)
-            { member.LastSequence = 0; member.NextCommandAt = member.NextMoveAt = member.NextReviveAt = 0; member.Position = Station(member.Slot); }
+            { member.LastSequence = 0; member.NextCommandAt = member.NextReloadAt = member.NextMoveAt = member.NextReviveAt = 0; member.Position = Station(member.Slot); }
             status = "Round started. Capture controls: WASD move, mouse aim/fire, R reload.";
             PublishSnapshot(); return true;
         }
@@ -454,8 +454,19 @@ namespace UndeadOvertime.LanPrototype
                 return;
             }
             encounter?.CancelReviveFromHost(member.Ticket);
-            if (now < member.NextCommandAt) return;
-            member.NextCommandAt = now + .02;
+            // Reload is a different input from fire. A fresh reload immediately after a shot
+            // must not disappear into the shot's pacing window; the weapon gate still validates
+            // magazine/alive state and makes repeated reloads idempotent.
+            if (command.Action == RangeAction.Reload)
+            {
+                if (now < member.NextReloadAt) return;
+                member.NextReloadAt = now + .02;
+            }
+            else
+            {
+                if (now < member.NextCommandAt) return;
+                member.NextCommandAt = now + .02;
+            }
             Vector3 origin = member.Position;
             fireGate.SetPoseFromHost(member.Ticket, new AimVector(origin.x, origin.y, origin.z), command.Aim);
             if (command.Action == RangeAction.Reload) fireGate.TryBeginReloadFromHost(member.Ticket, now);

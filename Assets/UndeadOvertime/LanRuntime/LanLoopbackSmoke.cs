@@ -19,6 +19,7 @@ namespace UndeadOvertime.LanPrototype
         private LoopbackSmokeOptions options;
         private SmokeReport report;
         private readonly List<string> steps = new List<string>();
+        private readonly List<string> stepUtcTimes = new List<string>();
         private double deadline;
         private bool finished;
         [Serializable]
@@ -30,7 +31,7 @@ namespace UndeadOvertime.LanPrototype
             public string firstRuntimeError;
             public bool success;
             public string error;
-            public string[] steps;
+            public string[] steps, stepUtcTimes;
             public long firstRemoteConnection, secondRemoteConnection;
             public string scope = "Two standalone processes on 127.0.0.1 only; not real LAN or ten-player acceptance.";
         }
@@ -149,7 +150,15 @@ namespace UndeadOvertime.LanPrototype
             Record("teammate-revived");
             while (range.CurrentSnapshot.TargetHealth(0) != 75) yield return null;
             Require(Remote().Ammo == 11, "Revived client's shot did not consume one round.");
+            Record("revived-client-shot-observed");
             while (!Remote().Reloading) yield return null;
+            Record("revived-client-reload-started");
+            while (Remote().Reloading || Remote().Ammo != 12) yield return null;
+            Record("revived-client-reload-completed");
+            // A deliberate miss is sent only after the client sees the completed reload.
+            // This proves the reload outcome reached the client before host shutdown.
+            while (Remote().Ammo != 11) yield return null;
+            Require(range.CurrentSnapshot.TargetHealth(0) == 75, "Final receipt unexpectedly damaged a target.");
             Record("revived-client-action-acknowledged");
             range.StopSession("Automated loopback host shutdown.");
             while (range.IsBusy) yield return null;
@@ -255,6 +264,11 @@ namespace UndeadOvertime.LanPrototype
             while (range.CurrentSnapshot.TargetHealth(0) != 75 || Local().Ammo != 11) yield return null;
             Record("revived-client-actions-replicated");
             Require(range.SendAction(RangeAction.Reload, AimAt(0)), "Could not acknowledge restored client actions.");
+            while (!Local().Reloading) yield return null;
+            Record("revived-client-reload-received");
+            while (Local().Reloading || Local().Ammo != 12) yield return null;
+            Record("revived-client-reload-completion-received");
+            Require(range.SendAction(RangeAction.Fire, Vector3.up), "Could not acknowledge the revived client's observed reload completion.");
             while (range.IsBusy || range.IsConnected) yield return null;
             Require(range.MemberCount == 0 && range.Phase == SessionPhase.Stopped, "Host shutdown left stale client membership.");
             Record("host-shutdown-observed");
@@ -288,7 +302,11 @@ namespace UndeadOvertime.LanPrototype
             return (new Vector3((target - 1) * 5, 1.6f, 10) - new Vector3((float)eye.X, (float)eye.Y, (float)eye.Z)).normalized;
         }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
-        private void Record(string step) { steps.Add(step); Debug.Log("UO_LAN_SMOKE_STEP " + report.role + " " + step); }
+        private void Record(string step)
+        {
+            string utc = DateTime.UtcNow.ToString("O"); steps.Add(step); stepUtcTimes.Add(utc);
+            Debug.Log("UO_LAN_SMOKE_STEP " + report.role + " " + step + " " + utc);
+        }
         private void ObserveLog(string condition, string stackTrace, LogType type)
         {
             if (type == LogType.Warning) report.warningCount++;
@@ -299,7 +317,7 @@ namespace UndeadOvertime.LanPrototype
         private void Finish(bool success, string error)
         {
             if (finished) return;
-            finished = true; report.success = success; report.error = error; report.steps = steps.ToArray(); report.finishedUtc = DateTime.UtcNow.ToString("O");
+            finished = true; report.success = success; report.error = error; report.steps = steps.ToArray(); report.stepUtcTimes = stepUtcTimes.ToArray(); report.finishedUtc = DateTime.UtcNow.ToString("O");
             range.StopSession(success ? "Automated smoke test completed." : "Automated smoke test failed.");
             if (report.runtimeErrorCount > 0) { report.success = false; report.error = report.error ?? report.firstRuntimeError; }
             int exit = report.success ? 0 : 1;
