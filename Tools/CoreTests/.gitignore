@@ -1,0 +1,5 @@
+**/bin/
+**/obj/
+results/
+.cache/
+__pycache__/
