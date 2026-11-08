@@ -71,7 +71,10 @@ namespace UndeadOvertime.Core
 
         public static byte[] Encode(RangeCommand command)
         {
-            if (!Valid(command)) throw new ArgumentException("Invalid range command.");
+            // Reject before allocating/writing if rounding would create a packet our decoder cannot accept.
+            // Do not widen receive tolerances or silently normalize the caller's authoritative values.
+            if (!Valid(command) || !Valid(new RangeCommand(command.Action, command.SessionId, command.RoundId,
+                command.Sequence, WireVector(command.Aim)))) throw new ArgumentException("Invalid range command or float wire representation.");
             using (var stream = new MemoryStream(CommandBytes))
             using (var writer = new BinaryWriter(stream))
             {
@@ -94,6 +97,8 @@ namespace UndeadOvertime.Core
                 command = parsed; return true;
             }
         }
+        private static AimVector WireVector(AimVector value) => new AimVector((float)value.X, (float)value.Y, (float)value.Z);
+        private static bool ValidWirePosition(AimVector value) => HostMoveGate.ValidPosition(value) && HostMoveGate.ValidPosition(WireVector(value));
         private static bool Valid(RangeCommand value) =>
             value.SessionId > 0 && value.RoundId > 0 && value.Sequence > 0 &&
             (value.Action == RangeAction.Move ? HostMoveGate.ValidIntent(value.Aim) :
@@ -166,14 +171,14 @@ namespace UndeadOvertime.Core
                 (snapshot.Phase == SessionPhase.Playing && snapshot.RoundId == 0) ||
                 snapshot.MemberCount < 1 || snapshot.MemberCount > LanSession.MaximumPlayers) return false;
             InfectedSnapshot enemy = snapshot.Encounter;
-            if (!HostMoveGate.ValidPosition(enemy.Position) || (enemy.Phase == EncounterPhase.Dormant && enemy.Health != 0) ||
+            if (!ValidWirePosition(enemy.Position) || (enemy.Phase == EncounterPhase.Dormant && enemy.Health != 0) ||
                 (byte)enemy.Phase > (byte)EncounterPhase.Failed || snapshot.EnemyCount > HostInfectedEncounter.MaximumEnemies ||
                 (snapshot.Phase == SessionPhase.Lobby && enemy.Phase != EncounterPhase.Dormant)) return false;
             int alive = 0; var enemyIds = new HashSet<byte>();
             for (int i = 0; i < snapshot.EnemyCount; i++)
             {
                 EnemySnapshot value = snapshot.Enemy(i);
-                if (value.Health > 100 || !HostMoveGate.ValidPosition(value.Position) || !enemyIds.Add(value.Id)) return false;
+                if (value.Health > 100 || !ValidWirePosition(value.Position) || !enemyIds.Add(value.Id)) return false;
                 if (value.Health > 0) alive++;
             }
             HordeSnapshot horde = snapshot.Horde;
@@ -200,13 +205,13 @@ namespace UndeadOvertime.Core
                 }
                 if (horde.Phase != HordePhase.Intermission && horde.IntermissionSeconds != 0) return false;
             }
-            var peers = new HashSet<ulong>(); var slots = new HashSet<byte>();
+            var peers = new HashSet<ulong>(); var slots = new HashSet<byte>(); var connections = new HashSet<long>();
             for (int i = 0; i < snapshot.MemberCount; i++)
             {
                 RangeMember m = snapshot.Member(i);
                 if (m.ConnectionId <= 0 || m.Slot >= LanSession.MaximumPlayers || m.Ammo > HostFireGate.MagazineSize || m.Health > 100 || m.ReviveProgress > 99 ||
                     (m.ReviveTargetSlot == 255 ? m.ReviveProgress != 0 : m.ReviveTargetSlot >= LanSession.MaximumPlayers || m.ReviveTargetSlot == m.Slot || m.Health == 0) ||
-                    !HostMoveGate.ValidPosition(m.Position) || !peers.Add(m.PeerId) || !slots.Add(m.Slot)) return false;
+                    !ValidWirePosition(m.Position) || !peers.Add(m.PeerId) || !slots.Add(m.Slot) || !connections.Add(m.ConnectionId)) return false;
             }
             for (int i = 0; i < snapshot.MemberCount; i++)
             {

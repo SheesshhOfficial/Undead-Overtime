@@ -8,7 +8,7 @@ Unity prototype for a planned Windows solo and 1–10-player LAN co-op zombie sh
 
 The last accepted Unity camera baseline is `eaf20a6cb99dbe4b4e7102b9a655f8a45445f918`. It passed 132 EditMode / 39 PlayMode, Windows build, two-process loopback and inspected FPS/TPS captures. This describes historical evidence, not an instruction to change the user's checkout.
 
-The inactive mission rules, coordinator and codec now have executable cloud core coverage. See [cloud verification](Documentation/CLOUD_CORE_VERIFICATION.md), [mission replication tests](Documentation/COOP_MISSION_REPLICATION_TESTS.md) and [host frame capture](Documentation/HOST_MISSION_CAPTURE.md). Those checks are not Unity physics, materials, scene wiring or real LAN acceptance.
+The inactive mission rules, coordinator and codec now have executable cloud core coverage. See [cloud verification](Documentation/CLOUD_CORE_VERIFICATION.md), [mission replication tests](Documentation/COOP_MISSION_REPLICATION_TESTS.md) and [host frame capture](Documentation/HOST_MISSION_CAPTURE.md). The [packet boundary validation](Documentation/PROTOCOL_ROBUSTNESS.md) found and corrected float-conversion and duplicate-connection defects; the latest pure-core run passed 248 cases. Those checks are not Unity physics, materials, scene wiring or real LAN acceptance.
 
 ## Playable prototype
 
