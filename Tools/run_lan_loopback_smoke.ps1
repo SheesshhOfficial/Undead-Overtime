@@ -78,12 +78,14 @@ try {
     if ($hostReport.steps -notcontains 'revived-client-reload-completed' -or $clientReport.steps -notcontains 'revived-client-reload-completion-received') { throw 'The restored-action reload confirmation is missing.' }
     if ($hostReport.steps -notcontains 'wave-result-acknowledged' -or $clientReport.steps -notcontains 'replicated-three-waves-cleared' -or $clientReport.steps -notcontains 'wave-reload-completion-received') { throw 'The complete co-op wave acknowledgment is missing.' }
     } else {
-        foreach ($step in @('mission-round-started', 'remote-power-opened-gate', 'host-mission-shot-replicated', 'host-mission-reload-started', 'host-mission-reload-completed', 'mission-three-waves-cleared', 'mission-extracted', 'client-completion-acknowledged')) {
+        foreach ($step in @('mission-round-started', 'remote-power-opened-gate', 'host-mission-shot-replicated', 'host-mission-reload-started', 'host-mission-reload-completed', 'mission-three-waves-cleared', 'mission-extracted', 'client-completion-acknowledged', 'mission-lobby-reset', 'mission-client-disconnected', 'mission-fresh-client-rejoin', 'mission-second-round-reset', 'mission-second-round-power', 'mission-second-round-client-acknowledged')) {
             if ($hostReport.steps -notcontains $step) { throw ('Missing host mission step: ' + $step) }
         }
-        foreach ($step in @('mission-round-received', 'client-power-held', 'replicated-mission-gate-open', 'client-mission-shot-replicated', 'client-mission-reload-started', 'client-mission-reload-completed', 'replicated-mission-three-waves', 'replicated-mission-completed')) {
+        foreach ($step in @('mission-round-received', 'client-power-held', 'replicated-mission-gate-open', 'client-mission-shot-replicated', 'client-mission-reload-started', 'client-mission-reload-completed', 'replicated-mission-three-waves', 'replicated-mission-completed', 'replicated-mission-lobby-reset', 'mission-client-disconnected', 'replicated-mission-second-round-reset', 'replicated-mission-second-round-power', 'mission-second-round-reload-completed')) {
             if ($clientReport.steps -notcontains $step) { throw ('Missing client mission step: ' + $step) }
         }
+        if ($hostReport.firstRemoteConnection -le 0 -or $hostReport.secondRemoteConnection -le 0 -or
+            $hostReport.firstRemoteConnection -eq $hostReport.secondRemoteConnection) { throw 'Mission rejoin did not prove a fresh connection lifetime.' }
     }
     if ($hostProcess.ExitCode -ne 0 -or $clientProcess.ExitCode -ne 0) { throw 'A test player returned a nonzero exit code.' }
     $summary = [ordered]@{

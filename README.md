@@ -4,17 +4,17 @@ Unity prototype for a planned Windows solo and 1–10-player LAN co-op zombie sh
 
 ## Current acceptance state
 
-The last accepted native baseline is **802ce58**: clean compilation, **288 EditMode /56 PlayMode**, Windows build and full two-process range loopback. The original textured floor also passed import and inspected FPS/TPS rendering. [Exact native evidence and caveats](Documentation/NATIVE_ACCEPTANCE_802CE58.md).
+The accepted native mission baseline is **917d94**: clean compilation, **305 EditMode /65 PlayMode**, one Windows build and successful default-range **and opt-in mission** two-process loopbacks. Remote power, replicated gate, three co-op waves and whole-team extraction passed on loopback. [Exact native evidence and limits](Documentation/NATIVE_ACCEPTANCE_917D94.md).
 
-**Current candidate adds opt-in playable depot mission wiring and still needs native acceptance.** Select Depot mission before Host/Join on every peer; restore power with F, survive three waves, then gather at extraction. Range mode remains the default. [Mission controls, protocol, tests and acceptance runbook](Documentation/PLAYABLE_DEPOT_MISSION.md).
+Select **Depot mission** before Host/Join on every peer; restore power with F, survive three waves, then gather at extraction. Range mode remains the default. [Mission controls and authority](Documentation/PLAYABLE_DEPOT_MISSION.md).
 
-The candidate's actual cloud core run passed **281/281** cases. This is not Unity physics, rendering, a mission network session or real LAN acceptance. Preserve existing local changes; this candidate needs no material reimport/save or settings change.
+**Current candidate strengthens mission restart validation**, adding actual remote lobby cleanup, reconnect and a reset second round to the smoke sequence. It changes test/verification code, not normal gameplay; its new native checks remain pending. [Lifecycle acceptance runbook](Documentation/MISSION_LIFECYCLE.md). Pure-core coverage is separate from Unity physics and transport acceptance. Preserve local files; no material reimport/save or settings change is needed.
 
 ## Playable prototype
 
 Use **Unity 6000.6.5f1** and open `Assets/UndeadOvertime/Scenes/LanRange.unity`.
 
-The isolated LAN arena supports host/join, planar movement, host-authoritative shooting/reload, single infected or three bounded waves (2/3/4 enemies), damage/downing, timed teammate revive, intermissions and round reset. Current camera/control work adds a local FPS/TPS switch and clearer HUD. The original floor is textured; most other models remain temporary primitives. The city, production characters/animation, story, audio and polish are not integrated. The opt-in mission candidate is described above.
+The isolated LAN arena supports host/join, planar movement, host-authoritative shooting/reload, single infected or three bounded waves (2/3/4 enemies), damage/downing, timed teammate revive, intermissions and round reset. Current camera/control work adds a local FPS/TPS switch and clearer HUD. The original floor is textured; most other models remain temporary primitives. The city, production characters/animation, story, audio and polish are not integrated. The accepted opt-in mission and current validation candidate are described above.
 
 Quick start: enter Play Mode → Host on `127.0.0.1:7777` → Start round → Start waves → Capture mouse. WASD moves, mouse aims/fires, R reloads, E revives, V switches view, Esc releases capture. Join a second process before the host starts a round. See [the hands-on guide](Documentation/LAN_CONTROLS.md).
 

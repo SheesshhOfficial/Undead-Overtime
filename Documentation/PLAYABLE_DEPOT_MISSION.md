@@ -2,15 +2,11 @@
 
 ## Acceptance status
 
-Native attempt `d2b035b` passed compilation and all 305 EditMode cases; PlayMode passed 64/65, including the full solo mission. The deliberate blocked-placement case failed in its power helper at the immediate-authority versus 10 Hz published-state boundary. Build and loopbacks were not run. A narrow test-only correction now requires the same round's newer Failed frame within 300 ms and preserves terminal rejection checks. See [the failure and correction record](MISSION_PLACEMENT_TEST_BOUNDARY.md). Corrected native acceptance remains pending.
+The opt-in greybox depot mission was accepted at **917d94aea47d25911b730fac6f2a5cd599783d14**: clean native compilation, **305/305 EditMode, 65/65 PlayMode**, one Windows build and both default-range and mission two-process loopbacks. The mission run covered remote power, gate replication, each peer's weapon/reload state, three waves, whole-team extraction and client-confirmed shutdown. [Evidence and limits](NATIVE_ACCEPTANCE_917D94.md). The earlier d2b035b negative-test timing failure is retained in [the correction record](MISSION_PLACEMENT_TEST_BOUNDARY.md).
 
-This candidate wires the previously tested mission rules, owner, codec and geometry into an **opt-in mode in LanRange**. The default range mode remains separate. The integration has cloud core execution plus partial native acceptance; it is not accepted until the exact correcting revision passes every required gate. It is a small greybox depot mission, not the planned complete city or finished game.
+The current candidate adds lifecycle verification after completion: lobby cleanup, a fresh client connection, a locked/reset second round and new remote power/reload actions. It does not change normal gameplay. Its additional three pure-core cases and one native case bring the expected native inventory to **308 EditMode /66 PlayMode**. Corrected tests, expanded smoke and core result are documented in [MISSION_LIFECYCLE.md](MISSION_LIFECYCLE.md); new native acceptance is pending.
 
-Base `802ce58b7aa30639291c9e21834e52e84fd5fdc7` passed native compilation, 288 EditMode, 56 PlayMode, a Windows build and the existing two-process v5 loopback. The original floor also passed native import and inspected FPS/TPS rendering at `4b7e1ab`. See `NATIVE_ACCEPTANCE_802CE58.md` for evidence and limitations. Those results do not cover this integration's new transport, controls or pursuit route.
-
-Current cloud core result: **281/281 cases passed**, zero failures, warnings, skipped or inconclusive cases; actual production core compiled separately as .NET Standard 2.1/C# 9. This adds 12 mission session-boundary cases and five smoke-mode parsing cases to the prior 264. Eight of the nine new native mission cases passed at `d2b035b`; the ninth requires the corrected retest. Expected full inventory: **305 EditMode and 65 PlayMode**. C# syntax-only parsing is not Unity/NGO API compilation.
-
-No material, texture, mesh, import metadata, scene, package, project setting, branch or user-local file is modified in this candidate. Runtime geometry uses existing caller-owned materials. No new third-party asset or external service is involved.
+This is a small greybox depot, not the complete city or finished game. The original textured floor previously passed inspected FPS/TPS rendering, but mission-mode screenshots and manual controls were not inspected in the accepted loopback pass. No material, mesh, texture, import metadata, scene, package, project setting or user-local file is edited by this validation candidate.
 
 ## Starting the mission
 
@@ -54,8 +50,8 @@ Nine authored PlayMode cases cover opt-in/no-network construction, prefixed maxi
 
 Use the existing local execution coordinator and preserve the recorded dirty checkout. Verify exact revision and non-overlap, then:
 
-1. Native compile; full EditMode **305**; save the actual result before running another suite.
-2. Full PlayMode **65**; stop and return diagnostics on failure. Do not weaken assertions locally.
+1. Native compile; full EditMode **308**; save the actual result before running another suite.
+2. Full PlayMode **66**; stop and return diagnostics on failure. Do not weaken assertions locally.
 3. One explicit Windows build using `Undead Overtime/Build LAN test player (Windows)`. The material validation is read-only. Do not rerun floor setup or overwrite existing material serialization.
 4. Run the existing launcher once with `-Mode range -Revision <exact 40-character commit>` to regress movement/combat/rejoin/revive/waves.
 5. If range passes, run it once with `-Mode mission -Revision <same commit>`. The same player now selects mission mode through a strictly validated optional smoke flag.
@@ -63,4 +59,4 @@ Use the existing local execution coordinator and preserve the recorded dirty che
 
 The mission smoke launches exactly two loopback peers. The remote client alone walks to the console and supplies held-F intent; both peers verify gate replication, separately confirm an authorized shot (12 to 11 ammo) and a started/completed reload back to 12 through their own authoritative/replicated state, fight three physical waves, then walk through the gate to extraction. The client sends a bounded **test-only, non-gameplay completion receipt** after it observes completion; the host waits for that receipt before shutdown. This avoids mistaking host-only completion or a fixed delay for client confirmation. The receipt handler is installed only by explicit standalone smoke execution, never a normal game session, and cannot change mission authority.
 
-This mission smoke does not cover mission rejoin/second round, deliberate incompatible-client connection attempts, downing during the mission-specific full flow, or manual controls. The native lifecycle cases and prior range smoke cover parts of those behaviors, while the core mission fixtures cover downing/revive/extraction logic. They are not substitutes for future multiplayer mission scenarios, real LAN/ten-player tests, visual review and performance profiling.
+The accepted 917d94 mission smoke did not cover rejoin/second round; the current candidate adds those checks but has not yet run them natively. Deliberate incompatible-client connection attempts, downing during the mission-specific full flow, and manual controls remain outside this smoke. The native lifecycle cases and prior range smoke cover parts of those behaviors, while the core mission fixtures cover downing/revive/extraction logic. They are not substitutes for future multiplayer mission scenarios, real LAN/ten-player tests, visual review and performance profiling.

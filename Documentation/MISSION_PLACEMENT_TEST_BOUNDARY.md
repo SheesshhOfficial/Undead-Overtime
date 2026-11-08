@@ -1,5 +1,9 @@
 # Native mission placement-failure boundary correction
 
+## Follow-up acceptance
+
+The correction was accepted at `917d94aea47d25911b730fac6f2a5cd599783d14`: 305/305 EditMode, 65/65 PlayMode, Windows build and both range/mission loopbacks passed. See [the exact result](NATIVE_ACCEPTANCE_917D94.md). The remaining sections preserve the failure and pre-acceptance correction record.
+
 ## Failed native candidate
 
 On 2026-11-08 the local execution coordinator tested exact main revision `d2b035b761245a8092c145485a79892be2774977` in Unity 6000.6.5f1. Guarded fast-forward preserved the existing dirty files. Native compilation passed; all **305 EditMode cases passed**. PlayMode finished with **64 passed / one failed / 65 total**, zero skips or inconclusive cases, in 125.52 seconds.

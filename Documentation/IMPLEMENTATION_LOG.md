@@ -221,3 +221,10 @@ Cloud core: 281/281 passed; C# 9 syntax parsing does not claim Unity API compila
 Native d2b035b compiled and passed all 305 EditMode cases, then passed 64/65 PlayMode cases. The deliberately blocked-placement test asserted power submission while its public frame still showed RestorePower, although the authoritative host had already failed and correctly rejected the command. Eight other mission cases, including the full solo mission, passed. No build or loopback followed the failed gate.
 
 Corrected only the negative-test helper: opt-in wait of at most 300 ms for a newer Failed frame with the same session/round, connection and Playing state retained. Other power-hold callers still require successful sends; mission/horde failure and power/fire/reload/movement rejection remain explicit. No runtime code, authority or network cadence changed. Actual unchanged cloud core passed 281/281; static and syntax checks passed. Native corrected suites remain pending at unchanged counts 305/65. See MISSION_PLACEMENT_TEST_BOUNDARY.md for exact evidence, result hash and guarded retest.
+
+
+## 2026-11-08: mission replay/reconnect verification candidate
+
+Recorded actual 917d94 native acceptance: 305/305 EditMode, 65/65 PlayMode, one Windows build and both default-range and full-mission two-process loopbacks. Expanded only explicit mission smoke to continue after completed extraction through lobby physics cleanup, client departure/fresh connection, locked/reset round 2, new remote power, weapon/reload receipt and shutdown. Launcher requires the new markers and unequal positive connection lifetimes. No normal gameplay/authority/transport-format/settings/material changes.
+
+Added three pure-core retirement/repeated-round cases and one native reset/power case. The initial new failure fixture was malformed and correctly rejected (283 pass / one error); fixed the fixture, not production validation. Final actual cloud run 284/284 passed, static and C# 9 syntax checks passed. Expected native 308 EditMode /66 PlayMode and extended 17 host /15 client mission markers remain pending. See MISSION_LIFECYCLE.md and its core result for exact scope and hashes.

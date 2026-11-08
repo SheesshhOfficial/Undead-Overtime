@@ -153,6 +153,30 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.MissionGateOpen, Is.True); Assert.That(range.CurrentSnapshot.EnemyCount, Is.EqualTo(2));
         }
         [UnityTest]
+        public IEnumerator RestartAfterPowerResetsGateWavesAmmoAndProgress()
+        {
+            yield return Host(); Assert.That(range.BeginRound(), Is.True);
+            long sessionId = range.CurrentSnapshot.SessionId;
+            yield return WalkTo(new Vector3(-9, 1.6f, -6.7f)); yield return HoldPower(3.6f);
+            Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.DefendDepot));
+            Assert.That(range.SendAction(RangeAction.Fire, Vector3.up), Is.True);
+            yield return new WaitForSecondsRealtime(.15f); Assert.That(range.CurrentSnapshot.Member(0).Ammo, Is.EqualTo(11));
+            Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.CurrentMission, Is.Null);
+            Assert.That(range.MissionGateOpen, Is.False); Assert.That(range.BeginRound(), Is.True);
+            Assert.That(range.CurrentSnapshot.SessionId, Is.EqualTo(sessionId)); Assert.That(range.CurrentSnapshot.RoundId, Is.EqualTo(2));
+            Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.RestorePower));
+            Assert.That(range.CurrentSnapshot.Horde.Phase, Is.EqualTo(HordePhase.Disabled)); Assert.That(range.CurrentSnapshot.EnemyCount, Is.Zero);
+            RangeMember player = range.CurrentSnapshot.Member(0);
+            Assert.That(player.Ammo, Is.EqualTo(12)); Assert.That(player.Health, Is.EqualTo(100)); Assert.That(player.Reloading, Is.False);
+            Assert.That((player.Position - HostMoveGate.Spawn(player.Slot)).LengthSquared, Is.LessThan(.0001));
+            Assert.That(range.MissionGateOpen, Is.False);
+            yield return WalkTo(new Vector3(-9, 1.6f, -6.7f)); yield return new WaitForSecondsRealtime(.4f);
+            Assert.That(range.CurrentMission.Mission.HoldSeconds, Is.Zero, "The fresh round must not acquire progress without a new power hold.");
+            yield return HoldPower(1.1f);
+            Assert.That(range.CurrentMission.Mission.HoldSeconds, Is.GreaterThan(.5).And.LessThan(2));
+            Assert.That(range.MissionGateOpen, Is.False, "Fresh interaction starts from zero rather than carrying prior progress.");
+        }
+        [UnityTest]
         public IEnumerator FullyBlockedWavePlacementFailsMissionClosed()
         {
             yield return Host(); range.BeginRound(); yield return WalkTo(new Vector3(-9, 1.6f, -6.7f));

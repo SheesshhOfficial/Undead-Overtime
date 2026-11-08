@@ -57,6 +57,45 @@ namespace UndeadOvertime.Core.Tests
             CoopMissionProtocol.TryFrame(Frame(), out MissionFrame frame);
             Assert.That(guard.TryAcceptHostPacket(LanRangeProtocol.Encode(frame.Range)), Is.False); Assert.That(guard.Mission, Is.Null);
         }
+        private static byte[] TerminalFrame(CoopMissionPhase phase, long round = 1, ulong sequence = 100)
+        {
+            bool completed = phase == CoopMissionPhase.Completed;
+            var enemies = completed ? new EnemySnapshot[4] : System.Array.Empty<EnemySnapshot>();
+            for (int i = 0; i < enemies.Length; i++) enemies[i] = new EnemySnapshot((byte)(12 + i), 0, HostInfectedEncounter.WaveSpawn(i));
+            var range = new RangeSnapshot(5, round, SessionPhase.Playing, new[] { new RangeMember(0, 1, 0, 7, false) },
+                new[] { 100, 100, 100 }, completed ? EncounterPhase.Cleared : EncounterPhase.Dormant, enemies,
+                completed ? new HordeSnapshot(HordePhase.Completed, 3, 3, 0) : HordeSnapshot.Disabled);
+            return CoopMissionProtocol.Encode(new MissionFrame(sequence, range, new CoopMissionSnapshot(5, round, phase, true, completed, 0)));
+        }
+        [TestCase(CoopMissionPhase.Completed)] [TestCase(CoopMissionPhase.Failed)]
+        public void TerminalRoundRequiresClosingLobbyBeforeFreshRoundCanReset(CoopMissionPhase phase)
+        {
+            var guard = new CoopMissionSessionReplica(); Assert.That(guard.TryAcceptHostPacket(Lobby()), Is.True);
+            Assert.That(guard.TryAcceptHostPacket(TerminalFrame(phase)), Is.True); MissionFrame terminal = guard.Mission;
+            Assert.That(guard.TryAcceptHostPacket(Frame(sequence: 101)), Is.False);
+            Assert.That(guard.TryAcceptHostPacket(Frame(round: 2)), Is.False);
+            Assert.That(guard.Mission, Is.SameAs(terminal));
+            Assert.That(guard.TryAcceptHostPacket(Lobby(round: 1)), Is.True); Assert.That(guard.Mission, Is.Null);
+            Assert.That(guard.TryAcceptHostPacket(TerminalFrame(phase, sequence: 102)), Is.False);
+            Assert.That(guard.TryAcceptHostPacket(Frame(round: 2)), Is.True);
+            Assert.That(guard.Mission.Mission.Phase, Is.EqualTo(CoopMissionPhase.RestorePower));
+            Assert.That(guard.Mission.Mission.DepotGateUnlocked, Is.False); Assert.That(guard.Mission.Sequence, Is.EqualTo(1));
+            Assert.That(guard.Mission.Range.Member(0).Ammo, Is.EqualTo(12));
+        }
+        [Test]
+        public void RepeatedCompletedRoundsNeverReopenRetiredTerminalOrLobbyPackets()
+        {
+            var guard = new CoopMissionSessionReplica(); guard.TryAcceptHostPacket(Lobby());
+            for (long round = 1; round <= 100; round++)
+            {
+                Assert.That(guard.TryAcceptHostPacket(Frame(round: round)), Is.True);
+                Assert.That(guard.TryAcceptHostPacket(TerminalFrame(CoopMissionPhase.Completed, round)), Is.True);
+                Assert.That(guard.TryAcceptHostPacket(Lobby(round: round - 1)), Is.False);
+                Assert.That(guard.TryAcceptHostPacket(Lobby(round: round)), Is.True);
+                Assert.That(guard.TryAcceptHostPacket(TerminalFrame(CoopMissionPhase.Completed, round, ulong.MaxValue)), Is.False);
+                Assert.That(guard.Mission, Is.Null); Assert.That(guard.Range.RoundId, Is.EqualTo(round));
+            }
+        }
         [Test]
         public void ClosedRoundOverflowCannotWrapIntoAValidMission()
         {
