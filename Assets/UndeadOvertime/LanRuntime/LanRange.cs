@@ -36,6 +36,7 @@ namespace UndeadOvertime.LanPrototype
         private ulong sequence;
         private int localSlot = -1;
         public bool IsBuilt { get; private set; }
+        public bool PresentationEnabled { get; private set; }
         public Camera WorldCamera => worldCamera;
         public bool IsHosting => manager != null && manager.IsHost && !stopping;
         public bool IsConnected => manager != null && manager.IsConnectedClient && !stopping;
@@ -54,10 +55,15 @@ namespace UndeadOvertime.LanPrototype
             public ulong LastSequence;
         }
         private void Start() { if (!IsBuilt) Build(worldCamera); LanLoopbackSmoke.TryStart(this); }
-        public void Build(Camera camera)
+        public void Build(Camera camera) => Build(camera, true);
+        // The explicit false option exercises the same collider-only path in editor regression tests.
+        // A null graphics device always disables presentation, even if the caller requests it.
+        public void Build(Camera camera, bool enablePresentation)
         {
             if (IsBuilt) return;
             if (camera == null) throw new ArgumentNullException(nameof(camera));
+            PresentationEnabled = enablePresentation && SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (!PresentationEnabled) camera.enabled = false;
             worldCamera = camera; camera.nearClipPlane = 0.05f; camera.farClipPlane = 100f; camera.fieldOfView = 75f;
             generated = new GameObject("LAN range generated geometry").transform; generated.SetParent(transform, false);
             Material floor = Material("Range floor", new Color(.18f, .23f, .25f));
@@ -83,14 +89,35 @@ namespace UndeadOvertime.LanPrototype
         public static Vector3 Station(int slot) => new Vector3(-9 + slot * 2, 1.6f, -8);
         private Material Material(string name, Color color)
         {
+            if (!PresentationEnabled) return null;
             Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            if (shader == null) throw new InvalidOperationException("LAN range rendering needs an included URP Lit or Standard shader.");
             var material = new Material(shader) { name = name, color = color }; materials.Add(material); return material;
         }
         private GameObject Primitive(PrimitiveType type, string name, Vector3 position, Vector3 scale, Material material)
         {
-            GameObject obj = GameObject.CreatePrimitive(type); obj.name = name;
+            GameObject obj;
+            if (PresentationEnabled)
+            {
+                obj = GameObject.CreatePrimitive(type);
+                obj.GetComponent<Renderer>().sharedMaterial = material;
+            }
+            else
+            {
+                // Keep authoritative raycasts identical without meshes, shaders or material construction.
+                obj = new GameObject(name);
+                switch (type)
+                {
+                    case PrimitiveType.Cube: obj.AddComponent<BoxCollider>().size = Vector3.one; break;
+                    case PrimitiveType.Sphere: obj.AddComponent<SphereCollider>().radius = .5f; break;
+                    case PrimitiveType.Capsule:
+                        var capsule = obj.AddComponent<CapsuleCollider>(); capsule.radius = .5f; capsule.height = 2; capsule.direction = 1; break;
+                    default: throw new ArgumentOutOfRangeException(nameof(type), "Unsupported range collider.");
+                }
+            }
+            obj.name = name;
             obj.transform.SetParent(generated, false); obj.transform.position = position; obj.transform.localScale = scale;
-            obj.GetComponent<Renderer>().sharedMaterial = material; return obj;
+            return obj;
         }
 
         private bool Prepare(string ip, ushort port)
@@ -257,10 +284,14 @@ namespace UndeadOvertime.LanPrototype
         }
         public void CaptureControls()
         {
-            if (!IsConnected || Phase != SessionPhase.Playing || localSlot < 0) return;
+            if (!PresentationEnabled || !IsConnected || Phase != SessionPhase.Playing || localSlot < 0) return;
             captured = true; waitForRelease = true; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
         }
-        public void ReleaseControls() { captured = false; waitForRelease = true; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
+        public void ReleaseControls()
+        {
+            captured = false; waitForRelease = true;
+            if (PresentationEnabled) { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
+        }
         private void OnApplicationFocus(bool focused) { if (!focused) ReleaseControls(); }
         private void OnDisable() { if (IsBuilt) StopSession("Range disabled."); }
         public bool SendAction(RangeAction action, Vector3 aim)
@@ -364,7 +395,7 @@ namespace UndeadOvertime.LanPrototype
         private void ApplyTarget(int index) { if (targets[index] != null) targets[index].SetActive(health[index] > 0); }
         private void OnGUI()
         {
-            if (!IsBuilt) return;
+            if (!IsBuilt || !PresentationEnabled) return;
             GUILayout.BeginArea(new Rect(14, 14, 510, 310), GUI.skin.box);
             GUILayout.Label("UNDEAD OVERTIME | LAN transport firing range");
             GUILayout.Label("Fixed stations, shared targets. Not the multiplayer zombie game yet.");

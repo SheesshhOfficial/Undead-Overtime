@@ -21,7 +21,7 @@ The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderP
 
 Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
 
-Run all suites after pulling: **81 authored EditMode cases and 18 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs.
+Run all suites after pulling: **81 authored EditMode cases and 20 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers.
 
 Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
 
@@ -40,7 +40,7 @@ Optional parameters:
 
 If execution policy, SmartScreen, an OS permission prompt or another security restriction blocks execution, report the exact blocker. Do not use policy-bypass flags, change security settings or switch routes to defeat it.
 
-The launcher starts the host with normal Unity standalone `-batchmode -nographics` arguments. It waits up to 30 seconds for the host's own ready log before launching the client. Each player has a 90-second monotonic test deadline; the launcher has a 120-second monotonic deadline from the host launch. On failure/timeout, it terminates only its retained child-process objects, never the editor or pre-existing player processes.
+The launcher starts the host with normal Unity standalone `-batchmode -nographics` arguments. With a null graphics device, the range builds colliders only and disables camera rendering, HUD and cursor capture. No shaders or materials are looked up or constructed on this path; the authoritative target geometry, camera transform used for aiming, and networking remain active. It waits up to 30 seconds for the host's own ready log before launching the client. Each player has a 90-second monotonic test deadline; the launcher has a 120-second monotonic deadline from the host launch. On failure/timeout, it terminates only its retained child-process objects, never the editor or pre-existing player processes.
 
 No game code launches another executable. The game accepts only role, port, run ID and revision test flags, always uses `127.0.0.1`, and writes results only into its own build directory under a validated hexadecimal run ID. Editor executions do not start this mode.
 
@@ -85,3 +85,20 @@ Reported for exact revision `b18b57b0144927363f05636723a0a360ad4cd39d` on Unity 
 - The generated DefaultNetworkPrefabs asset is an empty NGO NetworkPrefabsList. It and its metadata remain local and unchanged.
 
 These findings establish the previous build/test baseline, not this new harness's execution result. No two-process or real-LAN pass has been claimed yet.
+
+## 2026-11-08: first harness execution and headless startup fix
+
+Exact tested revision `bf881d8d3f7d7c01f5dd4f17121cb0fb1a8867d2`: compilation succeeded, 81/81 EditMode and 18/18 PlayMode tests passed, and the Windows player rebuilt successfully. The first standalone script invocation **failed**, exit 1, waiting 30 seconds for the host-ready marker. `host.log` recorded `ArgumentNullException` in `Material(Shader)` through `LanRange.Material`, `Build` and `Start` with NullGfxDevice. It failed before the client was launched; there were no per-peer JSON reports or summary. No player process remained afterward. All nine preserved local generated-file hashes remained unchanged. Player logs also contained Unity telemetry connection failures; no telemetry, cloud or security setting was changed as part of diagnosis.
+
+The follow-up source fix separates presentation from collision construction. `Build(camera)` automatically uses collider-only geometry on `GraphicsDeviceType.Null`; `Build(camera, false)` exercises the same path in editor tests. Five boxes, three sphere targets and ten disabled station capsules retain the normal primitive dimensions/transforms. Disabled rendering does not disable physics or host networking. A graphical build still reports a missing shader as an explicit error instead of silently hiding a broken rendered scene.
+
+Rebuild the player after pulling this fix, then run the script again with the new exact revision. The two new tests are authored regressions, not a substitute for rerunning the actual null-graphics standalone processes. This entry records a failure and candidate fix, **not** a two-process pass.
+
+For reference, the previously successful supported local package-resolution commands were:
+
+```powershell
+unity command package resolve --project-path 'G:\Unity Projects\Undead Overtime' --format json
+unity command script recompile_status --project-path 'G:\Unity Projects\Undead Overtime' --format json
+```
+
+Resolve returned completed/applied with `requiresRecompile: true`. Recompile status was polled through compiling and a transient editor-unavailable domain reload until ready, with completed/failed:false and no errors. Do not change package versions or treat that transient reload status as a reason to launch a second editor.
