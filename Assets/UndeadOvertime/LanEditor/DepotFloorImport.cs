@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace UndeadOvertime.LanPrototype.Editor
 {
@@ -62,24 +63,72 @@ namespace UndeadOvertime.LanPrototype.Editor
                 if (!(AssetImporter.GetAtPath(path) is ModelImporter) || AssetDatabase.LoadAssetAtPath<GameObject>(path) == null)
                     throw new InvalidOperationException("Depot floor model did not import: " + path + ". Inspect importer schema and native Console diagnostics.");
             }
+            // Persist only the two approved material assets after all typed dependencies resolve.
+            // Runtime-only keyword changes cannot preserve build-time shader variants.
+            int savedMaterials = 0;
+            Material[] materials = { ValidateMaterialDependencies("floor"), ValidateMaterialDependencies("concrete") };
+            foreach (Material material in materials)
+            {
+                if (ConfigureRequiredKeywords(material))
+                {
+                    EditorUtility.SetDirty(material);
+                    AssetDatabase.SaveAssetIfDirty(material);
+                    savedMaterials++;
+                }
+            }
+            // One real serialization round trip, not an in-memory success assertion or retry loop.
+            Import("floor_material.mat"); Import("concrete_material.mat");
+            ValidateMaterialAssets();
+            Debug.Log("UO_DEPOT_FLOOR_IMPORT_OK files=11 saved-materials=" + savedMaterials + " reloaded-keywords-and-dependencies=verified; geometry/rendering acceptance still requires tests.");
+        }
+        /// <summary>Read-only player-build gate. Does not repair or save project state implicitly.</summary>
+        public static void ValidateMaterialAssets()
+        {
             foreach (string prefix in new[] { "floor", "concrete" })
             {
-                string path = AssetRoot + prefix + "_material.mat";
-                Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
-                if (material == null || material.shader == null || material.shader.name != "Universal Render Pipeline/Lit")
-                    throw new InvalidOperationException("Depot floor material or URP Lit shader did not resolve: " + path);
-                string[] properties = { "_BaseMap", "_BumpMap", "_MetallicGlossMap" };
-                string[] suffixes = { "basecolor", "normal_opengl", "metallic_smoothness" };
-                for (int i = 0; i < properties.Length; i++)
+                Material material = ValidateMaterialDependencies(prefix);
+                foreach (string name in new[] { "_NORMALMAP", "_METALLICSPECGLOSSMAP" })
                 {
-                    Texture2D expected = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetRoot + prefix + "_" + suffixes[i] + ".png");
-                    if (expected == null || material.GetTexture(properties[i]) != expected)
-                        throw new InvalidOperationException("Depot floor material dependency did not resolve: " + path + " property " + properties[i]);
+                    LocalKeyword keyword = material.shader.keywordSpace.FindKeyword(name);
+                    if (!keyword.isValid || !material.IsKeywordEnabled(keyword) || !material.IsKeywordEnabled(name))
+                        throw new InvalidOperationException("Depot floor material " + prefix + " is missing declared/enabled PBR keyword " + name + ". Run the explicit depot-floor reimport/setup command before building.");
                 }
-                if (!material.IsKeywordEnabled("_NORMALMAP") || !material.IsKeywordEnabled("_METALLICSPECGLOSSMAP"))
-                    throw new InvalidOperationException("Depot floor material PBR shader keywords are missing: " + path);
             }
-            Debug.Log("UO_DEPOT_FLOOR_IMPORT_OK files=11 assets-and-material-dependencies=resolved; geometry/rendering acceptance still requires tests.");
+        }
+        /// <summary>Normalize only the two required local shader flags. File persistence is separately scoped.</summary>
+        public static bool ConfigureRequiredKeywords(Material material)
+        {
+            if (material == null) throw new ArgumentNullException(nameof(material));
+            if (material.shader == null || material.shader.name != "Universal Render Pipeline/Lit")
+                throw new InvalidOperationException("Depot floor keyword setup requires the installed URP Lit shader.");
+            foreach (string property in new[] { "_BaseMap", "_BumpMap", "_MetallicGlossMap" })
+                if (!(material.GetTexture(property) is Texture2D))
+                    throw new InvalidOperationException("Depot floor keyword setup requires resolved Texture2D dependency " + property + ".");
+            LocalKeyword normal = material.shader.keywordSpace.FindKeyword("_NORMALMAP");
+            LocalKeyword metallic = material.shader.keywordSpace.FindKeyword("_METALLICSPECGLOSSMAP");
+            if (!normal.isValid || !metallic.isValid)
+                throw new InvalidOperationException("Installed URP Lit shader does not declare the required depot floor PBR keywords.");
+            bool needsNormal = !material.IsKeywordEnabled(normal), needsMetallic = !material.IsKeywordEnabled(metallic);
+            if (needsNormal) material.SetKeyword(normal, true);
+            if (needsMetallic) material.SetKeyword(metallic, true);
+            return needsNormal || needsMetallic;
+        }
+        private static Material ValidateMaterialDependencies(string prefix)
+        {
+            string path = AssetRoot + prefix + "_material.mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null || material.shader == null || material.shader.name != "Universal Render Pipeline/Lit" ||
+                AssetDatabase.GetAssetPath(material.shader) != "Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader")
+                throw new InvalidOperationException("Depot floor material or installed URP Lit shader did not resolve: " + path);
+            string[] properties = { "_BaseMap", "_BumpMap", "_MetallicGlossMap" };
+            string[] suffixes = { "basecolor", "normal_opengl", "metallic_smoothness" };
+            for (int i = 0; i < properties.Length; i++)
+            {
+                Texture2D expected = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetRoot + prefix + "_" + suffixes[i] + ".png");
+                if (expected == null || material.GetTexture(properties[i]) != expected)
+                    throw new InvalidOperationException("Depot floor material dependency did not resolve: " + path + " property " + properties[i]);
+            }
+            return material;
         }
         private static void RequireImporterMetadata(string file, string importerName, int minimumVersion)
         {

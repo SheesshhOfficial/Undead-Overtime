@@ -63,6 +63,44 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(material.GetTexture("_MetallicGlossMap"), Is.EqualTo(packed), prefix + " _MetallicGlossMap reference");
             Assert.That(material.GetFloat("_Smoothness"), Is.EqualTo(1)); Assert.That(material.GetFloat("_SmoothnessTextureChannel"), Is.Zero);
         }
+        [TestCase("floor")] [TestCase("concrete")]
+        public void ExplicitKeywordSetupIsIdempotentAndPreservesOtherMaterialState(string prefix)
+        {
+            Material source = AssetDatabase.LoadAssetAtPath<Material>(Root + prefix + "_material.mat");
+            Assert.That(source, Is.Not.Null);
+            var material = new Material(source); // Tests never save or mutate the project asset.
+            try
+            {
+                LocalKeyword normal = material.shader.keywordSpace.FindKeyword("_NORMALMAP");
+                LocalKeyword metallic = material.shader.keywordSpace.FindKeyword("_METALLICSPECGLOSSMAP");
+                LocalKeyword alpha = material.shader.keywordSpace.FindKeyword("_ALPHATEST_ON");
+                Assert.That(normal.isValid && metallic.isValid && alpha.isValid, Is.True);
+                material.SetKeyword(normal, false); material.SetKeyword(metallic, false); material.SetKeyword(alpha, true);
+                Texture color = material.GetTexture("_BaseMap"), bump = material.GetTexture("_BumpMap"), packed = material.GetTexture("_MetallicGlossMap");
+                float smoothness = material.GetFloat("_Smoothness"); int queue = material.renderQueue;
+                Assert.That(UndeadOvertime.LanPrototype.Editor.DepotFloorImport.ConfigureRequiredKeywords(material), Is.True);
+                Assert.That(material.IsKeywordEnabled(normal) && material.IsKeywordEnabled(metallic), Is.True);
+                Assert.That(material.IsKeywordEnabled(alpha), Is.True, "Unrelated local keyword must be preserved.");
+                Assert.That(UndeadOvertime.LanPrototype.Editor.DepotFloorImport.ConfigureRequiredKeywords(material), Is.False, "A second setup is a no-op.");
+                Assert.That(material.GetTexture("_BaseMap"), Is.SameAs(color)); Assert.That(material.GetTexture("_BumpMap"), Is.SameAs(bump));
+                Assert.That(material.GetTexture("_MetallicGlossMap"), Is.SameAs(packed));
+                Assert.That(material.GetFloat("_Smoothness"), Is.EqualTo(smoothness)); Assert.That(material.renderQueue, Is.EqualTo(queue));
+            }
+            finally { Object.DestroyImmediate(material); }
+        }
+        [Test]
+        public void KeywordSetupRejectsMissingTextureWithoutChangingFlags()
+        {
+            Material source = AssetDatabase.LoadAssetAtPath<Material>(Root + "floor_material.mat");
+            Assert.That(source, Is.Not.Null); var material = new Material(source);
+            try
+            {
+                material.DisableKeyword("_NORMALMAP"); material.DisableKeyword("_METALLICSPECGLOSSMAP"); material.SetTexture("_BumpMap", null);
+                Assert.Throws<System.InvalidOperationException>(() => UndeadOvertime.LanPrototype.Editor.DepotFloorImport.ConfigureRequiredKeywords(material));
+                Assert.That(material.IsKeywordEnabled("_NORMALMAP"), Is.False); Assert.That(material.IsKeywordEnabled("_METALLICSPECGLOSSMAP"), Is.False);
+            }
+            finally { Object.DestroyImmediate(material); }
+        }
         [TestCase("floor", "basecolor", 2048)] [TestCase("floor", "normal_opengl", 2048)] [TestCase("floor", "metallic_smoothness", 2048)]
         [TestCase("concrete", "basecolor", 1024)] [TestCase("concrete", "normal_opengl", 1024)] [TestCase("concrete", "metallic_smoothness", 1024)]
         public void FullResolutionMapsHaveExplicitColorNormalAndDataImport(string prefix, string suffix, int dimension)

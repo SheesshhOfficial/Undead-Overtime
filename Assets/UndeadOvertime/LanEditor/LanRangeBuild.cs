@@ -11,6 +11,7 @@ namespace UndeadOvertime.LanPrototype.Editor
         [MenuItem("Undead Overtime/Build LAN test player (Windows)")]
         public static void BuildWindows()
         {
+            DepotFloorImport.ValidateMaterialAssets();
             string directory = Path.GetFullPath(Path.Combine("Builds", "LanRange"));
             Directory.CreateDirectory(directory);
             BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
