@@ -91,11 +91,30 @@ namespace UndeadOvertime.LanPrototype.Tests
         public void MissionIsOptInAndDoesNotCreateGeometryOrNetworkingOnBuild()
         {
             Assert.That(range.MissionMode, Is.False); Assert.That(range.CurrentMission, Is.Null);
+            Assert.That(range.MissionNavigationText, Is.Empty);
             Assert.That(NetworkManager.Singleton, Is.Null); Assert.That(range.SendPowerIntent(true), Is.False);
             Assert.That(range.SetMissionMode(true), Is.True); Assert.That(range.IsBusy, Is.False);
             foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
                 if (child.name.StartsWith("Shared target ")) Assert.That(child.gameObject.activeSelf, Is.False);
             Assert.That(range.SetMissionMode(false), Is.True);
+        }
+        [UnityTest]
+        public IEnumerator MissionWaypointTracksViewWithoutChangingAuthoritativeState()
+        {
+            yield return Host(); Assert.That(range.BeginRound(), Is.True);
+            MissionFrame before = range.CurrentMission;
+            range.WorldCamera.transform.rotation = Quaternion.identity;
+            Assert.That(range.MissionNavigationText, Is.EqualTo("Waypoint: Power console | 3 m | ahead"));
+            range.WorldCamera.transform.rotation = Quaternion.Euler(0, 180, 0);
+            Assert.That(range.MissionNavigationText, Is.EqualTo("Waypoint: Power console | 3 m | behind"));
+            Assert.That(range.CurrentMission, Is.SameAs(before));
+            Assert.That(range.CurrentSnapshot.Member(0).Ammo, Is.EqualTo(12));
+            Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
+            Assert.That((range.CurrentSnapshot.Member(0).Position - before.Range.Member(0).Position).LengthSquared, Is.Zero);
+            Assert.That((range.CurrentSnapshot.Member(0).Position - HostMoveGate.Spawn(0)).LengthSquared, Is.LessThan(.0001));
+            Assert.That(range.MissionGateOpen, Is.False); Assert.That(range.ControlsCaptured, Is.False);
+            Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.MissionNavigationText, Is.Empty);
+            range.StopSession(); Assert.That(range.MissionNavigationText, Is.Empty);
         }
         [Test]
         public void MaximumMissionPayloadAcceptsConsumedPrefixButLegacyBoundStillRejectsIt()
@@ -150,6 +169,7 @@ namespace UndeadOvertime.LanPrototype.Tests
             range.SendAction(RangeAction.Fire, Vector3.up); yield return new WaitForSecondsRealtime(.15f);
             Assert.That(range.CurrentMission.Mission.HoldSeconds, Is.Zero, "A shot interrupts the interaction.");
             yield return HoldPower(3.6f); Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.DefendDepot));
+            Assert.That(range.MissionNavigationText, Is.Empty, "The power waypoint must disappear during defense.");
             Assert.That(range.MissionGateOpen, Is.True); Assert.That(range.CurrentSnapshot.EnemyCount, Is.EqualTo(2));
         }
         [UnityTest]

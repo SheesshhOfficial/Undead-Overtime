@@ -228,3 +228,10 @@ Corrected only the negative-test helper: opt-in wait of at most 300 ms for a new
 Recorded actual 917d94 native acceptance: 305/305 EditMode, 65/65 PlayMode, one Windows build and both default-range and full-mission two-process loopbacks. Expanded only explicit mission smoke to continue after completed extraction through lobby physics cleanup, client departure/fresh connection, locked/reset round 2, new remote power, weapon/reload receipt and shutdown. Launcher requires the new markers and unequal positive connection lifetimes. No normal gameplay/authority/transport-format/settings/material changes.
 
 Added three pure-core retirement/repeated-round cases and one native reset/power case. The initial new failure fixture was malformed and correctly rejected (283 pass / one error); fixed the fixture, not production validation. Final actual cloud run 284/284 passed, static and C# 9 syntax checks passed. Expected native 308 EditMode /66 PlayMode and extended 17 host /15 client mission markers remain pending. See MISSION_LIFECYCLE.md and its core result for exact scope and hashes.
+
+
+## 2026-11-08: view-relative mission waypoint aid candidate
+
+While the user may be trying the accepted 917d94 player, prepared a cloud-only fixed-objective HUD distance/bearing line on top of a150bc3. It is wired directly into the mission HUD/menu and reads published mission/player state plus the view orientation; it never authorizes interaction or changes gameplay state. No PC or local acceptance action was performed. The reviewed guidance is published after the replay candidate; local validation remains on hold while the user plays.
+
+Actual pure-core run passed 310/310 including 26 new direction/lifecycle/numeric cases. Static and syntax checks passed; independent review caught and corrected an exact-float spawn assertion in the authored native case. Expected future native inventory is 334 EditMode /67 PlayMode, not yet run. Native visual readability and ordinary manual input require later review. See MISSION_NAVIGATION.md and its core result.

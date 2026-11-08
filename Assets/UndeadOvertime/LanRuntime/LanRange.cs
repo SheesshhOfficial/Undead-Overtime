@@ -694,7 +694,8 @@ namespace UndeadOvertime.LanPrototype
             if (!IsBuilt || !PresentationEnabled) return;
             if (captured && TryGetLocalMember(out RangeMember hud))
             {
-                GUILayout.BeginArea(new Rect(14, 14, 590, 180), GUI.skin.box);
+                string navigation = MissionNavigationText;
+                GUILayout.BeginArea(new Rect(14, 14, 590, navigation.Length > 0 ? 205 : 180), GUI.skin.box);
                 GUILayout.Label("UNDEAD OVERTIME | " + (viewMode == PlayerViewMode.FirstPerson ? "FIRST PERSON" : "THIRD PERSON"));
                 GUILayout.Label("Health " + hud.Health + "/100  |  Ammo " + hud.Ammo + "/12" + (hud.Reloading ? "  RELOADING" : ""));
                 if (snapshot.Horde.Phase != HordePhase.Disabled)
@@ -703,6 +704,7 @@ namespace UndeadOvertime.LanPrototype
                 else GUILayout.Label("Encounter " + snapshot.Encounter.Phase);
                 if (hud.ReviveTargetSlot != 255) GUILayout.Label("Reviving teammate " + (hud.ReviveTargetSlot + 1) + "  " + hud.ReviveProgress + "%");
                 if (MissionMode) GUILayout.Label(MissionObjectiveText);
+                if (navigation.Length > 0) GUILayout.Label(navigation);
                 GUILayout.Label("WASD move | Mouse shoot | R reload | E revive | F power | V view | Esc menu");
                 GUILayout.EndArea();
                 GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
@@ -711,6 +713,8 @@ namespace UndeadOvertime.LanPrototype
             GUILayout.BeginArea(new Rect(14, 14, 760, 500), GUI.skin.box);
             GUILayout.Label(MissionMode ? "UNDEAD OVERTIME | DEPOT ESCAPE MISSION" : "UNDEAD OVERTIME | LAN transport firing range");
             if (MissionMode) GUILayout.Label(MissionObjectiveText);
+            string menuNavigation = MissionNavigationText;
+            if (menuNavigation.Length > 0) GUILayout.Label(menuNavigation);
             GUILayout.Label("Host-owned walking, targets, infected and bounded co-op waves. Prototype art.");
             GUILayout.Label(status);
             if (!IsBusy)

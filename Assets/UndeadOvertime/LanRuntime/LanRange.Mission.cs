@@ -19,6 +19,18 @@ namespace UndeadOvertime.LanPrototype
         public bool MissionMode { get; private set; }
         public MissionFrame CurrentMission => missionFrame;
         public bool MissionGateOpen => missionPresentation != null && missionPresentation.GateUnlocked;
+        public string MissionNavigationText
+        {
+            get
+            {
+                if (!MissionMode || !IsConnected || Phase != SessionPhase.Playing || missionFrame == null || worldCamera == null ||
+                    !TryGetLocalMember(out RangeMember player) || player.Health == 0 ||
+                    !MissionNavigationHint.TryCreate(missionFrame.Mission, player.Position, ToCore(worldCamera.transform.forward),
+                        DepotMissionPresentation.PowerControl, DepotMissionPresentation.ExtractionCenter, out MissionNavigationHint hint)) return "";
+                return "Waypoint: " + hint.GoalText + " | " + Math.Ceiling(hint.DistanceMeters).ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    " m | " + hint.BearingText;
+            }
+        }
         private bool MissionTerminal => MissionMode && (hostMission != null ? Terminal(hostMission.Snapshot.Phase) : missionFrame != null && Terminal(missionFrame.Mission.Phase));
         private static bool Terminal(CoopMissionPhase phase) => phase == CoopMissionPhase.Completed || phase == CoopMissionPhase.Failed;
         public bool SetMissionMode(bool enabled)
