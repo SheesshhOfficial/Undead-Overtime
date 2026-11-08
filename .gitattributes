@@ -169,3 +169,15 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# Original depot floor runtime packet uses small ordinary Git binaries, not LFS pointers.
+# Scope is exactly the nine reviewed files; unrelated model/image LFS rules remain.
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD0.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD1.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD2.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_basecolor.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_metallic_smoothness.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_normal_opengl.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_basecolor.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_metallic_smoothness.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_normal_opengl.png -filter -diff -merge -text

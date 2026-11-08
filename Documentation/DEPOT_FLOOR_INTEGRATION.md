@@ -36,3 +36,11 @@ Headless execution creates no floor meshes, renderers, materials or texture load
 6. Restore the session, stop Play Mode, ensure no player process remains, and compare existing dirty hashes. Return any new importer-generated changes separately for cloud review; never silently absorb unrelated settings.
 
 Before execution, cloud static checks, Blender export/roundtrip checks and source review only establish a candidate. Real LAN, ten-player behavior, manual controls, final environment appearance and performance remain unverified.
+
+## Import-preflight failure and scoped Git storage correction
+
+The first local attempt fast-forwarded to be0c582 and preserved all nine prior generated-file hashes, but did not reach Unity import/tests. Existing global .gitattributes rules declared every FBX/PNG to be LFS while this selected packet was committed as ordinary raw Git objects. Git warned that nine files should have been pointers; status then attempted an LFS temporary write and failed with Access is denied. Separately, the shell could not resolve the previously used bare Unity CLI command; existing-installation discovery is required, not a silent reinstall. No new Unity acceptance is claimed for be0c582.
+
+The cloud correction appends exact-path -filter/-diff/-merge/-text overrides for only these nine reviewed files. No other LFS patterns, pointers, Git configuration, permissions or local files are rewritten. `python Tools/validate_gitattributes.py` verifies 48 attribute assertions in a temporary isolated Git repository, including unrelated FBX/PNG/OBJ files retaining LFS. Static checks continue to verify the runtime bytes against the packet receipt.
+
+Before local application, compare current HEAD, the .gitattributes index object and working bytes to the known unmodified predecessor. Try only an authorized fast-forward. If Git cannot reach the correction because the old filter executes during preflight, stop and report the exact output. A narrowly scoped application of the already-published .gitattributes to both index and worktree, followed by fast-forward, must preserve the original nine changes and be authorized; never use reset, stash, filter-disable flags, permission changes or LFS migration as a substitute.
