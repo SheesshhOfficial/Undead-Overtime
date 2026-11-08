@@ -60,6 +60,7 @@ namespace UndeadOvertime.LanPrototype
                 {
                     DepotConsolePresentation.Create(Root, concreteMaterial);
                     console.GetComponent<Renderer>().enabled = false;
+                    DepotSafetyMarkings.Create(Root, controlMaterial);
                 }
                 // This is a marker, never a second floor or blocking/trigger collision surface.
                 Part("Mission extraction marker", new Vector3(0, .025f, 12), new Vector3(4, .025f, 4), extractionMaterial, false);

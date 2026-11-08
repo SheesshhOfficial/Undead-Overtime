@@ -8,7 +8,7 @@ The accepted native mission baseline is **917d94**: clean compilation, **305 Edi
 
 Select **Depot mission** before Host/Join on every peer; restore power with F, survive three waves, then gather at extraction. Range mode remains the default. [Mission controls and authority](Documentation/PLAYABLE_DEPOT_MISSION.md).
 
-**Current candidate builds the depot area before combined testing**, as requested: view-relative objective guidance, original concrete on partitions/perimeter, gate relief and the selected original electrical cabinet with three LODs and a measured collision proxy. It also expands mission replay/reconnect checks. These changes are cloud-authored and source-checked, **not yet accepted in native Unity**. [Combined depot acceptance plan](Documentation/DEPOT_CONSOLE.md). The accepted player remains the 917d94 baseline above; preserve local files and do not reimport or save the existing floor materials.
+**Current candidate builds the depot area before combined testing**, as requested: view-relative objective guidance, original concrete on partitions/perimeter, gate relief, the selected original electrical cabinet with three LODs and a measured collision proxy, and renderer-only loading-bay/safety paint. It also expands mission replay/reconnect checks. These changes are cloud-authored and source-checked, **not yet accepted in native Unity**. [Combined depot acceptance plan](Documentation/DEPOT_CONSOLE.md) and [safety-paint scope](Documentation/DEPOT_SAFETY_MARKINGS.md). The accepted player remains the 917d94 baseline above; preserve local files and do not reimport or save the existing floor materials.
 
 ## Playable prototype
 

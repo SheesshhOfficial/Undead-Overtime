@@ -113,8 +113,9 @@ namespace UndeadOvertime.LanPrototype.Tests
         public void RenderedPartitionsAndShutterPreserveCollidersAndOpenState()
         {
             layout = Rendered(); Material concrete = DepotFloorPresentation.LoadConcreteMaterial();
-            Assert.That(layout.ArchitecturalDetailsEnabled, Is.True); Assert.That(layout.Root.childCount, Is.EqualTo(6));
+            Assert.That(layout.ArchitecturalDetailsEnabled, Is.True); Assert.That(layout.Root.childCount, Is.EqualTo(7));
             Assert.That(layout.Root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(2));
+            Assert.That(layout.Root.GetComponentsInChildren<DepotSafetyMarkings>().Length, Is.EqualTo(1));
             foreach (string name in new[] { "Mission west partition", "Mission east partition" })
             {
                 var wall = layout.Root.Find(name); Assert.That(wall.GetComponent<Renderer>().sharedMaterial, Is.SameAs(concrete));
@@ -161,6 +162,7 @@ namespace UndeadOvertime.LanPrototype.Tests
             layout = new DepotMissionPresentation(root.transform, 5, 2, false);
             Assert.That(layout.ArchitecturalDetailsEnabled, Is.False); Assert.That(layout.Root.childCount, Is.EqualTo(5));
             Assert.That(layout.Root.GetComponentsInChildren<DepotWallSurface>(true), Is.Empty);
+            Assert.That(layout.Root.GetComponentsInChildren<DepotSafetyMarkings>(true), Is.Empty);
             Assert.That(layout.Root.GetComponentsInChildren<MeshFilter>(true), Is.Empty);
             Assert.That(layout.Root.Find("Mission route gate").childCount, Is.Zero);
             Assert.That(layout.Root.GetComponentsInChildren<Collider>(true).Length, Is.EqualTo(4));
@@ -177,10 +179,12 @@ namespace UndeadOvertime.LanPrototype.Tests
             for (int i = 0; i < 120 && !range.IsConnected; i++) yield return null;
             Assert.That(range.IsConnected, Is.True); Assert.That(range.BeginRound(), Is.True);
             Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(6));
+            Assert.That(root.GetComponentsInChildren<DepotSafetyMarkings>().Length, Is.EqualTo(1));
             Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.RestorePower));
             Assert.That(range.ReturnToLobby(), Is.True); Assert.That(root.GetComponentsInChildren<DepotWallSurface>(), Is.Empty);
             yield return null; yield return null;
             Assert.That(root.GetComponentsInChildren<DepotWallSurface>(true), Is.Empty);
+            Assert.That(root.GetComponentsInChildren<DepotSafetyMarkings>(true), Is.Empty);
             foreach (string name in new[] { "North wall", "South wall", "West wall", "East wall" })
                 Assert.That(root.transform.Find("LAN range generated geometry/" + name).GetComponent<Renderer>().enabled, Is.True);
             Assert.That(range.BeginRound(), Is.True); Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(6));

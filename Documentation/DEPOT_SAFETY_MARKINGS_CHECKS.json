@@ -1,0 +1,90 @@
+{
+  "base": "73027a78656213563411472e07dd51a9ed6cb638",
+  "scope": "Source review, layout arithmetic, static consistency and C# syntax only; no Unity API binding, native test or visual acceptance.",
+  "static": {
+    "source_assets": 100,
+    "assemblies": 9,
+    "metadata_guids": 116,
+    "attribute_assertions": 72,
+    "malformed_importer_fixtures": 24,
+    "csharp9_syntax_files": 71,
+    "csharp9_syntax_errors": 0
+  },
+  "layout_arithmetic": {
+    "quads": 41,
+    "triangles": 82,
+    "vertices": 164,
+    "renderer_count": 1,
+    "material_slots": 1,
+    "rectangle_pairs_checked": 820,
+    "positive_area_overlaps": 0,
+    "gate_clearance_preserved": true,
+    "extraction_clearance_preserved": true,
+    "scope": "Independent arithmetic over authored layout coordinates, not executed Unity mesh or physics."
+  },
+  "source_review": "No blocker found in final read-only review, including platform-aware graphics contract.",
+  "unchanged_core_evidence": {
+    "result_file": "DEPOT_ARCHITECTURE_CORE_RESULT.json",
+    "passed": 310,
+    "source_and_lock_hashes_matched": 32,
+    "new_core_execution": false
+  },
+  "native_expected": {
+    "EditMode": 340,
+    "PlayMode": 94,
+    "new_paint_PlayMode_cases": 12
+  },
+  "native_status": "Not run; user requested combined later acceptance.",
+  "sources": [
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotSafetyMarkings.cs",
+      "bytes": 8055,
+      "sha256": "b65dd7452cc327e48792bbe8898c0d197f78f602738a64db810be1bdafce0976"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotSafetyMarkings.cs.meta",
+      "bytes": 60,
+      "sha256": "ebc41c71cae45155f5fe8b91759e015b9dae29282c72288d6e85a75af28efb31"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotSafetyMarkingsTests.cs",
+      "bytes": 19674,
+      "sha256": "ee84f35d07e263bdaf2ec11f4ffa3d80d2a2cdf5f6a6f1e00bc61bed6cbba713"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotSafetyMarkingsTests.cs.meta",
+      "bytes": 60,
+      "sha256": "1f7f029ef2241a82a0d8ba51a712bcf5d8acc741be75a94427e060b5fc11096b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotMissionPresentation.cs",
+      "bytes": 10665,
+      "sha256": "5e71d3d54ebe99ceb2d6d7a28d490a38b5f365a9277d577317b011e8f87181ae"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotArchitectureTests.cs",
+      "bytes": 13109,
+      "sha256": "c568719a63aa34dfb5bb8a2aa9ff8f321334a9bf0908d874e5882c1efb81e255"
+    },
+    {
+      "path": "Documentation/DEPOT_SAFETY_MARKINGS.md",
+      "bytes": 3744,
+      "sha256": "890d4bbab53866ba6db11e8b1d1aa1edea3cf3962643d2c99e5207a02f34f8c7"
+    },
+    {
+      "path": "Documentation/DEPOT_CONSOLE.md",
+      "bytes": 7405,
+      "sha256": "c84a5940ecbe9a48ae96c13508c60d08e81cb6c7f904716c4c5a978ea9469c96"
+    },
+    {
+      "path": "Documentation/IMPLEMENTATION_LOG.md",
+      "bytes": 42342,
+      "sha256": "70e61c33d0f1e398c92423c05c2701974a8c1a89adc107f542732716769b6226"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4791,
+      "sha256": "69f1c79d20c1181bebb23134e61320d3c36eabf31767fef4c2c38dc878da79c0"
+    }
+  ]
+}
