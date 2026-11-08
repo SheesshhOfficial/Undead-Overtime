@@ -214,3 +214,10 @@ No VENOM files were touched. Native material acceptance remains pinned to 4b7e1a
 Recorded exact native acceptance of 802ce58 (288 EditMode, 56 PlayMode, Windows build and two-process range regression), with preserved local state and native telemetry caveats. Wired the mission owner, physical gate/console/extraction presentation and coherent state capture into an opt-in LanRange session. Added a distinct negotiated protocol, host-only power input, session/round replica guard, F controls/objective HUD, terminal/lifecycle cleanup and a bounded gate pursuit waypoint. Training targets are disabled in mission mode. Default range behavior remains separate.
 
 Cloud core: 281/281 passed; C# 9 syntax parsing does not claim Unity API compilation. Added nine authored native mission cases and a separate two-process mission smoke scenario with a client completion receipt; these new paths are unrun pending exact-revision native acceptance. No material, import metadata, scene, package, project settings or local file changes. See PLAYABLE_DEPOT_MISSION.md and its core result record.
+
+
+## 2026-11-08: negative mission placement test publication boundary
+
+Native d2b035b compiled and passed all 305 EditMode cases, then passed 64/65 PlayMode cases. The deliberately blocked-placement test asserted power submission while its public frame still showed RestorePower, although the authoritative host had already failed and correctly rejected the command. Eight other mission cases, including the full solo mission, passed. No build or loopback followed the failed gate.
+
+Corrected only the negative-test helper: opt-in wait of at most 300 ms for a newer Failed frame with the same session/round, connection and Playing state retained. Other power-hold callers still require successful sends; mission/horde failure and power/fire/reload/movement rejection remain explicit. No runtime code, authority or network cadence changed. Actual unchanged cloud core passed 281/281; static and syntax checks passed. Native corrected suites remain pending at unchanged counts 305/65. See MISSION_PLACEMENT_TEST_BOUNDARY.md for exact evidence, result hash and guarded retest.

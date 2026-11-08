@@ -49,13 +49,42 @@ namespace UndeadOvertime.LanPrototype.Tests
             }
             Assert.Fail("Host movement did not reach its bounded mission waypoint.");
         }
-        private IEnumerator HoldPower(float seconds)
+        private IEnumerator HoldPower(float seconds, bool expectPlacementFailure = false)
         {
             double end = Time.realtimeSinceStartupAsDouble + seconds;
             while (Time.realtimeSinceStartupAsDouble < end && range.CurrentMission.Mission.Phase == CoopMissionPhase.RestorePower)
             {
                 range.SendAction(RangeAction.Move, Vector3.zero); range.SendAction(RangeAction.Revive, Vector3.zero);
-                Assert.That(range.SendPowerIntent(true), Is.True); yield return new WaitForSecondsRealtime(.05f);
+                bool submitted = range.SendPowerIntent(true);
+                if (!submitted && expectPlacementFailure)
+                {
+                    // The host rejects terminal actions immediately, before its next 10 Hz public frame.
+                    // Only this deliberate placement-failure case may observe that short transition gap.
+                    long sessionId = range.CurrentMission.Range.SessionId, roundId = range.CurrentMission.Range.RoundId;
+                    ulong staleSequence = range.CurrentMission.Sequence;
+                    double publishDeadline = Time.realtimeSinceStartupAsDouble + .3;
+                    while (range.CurrentMission != null && range.CurrentMission.Mission.Phase == CoopMissionPhase.RestorePower &&
+                        Time.realtimeSinceStartupAsDouble < publishDeadline)
+                    {
+                        Assert.That(range.IsConnected, Is.True);
+                        Assert.That(range.Phase, Is.EqualTo(SessionPhase.Playing));
+                        Assert.That(range.CurrentMission.Range.SessionId, Is.EqualTo(sessionId));
+                        Assert.That(range.CurrentMission.Range.RoundId, Is.EqualTo(roundId));
+                        yield return null;
+                    }
+                    Assert.That(Time.realtimeSinceStartupAsDouble, Is.LessThanOrEqualTo(publishDeadline),
+                        "A delayed coroutine resume must not turn an expired publication deadline into success.");
+                    Assert.That(range.IsConnected, Is.True, "A disconnect must not count as the expected placement failure.");
+                    Assert.That(range.Phase, Is.EqualTo(SessionPhase.Playing));
+                    Assert.That(range.CurrentMission, Is.Not.Null);
+                    Assert.That(range.CurrentMission.Range.SessionId, Is.EqualTo(sessionId));
+                    Assert.That(range.CurrentMission.Range.RoundId, Is.EqualTo(roundId));
+                    Assert.That(range.CurrentMission.Sequence, Is.GreaterThan(staleSequence));
+                    Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.Failed),
+                        "Rejected power must be followed by the same round's published failure within 300 ms.");
+                    yield break;
+                }
+                Assert.That(submitted, Is.True); yield return new WaitForSecondsRealtime(.05f);
             }
         }
         [Test]
@@ -136,9 +165,12 @@ namespace UndeadOvertime.LanPrototype.Tests
                 var block = new GameObject("Blocked mission spawn " + i); block.transform.SetParent(root.transform);
                 block.transform.position = position; block.AddComponent<BoxCollider>().size = new Vector3(1, 2, 1);
             }
-            Physics.SyncTransforms(); yield return HoldPower(3.6f); yield return new WaitForSecondsRealtime(.15f);
+            Physics.SyncTransforms(); yield return HoldPower(3.6f, expectPlacementFailure: true); yield return new WaitForSecondsRealtime(.15f);
             Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.Failed));
             Assert.That(range.CurrentSnapshot.Horde.Phase, Is.EqualTo(HordePhase.Failed));
+            Assert.That(range.SendPowerIntent(true), Is.False); Assert.That(range.SendPowerIntent(false), Is.False);
+            Assert.That(range.SendAction(RangeAction.Fire, Vector3.up), Is.False);
+            Assert.That(range.SendAction(RangeAction.Reload, Vector3.up), Is.False);
             Assert.That(range.SendAction(RangeAction.Move, Vector3.forward), Is.False);
             Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.CurrentMission, Is.Null);
         }

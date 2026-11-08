@@ -2,11 +2,13 @@
 
 ## Acceptance status
 
-This candidate wires the previously tested mission rules, owner, codec and geometry into an **opt-in mode in LanRange**. The default range mode remains separate. The new integration has cloud core execution and source/syntax checks only until its exact revision passes native acceptance. It is a small greybox depot mission, not the planned complete city or finished game.
+Native attempt `d2b035b` passed compilation and all 305 EditMode cases; PlayMode passed 64/65, including the full solo mission. The deliberate blocked-placement case failed in its power helper at the immediate-authority versus 10 Hz published-state boundary. Build and loopbacks were not run. A narrow test-only correction now requires the same round's newer Failed frame within 300 ms and preserves terminal rejection checks. See [the failure and correction record](MISSION_PLACEMENT_TEST_BOUNDARY.md). Corrected native acceptance remains pending.
+
+This candidate wires the previously tested mission rules, owner, codec and geometry into an **opt-in mode in LanRange**. The default range mode remains separate. The integration has cloud core execution plus partial native acceptance; it is not accepted until the exact correcting revision passes every required gate. It is a small greybox depot mission, not the planned complete city or finished game.
 
 Base `802ce58b7aa30639291c9e21834e52e84fd5fdc7` passed native compilation, 288 EditMode, 56 PlayMode, a Windows build and the existing two-process v5 loopback. The original floor also passed native import and inspected FPS/TPS rendering at `4b7e1ab`. See `NATIVE_ACCEPTANCE_802CE58.md` for evidence and limitations. Those results do not cover this integration's new transport, controls or pursuit route.
 
-Current cloud core result: **281/281 cases passed**, zero failures, warnings, skipped or inconclusive cases; actual production core compiled separately as .NET Standard 2.1/C# 9. This adds 12 mission session-boundary cases and five smoke-mode parsing cases to the prior 264. The new nine native mission cases are authored, not yet run. Expected full inventory: **305 EditMode and 65 PlayMode**. C# syntax-only parsing is not Unity/NGO API compilation.
+Current cloud core result: **281/281 cases passed**, zero failures, warnings, skipped or inconclusive cases; actual production core compiled separately as .NET Standard 2.1/C# 9. This adds 12 mission session-boundary cases and five smoke-mode parsing cases to the prior 264. Eight of the nine new native mission cases passed at `d2b035b`; the ninth requires the corrected retest. Expected full inventory: **305 EditMode and 65 PlayMode**. C# syntax-only parsing is not Unity/NGO API compilation.
 
 No material, texture, mesh, import metadata, scene, package, project setting, branch or user-local file is modified in this candidate. Runtime geometry uses existing caller-owned materials. No new third-party asset or external service is involved.
 
