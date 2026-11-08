@@ -74,3 +74,7 @@ Repeat the two-process lifecycle/damage checks across the two PCs. Then separate
 ## Remaining production work
 
 Networked movement/collision/prediction, FPS/TPS ownership, enemies/waves, health/revival, mission progression, asset/animation import, audio/effects, reconnect policy, rate/abuse hardening, bandwidth profiling, ten-process load and robust whole-game UX remain separate work. This small firing range is an integration gate, not a finished co-op build.
+
+## Automated two-process route
+
+A later opt-in [loopback automation harness](LAN_LOOPBACK_AUTOMATION.md) can run the two built peers without native window clicking. It does not change the normal manual startup path. Rebuild at its exact revision and follow its evidence/dirty-checkout preservation steps; do not reuse the prior executable or infer LAN success from its existence.

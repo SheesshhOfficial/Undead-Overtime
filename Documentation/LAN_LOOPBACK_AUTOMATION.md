@@ -1,0 +1,87 @@
+# Automated two-process loopback check
+
+## Why this exists
+
+The LAN firing range needs two real peers exchanging messages before any networking claim. Native window controls are not required for this check: the built player now has an explicit test-only command-line mode, and a PowerShell launcher starts two separate copies. Normal launches remain manual. Neither the game nor launcher changes firewall rules, router settings, security settings or PowerShell execution policy.
+
+This proves only the scripted **127.0.0.1** flow when successfully executed. It does not prove another PC can connect, ten-player load, full-game co-op or visual/input acceptance.
+
+## Preserve the current checkout
+
+The previous local test of `b18b57b0144927363f05636723a0a360ad4cd39d` left seven tracked editor-generated changes and an empty DefaultNetworkPrefabs asset/meta. They are not part of this harness change. Before pulling:
+
+1. Record HEAD, branch, remote, status, exact known generated diffs and their file hashes.
+2. Fetch and verify the supplied cloud commit is a descendant of current main. Compare its changed paths with the locally modified/untracked paths.
+3. Fast-forward only if there is no overlap and no unexpected user edit. Preserve the known local generated files byte-for-byte. Stop/report overlap or divergence; do not reset, stash, discard, overwrite or commit them as an automatic workaround.
+4. After the fast-forward, verify those local file hashes/diffs are unchanged.
+
+The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderPipelineGlobalSettings, packages-lock, GraphicsSettings, ProjectSettings and UnityConnectSettings. See the execution record below. The harness commit deliberately avoids them.
+
+## Compile, test and rebuild
+
+Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
+
+Run all suites after pulling: **81 authored EditMode cases and 18 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs.
+
+Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
+
+## Launch from PowerShell
+
+From the project directory, using the exact 40-character commit that was just built:
+
+```powershell
+.\Tools\run_lan_loopback_smoke.ps1 -Revision '<exact-40-character-cloud-commit>'
+```
+
+Optional parameters:
+
+- `-Player 'G:\...\UndeadOvertimeLanRange.exe'` chooses the already-built test player.
+- `-Port 7777` chooses a free non-privileged loopback UDP port. By default, the launcher briefly reserves an ephemeral loopback port, releases it, then lets Unity bind. A bind race is reported as failure, not silently worked around.
+
+If execution policy, SmartScreen, an OS permission prompt or another security restriction blocks execution, report the exact blocker. Do not use policy-bypass flags, change security settings or switch routes to defeat it.
+
+The launcher starts the host with normal Unity standalone `-batchmode -nographics` arguments. It waits up to 30 seconds for the host's own ready log before launching the client. Each player has a 90-second monotonic test deadline; the launcher has a 120-second monotonic deadline from the host launch. On failure/timeout, it terminates only its retained child-process objects, never the editor or pre-existing player processes.
+
+No game code launches another executable. The game accepts only role, port, run ID and revision test flags, always uses `127.0.0.1`, and writes results only into its own build directory under a validated hexadecimal run ID. Editor executions do not start this mode.
+
+## What must pass
+
+Host and client each assert their side of the flow:
+
+1. Two members appear in the host-owned lobby and receive round one.
+2. The client sends four valid shots. The host kills the shared center target and accounts for exactly four rounds; the client receives the same HP/ammunition result.
+3. The client reloads. Both observe reload start/completion. A deliberate upward miss acknowledges that the client actually received the refilled magazine before the host changes phase.
+4. The host returns to lobby. The client disconnects and rejoins; the host must observe the departure and a different connection identity on return.
+5. Round two restores targets/ammunition. One client shot produces 75 HP on the left target, replicated back to that client. A reload request acknowledges receipt.
+6. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
+
+Unexpected Unity Error/Exception/Assert log messages observed during the test fail the per-process result. Warnings are counted and retained for review; they are not automatically declared harmless. Timeout, extra peers, missing/mismatched reports, wrong process IDs, a nonzero process exit or missing terminal steps fail the launcher.
+
+## Evidence and limits
+
+Evidence is written under:
+
+`Builds/LanRange/SmokeResults/<run-id>/`
+
+- `host.log`, `client.log`: separate player logs.
+- `host.json`, `client.json`: role, run ID, PID, port, timestamps, runtime version, checked steps, error/warning counts, result and failure reason. Existing result files are never overwritten.
+- `summary.json`: only written after both peers pass; includes distinct launched PIDs, exit codes, requested source revision, executable SHA-256, and gameplay assembly hashes when present (managed UndeadOvertime assemblies or IL2CPP GameAssembly).
+
+`requestedRevision` is an echoed test argument, not a cryptographic claim about which source built the executable. Exact-source evidence still comes from the runner's verified HEAD, build log and file hashes. The Unity executable alone may be identical across gameplay builds, hence gameplay DLL hashes are also recorded.
+
+Return both reports, summary, build log and relevant warnings for cloud review. A successful script result is automated loopback acceptance only. Separate real-LAN, capacity, mouse ownership, rendering and actual game tests still apply.
+
+## Previous local execution record and generated changes
+
+Reported for exact revision `b18b57b0144927363f05636723a0a360ad4cd39d` on Unity 6000.6.5f1:
+
+- An explicit supported package-resolution operation cleared the initial missing-Netcode-type errors; no source fix was needed.
+- 73/73 EditMode and 18/18 PlayMode tests passed; Windows LAN test player build succeeded.
+- Actual Transport resolution is **builtin 6.6.0**, despite the manifest minimum/pin 2.6.0. Its dependency declarations list Collections 6.5.0, Burst 1.8.24 and Mathematics 1.4.0. Those are dependency declarations, not evidence that the existing installed dependencies were downgraded. NGO remains registry 2.13.3.
+- A current Console snapshot reported zero errors and 66 warnings. The retained lifetime warning buffer includes ConvGeneric/Sentis shader variants and two stripped debug shaders; available evidence cannot assign exact categories/counts to the current 66 warnings. They remain unclassified for this run.
+- Editor-generated URP changes include a volume filter default, shadow/prefilter fields and runtime-setting references; GraphicsSettings gained state-collection/warmup/shader defaults. These remain local, uncommitted and not cloud-adopted.
+- The ProjectSettings preloaded-asset GUID `052faaac586de48259a63d0c4782560b` resolves to the existing InputSystem_Actions asset and matches its existing EditorBuildSettings registration.
+- UnityConnectSettings changed only `m_Enabled: 0` to `1`. Its cause/intent is not established; it is not silently adopted by this work.
+- The generated DefaultNetworkPrefabs asset is an empty NGO NetworkPrefabsList. It and its metadata remain local and unchanged.
+
+These findings establish the previous build/test baseline, not this new harness's execution result. No two-process or real-LAN pass has been claimed yet.

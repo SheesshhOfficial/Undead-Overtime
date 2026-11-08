@@ -53,7 +53,7 @@ namespace UndeadOvertime.LanPrototype
             public double Deadline, NextCommandAt;
             public ulong LastSequence;
         }
-        private void Start() { if (!IsBuilt) Build(worldCamera); }
+        private void Start() { if (!IsBuilt) Build(worldCamera); LanLoopbackSmoke.TryStart(this); }
         public void Build(Camera camera)
         {
             if (IsBuilt) return;

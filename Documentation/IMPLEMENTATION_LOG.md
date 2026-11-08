@@ -68,3 +68,11 @@ Cloud checks: static metadata/scene/assembly consistency; validator Python synta
 Local handoff: exact published revision; clean fast-forward; resolve packages/compile; run all suites and original scene regressions; build the dedicated player; test two real processes on loopback, then separately on LAN. Ten-member behavior/performance needs ten actual connections. Return compiler/test/log/screenshots and package-resolution diff for cloud fixes. No local authored repairs, no firewall/security changes without approval.
 
 Acceptance at publication: authored and statically checked candidate. New C#/Unity tests, player build, remote client exchange, actual LAN and performance remain unrun here.
+
+## 2026-11-08: opt-in two-process loopback harness
+
+Local result for b18b57b: explicit package resolution cleared missing Netcode types without code changes; 73 EditMode and 18 PlayMode passed, Windows player build succeeded. Transport resolved to builtin6.6.0. Seven editor-generated tracked changes and the empty default network-prefab asset remain preserved locally; none is overwritten or adopted by this commit. Exact distinctions and warning limits are recorded in [LAN_LOOPBACK_AUTOMATION.md](LAN_LOOPBACK_AUTOMATION.md).
+
+Added explicit standalone test flags, bounded loopback host/client coroutine assertions and per-process reports, a PowerShell launcher with monotonic deadlines and owned-process cleanup, and eight parser test cases. A normal player launch stays manual. The harness tests remote target damage/reload, disconnect/rejoin identity, round reset and host shutdown. Both endpoints are fixed to 127.0.0.1; no native UI automation or security-setting change is needed. The launcher records gameplay binary hashes; its supplied revision remains input that must be corroborated by the build runner.
+
+Cloud static consistency: 39 source/assets, nine assemblies and 51 metadata GUIDs. Unity C# compilation, the new expected81EditMode/18PlayMode suites, rebuilt Windows player and the two-process script remain unrun in cloud. Independent review and exact remote publication verification accompany the completion handoff. A passing host-only test is not a substitute for the new two-process test, and loopback is not real-LAN acceptance.
