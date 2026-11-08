@@ -2,9 +2,9 @@
 
 ## Current scope
 
-The LAN arena now has a presentation-only FPS/TPS switch, a collision-aware shoulder camera, reticle-converging aim, a compact captured HUD, sensitivity control and clearer start/downed hints. This is a new candidate awaiting exact-revision execution. The wave baseline `6b3df43657689622e70189704072893b0e899ada` already passed compilation, 132 EditMode / 32 PlayMode, Windows build and the complete two-process wave scenario.
+The LAN arena now has a presentation-only FPS/TPS switch, a collision-aware shoulder camera, reticle-converging aim, a compact captured HUD, sensitivity control and clearer start/downed hints. Exact camera revision eaf20a6cb99dbe4b4e7102b9a655f8a45445f918 passed compilation, 132 EditMode / 39 PlayMode, Windows build and the full two-process wave test; actual FPS/TPS Game View captures were inspected. The wave baseline `6b3df43657689622e70189704072893b0e899ada` already passed compilation, 132 EditMode / 32 PlayMode, Windows build and the complete two-process wave scenario.
 
-No original Blender asset or Mixamo character is imported by this change. Characters/enemies remain honest placeholder capsules. The private source library and restricted licensed downloads remain separate; a verified Unity import/material/rig route and distribution rights are required before copying selected runtime content into the public game repository.
+The camera revision imported no original Blender asset or Mixamo character. A later native floor candidate is described in [DEPOT_FLOOR_INTEGRATION.md](DEPOT_FLOOR_INTEGRATION.md). Characters/enemies remain honest placeholder capsules. The private source library and restricted licensed downloads remain separate; a verified Unity import/material/rig route and distribution rights are required before copying selected runtime content into the public game repository.
 
 ## Start a local solo session
 
@@ -46,3 +46,13 @@ Expected inventory: **132 EditMode / 39 PlayMode**. Seven new PlayMode cases cov
 Local acceptance requires compilation, all suites, new Windows build and the unchanged complete wave loopback. If supported camera/Game View capture is available, collect actual FPS and TPS screenshots from this revision, identify the capture method and scene state, and retain the corresponding logs. A static image does not prove input or collision behavior.
 
 Manual acceptance remains necessary: capture click suppression; WASD and aim while toggling V; shoulder camera near walls/floor/targets; crosshair hit placement at short/long range; muzzle blocked while camera can see; Esc/refocus; UI resize/readability; downed/revived control recapture; independent views on host/client. Do not label these manual checks passed based only on the automated headless run.
+
+## Recorded camera acceptance (2026-11-08 UTC)
+
+Exact eaf20a6 revision: compile clean, 132/132 EditMode, 39/39 PlayMode (80.13 s), build success at 14:23:54.1760309Z. Full loopback aeecf88a44dd4d06b00358680d234013 passed in 65.921 s with both exits 0, all markers and zero callback errors/warnings. Full logs each retained six native Unity cloud Curl diagnostics.
+
+Supported Unity eval selected the existing public host/round/view APIs; `capture game_view --source screen` produced actual 1280 × 720 images, not mockups. Pre-host frames advanced 1653 to 3348. FPS state at 14:38:04.5574935Z: frame 11628, Playing, host/connected/rendered/captured true, round 1, camera (-9, 1.6, -8). TPS at 14:38:24.4807971Z: frame 16035, same session, camera (-8.45, 2, -11). The corresponding HUD mode, 100 HP/12 ammo and local-body visibility were inspected; the cyan capsule was visible in TPS and absent in FPS. Both images show dormant target practice, not active zombies.
+
+The initial Debug.Log-only eval returned null; an old/truncated Console view hid the marker and that attempt stopped before host/capture. A later direct-return expression fixed evidence retrieval without changing source. This was not a gameplay failure. Successful captures are Logs/capture-fps.png (237,913 bytes, 14:38:08Z) and Logs/capture-tps.png (263,548 bytes, 14:38:28Z) on the execution PC. These are local evidence paths, not public download links.
+
+Cleanup left the editor stopped/ready, scene clean and nine pre-existing generated hashes unchanged. Networking's session runInBackground change returned to original false. No manual input, final visual polish or real-LAN acceptance is implied.

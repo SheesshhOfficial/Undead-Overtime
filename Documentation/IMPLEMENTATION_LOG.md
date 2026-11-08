@@ -138,3 +138,12 @@ Seven new physics/view-lifecycle PlayMode cases bring expected source totals to 
 No private source asset, licensed Mixamo download, package/settings/security change, new branch, backup or local authored fix is included. Production assets require a separately verified import/provenance route; placeholder capsules are not represented as completed realistic characters.
 
 Independent camera review found and corrected a presentation/authority crossover before publication: changing view originally called the broad snapshot visual application, which could rewind host enemy colliders to an older snapshot before the next fixed tick. View switching now touches only local-avatar visibility and camera placement. A seventh regression explicitly exercises newer-than-snapshot enemy physics and verifies position/active state is unchanged by repeated toggles.
+
+
+## 2026-11-08: original depot floor native-import candidate
+
+Camera eaf20a6 passed 132 EditMode / 39 PlayMode, Windows build, full two-process wave regression and actual programmatically selected FPS/TPS captures. Camera and loopback documents retain exact evidence, an initial Console-evidence retrieval failure, native cloud Curl caveats and clean restoration.
+
+Selected original AST-GEO-MOD-005 runtime meshes/maps for a native FBX/PBR import route, without adding a glTF plugin or copying restricted character content. A visual-only 8×8 floor grid replaces the primitive ground appearance while keeping its continuous collider and every networking rule. Headless mode skips rendered art. Explicit scoped importer, shared URP materials, three LODs, missing-asset failures, original-resolution texture handling and eleven import/three runtime regressions form the new candidate. Expected totals143 EditMode/42 PlayMode, not new execution results. Source/export provenance and hashes accompany the packet. Local import, bounds/material/normal verification, tests/build/full loopback and actual surface captures remain required.
+
+Before publication, independent integration review identified runtime-only PBR keywords as a player shader-stripping risk. Replaced constructed materials with serialized Resources material templates that retain required variants and texture dependencies. Export review separately caught Blender resetting material indices during texture-free FBX material replacement; the exporter was held for correction and pre-replacement population assertions before any floor upload. Neither issue is represented as an accepted runtime result.

@@ -1,0 +1,139 @@
+{
+  "asset_id": "AST-GEO-MOD-005",
+  "source_sha256": "f3bdddc1158c3c4bd2d7a7fe0cd94b5eced5320400fc39c238823650c8edfc42",
+  "source_unchanged": true,
+  "source_provenance": "DEPOT_FLOOR_PROVENANCE.md",
+  "blender_version": "4.3.2",
+  "offline_validation": "PASS: frozen-source hashes, original per-material triangle populations, FBX empty-scene reimport, per-corner geometry/UV/material equivalence and lossless texture packing. Unity validation pending.",
+  "unity_tested": false,
+  "fbx_axes": "+Y up, +Z forward; baked vertex transform (x,y,z) -> (-x,z,y)",
+  "unity_expected_bounds_m": [
+    0,
+    -0.2,
+    0,
+    4,
+    0,
+    4
+  ],
+  "uv_contract": {
+    "UV0": "UV_PBR_Tile, intentional repeats and overlap",
+    "UV1": "UV_Main, unique non-overlapping 0..1 islands"
+  },
+  "material_slots": [
+    "MAT_UO_DepotFloor_Aged",
+    "MAT_UO_Worn_Concrete"
+  ],
+  "triangles": [
+    318,
+    142,
+    12
+  ],
+  "triangles_by_material": [
+    [
+      200,
+      118
+    ],
+    [
+      72,
+      70
+    ],
+    [
+      2,
+      10
+    ]
+  ],
+  "files": [
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD0.fbx",
+      "bytes": 37772,
+      "sha256": "9bbd8b205823a1f96d6fb54bd26a661d7629183b4c305838f287f81dac5ba5e6",
+      "git_blob_sha1": "7bbbf4aa2a025dd762b3545ba86da2fd19ebfaad"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD1.fbx",
+      "bytes": 27308,
+      "sha256": "7af83f437c4515ab1c53a2a4c61505df821329da45e6d3347c63903e1dba1cac",
+      "git_blob_sha1": "3124d7180512369417059d758bfc95a1cdfd7160"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD2.fbx",
+      "bytes": 18972,
+      "sha256": "d60c4e0b25ad3926e525d9436e873fa20bdfe5bd907bc80699822459a83f0b6c",
+      "git_blob_sha1": "dd17a22e59ab97b872965f014a45df98d51cc01b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_basecolor.png",
+      "bytes": 910891,
+      "sha256": "4fefac324ad6bcf82fe25e6119bbd941f147ac5a40e9feac3513294e08fdacac",
+      "git_blob_sha1": "2b84462484027a6e95f0cd7a93472d9c6ec370ab",
+      "source": "source/textures/concrete_basecolor.png",
+      "source_sha256": "4fefac324ad6bcf82fe25e6119bbd941f147ac5a40e9feac3513294e08fdacac",
+      "width": 1024,
+      "height": 1024,
+      "color_space": "sRGB",
+      "source_bytes_unchanged": true
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_metallic_smoothness.png",
+      "bytes": 43118,
+      "sha256": "365576bfc152d592ae38e95cef6d6193bb63c74b097bc16300b37f302f86bb3f",
+      "git_blob_sha1": "f2ac154064d7853d0d3cd63e3fdf9abb5b9a56df",
+      "source": "source/textures/concrete_roughness.png",
+      "source_sha256": "e82c5986d70f43ef91031ec36b25215d61153bea1d8af3f0d418a1528b176f35",
+      "width": 1024,
+      "height": 1024,
+      "color_space": "linear",
+      "source_bytes_unchanged": false,
+      "max_packing_error_uint8": 0
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_normal_opengl.png",
+      "bytes": 1218075,
+      "sha256": "b23de7edb4b93778afd07aa8be3256d7facc2b65f9748a5277352e35405cbf4d",
+      "git_blob_sha1": "7184169ea8e260883c1a48b6af5bd9d8fd38edf9",
+      "source": "source/textures/concrete_normal_opengl.png",
+      "source_sha256": "b23de7edb4b93778afd07aa8be3256d7facc2b65f9748a5277352e35405cbf4d",
+      "width": 1024,
+      "height": 1024,
+      "color_space": "linear normal data",
+      "source_bytes_unchanged": true
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_basecolor.png",
+      "bytes": 4072129,
+      "sha256": "495e2a17b766336da8ce685305ac18b68d070f466f2de179e24be6ab7b1ca184",
+      "git_blob_sha1": "f0d4d7785e94b43e0593dd660f0cbef100f78dc9",
+      "source": "source/textures/floor_aged_basecolor.png",
+      "source_sha256": "495e2a17b766336da8ce685305ac18b68d070f466f2de179e24be6ab7b1ca184",
+      "width": 2048,
+      "height": 2048,
+      "color_space": "sRGB",
+      "source_bytes_unchanged": true
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_metallic_smoothness.png",
+      "bytes": 1518830,
+      "sha256": "822695c4c8677a8dcbd99a6f4153491ff22e059a79bfb0d7c186318cf6cc8792",
+      "git_blob_sha1": "7bbe6ef5f5d414a3c6bc974039e708f0e1d2c1e1",
+      "source": "source/textures/floor_roughness.png",
+      "source_sha256": "03cc0039f6825153042fed51358c8e73159d6debaa78325204f202d32ca6c5b0",
+      "width": 2048,
+      "height": 2048,
+      "color_space": "linear",
+      "source_bytes_unchanged": false,
+      "max_packing_error_uint8": 0
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/floor_normal_opengl.png",
+      "bytes": 3698186,
+      "sha256": "f2aeff9611e9ccdc5fbf13f876472d7102a1c642de3d589d1f3435a867abf3ac",
+      "git_blob_sha1": "1f3694990bcdc8de2df5093e6759c60af1907fb7",
+      "source": "source/textures/floor_normal_opengl.png",
+      "source_sha256": "f2aeff9611e9ccdc5fbf13f876472d7102a1c642de3d589d1f3435a867abf3ac",
+      "width": 2048,
+      "height": 2048,
+      "color_space": "linear normal data",
+      "source_bytes_unchanged": true
+    }
+  ]
+}

@@ -100,7 +100,12 @@ namespace UndeadOvertime.LanPrototype
             Material target = Material("Shared targets", new Color(.95f, .35f, .1f));
             Material body = Material("Remote stations", new Color(.15f, .6f, .8f));
             Material infected = Material("Placeholder infected", new Color(.35f, .55f, .15f));
-            Primitive(PrimitiveType.Cube, "Ground", new Vector3(0, -.25f, 0), new Vector3(32, .5f, 32), floor);
+            GameObject ground = Primitive(PrimitiveType.Cube, "Ground", new Vector3(0, -.25f, 0), new Vector3(32, .5f, 32), floor);
+            if (PresentationEnabled)
+            {
+                DepotFloorPresentation.Create(generated);
+                ground.GetComponent<Renderer>().enabled = false; // Keep the original continuous BoxCollider, without z-fighting.
+            }
             Primitive(PrimitiveType.Cube, "North wall", new Vector3(0, 2, 16), new Vector3(32, 4, .5f), wall);
             Primitive(PrimitiveType.Cube, "South wall", new Vector3(0, 2, -16), new Vector3(32, 4, .5f), wall);
             Primitive(PrimitiveType.Cube, "West wall", new Vector3(-16, 2, 0), new Vector3(.5f, 4, 32), wall);

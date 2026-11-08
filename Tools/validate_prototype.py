@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static consistency checks only; this does not compile or execute Unity/C#."""
 import json
+import hashlib
 import re
 from pathlib import Path
 
@@ -74,9 +75,31 @@ check(not any(p.name in ("Library", "Temp", "Logs") for p in ASSETS.rglob("*")),
 
 for path in files:
     raw = path.read_bytes()
-    check(b"\r" not in raw, f"Expected LF line endings: {path.relative_to(ROOT)}")
-    check(raw.endswith(b"\n"), f"Missing final newline: {path.relative_to(ROOT)}")
-    check(b"\x00" not in raw, f"Unexpected binary data: {path.relative_to(ROOT)}")
+    if path.suffix.lower() in (".fbx", ".png"):
+        approved = ASSETS / "Resources" / "UndeadOvertime" / "DepotFloor"
+        check(path.parent == approved, f"Binary asset outside reviewed runtime packet: {path.relative_to(ROOT)}")
+        signature = b"Kaydara FBX Binary  \x00\x1a\x00" if path.suffix.lower() == ".fbx" else b"\x89PNG\r\n\x1a\n"
+        check(raw.startswith(signature), f"Invalid native asset signature: {path.relative_to(ROOT)}")
+    else:
+        check(b"\r" not in raw, f"Expected LF line endings: {path.relative_to(ROOT)}")
+        check(raw.endswith(b"\n"), f"Missing final newline: {path.relative_to(ROOT)}")
+        check(b"\x00" not in raw, f"Unexpected binary data: {path.relative_to(ROOT)}")
+
+packet_path = ROOT / "Documentation" / "DEPOT_FLOOR_PACKET.json"
+if packet_path.exists():
+    packet = json.loads(packet_path.read_text())
+    check(len(packet["files"]) == 9, "Expected exactly nine original depot floor runtime binaries")
+    for entry in packet["files"]:
+        relative = Path(entry["path"])
+        allowed = Path("Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor")
+        check(relative.parent == allowed, "Unexpected floor packet path")
+        if relative.parent != allowed:
+            continue
+        path = ROOT / relative
+        check(path.is_file(), f"Missing verified floor runtime file: {relative}")
+        if path.is_file():
+            data = path.read_bytes()
+            check(len(data) == entry["bytes"] and hashlib.sha256(data).hexdigest() == entry["sha256"], f"Floor packet hash mismatch: {relative}")
 
 if errors:
     raise SystemExit("STATIC CHECK FAILED\n" + "\n".join(errors))

@@ -18,7 +18,7 @@ The original `PrototypeRange.unity` mechanics scene and `SurvivalYard.unity` sol
 
 Wave baseline `6b3df43657689622e70189704072893b0e899ada` passed compilation, 132 EditMode / 32 PlayMode tests, Windows build and an actual two-process loopback test covering movement, combat/reload, rejoin/reset, downing/revive and all three waves. Full logs retained Unity cloud Curl diagnostics, documented separately from zero gameplay callback error counts.
 
-The newer FPS/TPS/control candidate needs its own exact-revision execution. Its expected inventory is 132 EditMode / 39 PlayMode. Static source checks and authored tests are not runtime acceptance. Real LAN, ten-player scale, hands-on visual/input quality and performance remain unverified. Do not expose this unauthenticated prototype to the Internet.
+The FPS/TPS camera revision eaf20a6 passed 132 EditMode / 39 PlayMode, build and full loopback, with actual rendered views inspected. The newer original depot-floor import candidate expects 143 EditMode / 42 PlayMode and needs its own acceptance; see [native floor integration](Documentation/DEPOT_FLOOR_INTEGRATION.md). Real LAN, ten-player scale, hands-on input quality and performance remain unverified. Do not expose this unauthenticated prototype to the Internet.
 
 ## Documentation
 
