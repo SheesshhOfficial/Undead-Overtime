@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace UndeadOvertime.Core
 {
-    public enum RangeAction : byte { Fire = 1, Reload = 2, Move = 3 }
+    public enum RangeAction : byte { Fire = 1, Reload = 2, Move = 3, Revive = 4 }
     public readonly struct RangeCommand
     {
         public readonly RangeAction Action;
@@ -18,13 +18,13 @@ namespace UndeadOvertime.Core
     {
         public readonly ulong PeerId;
         public readonly long ConnectionId;
-        public readonly byte Slot, Ammo, Health;
+        public readonly byte Slot, Ammo, Health, ReviveTargetSlot, ReviveProgress;
         public readonly bool Reloading;
         public readonly AimVector Position;
         public RangeMember(ulong peerId, long connectionId, byte slot, byte ammo, bool reloading)
             : this(peerId, connectionId, slot, ammo, reloading, HostMoveGate.Spawn(slot), 100) { }
-        public RangeMember(ulong peerId, long connectionId, byte slot, byte ammo, bool reloading, AimVector position, byte health = 100)
-        { PeerId = peerId; ConnectionId = connectionId; Slot = slot; Ammo = ammo; Reloading = reloading; Position = position; Health = health; }
+        public RangeMember(ulong peerId, long connectionId, byte slot, byte ammo, bool reloading, AimVector position, byte health = 100, byte reviveTargetSlot = 255, byte reviveProgress = 0)
+        { PeerId = peerId; ConnectionId = connectionId; Slot = slot; Ammo = ammo; Reloading = reloading; Position = position; Health = health; ReviveTargetSlot = reviveTargetSlot; ReviveProgress = reviveProgress; }
     }
     public sealed class RangeSnapshot
     {
@@ -49,10 +49,10 @@ namespace UndeadOvertime.Core
     /// <summary>Fixed little-endian protocol, no strings/JSON/unbounded length prefixes. Not authentication.</summary>
     public static class LanRangeProtocol
     {
-        public const ushort Version = 3;
+        public const ushort Version = 4;
         public const int CommandBytes = 44;
         public const int SnapshotHeaderBytes = 51;
-        public const int MemberBytes = 32;
+        public const int MemberBytes = 34;
         public const int MaximumBytes = SnapshotHeaderBytes + LanSession.MaximumPlayers * MemberBytes;
         private const uint Magic = 0x554F4C31;
         public static byte[] Handshake => new byte[] { 0x55, 0x4f, 0x52, (byte)Version };
@@ -87,6 +87,7 @@ namespace UndeadOvertime.Core
         private static bool Valid(RangeCommand value) =>
             value.SessionId > 0 && value.RoundId > 0 && value.Sequence > 0 &&
             (value.Action == RangeAction.Move ? HostMoveGate.ValidIntent(value.Aim) :
+                value.Action == RangeAction.Revive ? HostInfectedEncounter.ValidReviveIntent(value.Aim) :
                 (value.Action == RangeAction.Fire || value.Action == RangeAction.Reload) && value.Aim.IsUnit);
 
         public static byte[] Encode(RangeSnapshot snapshot)
@@ -105,7 +106,7 @@ namespace UndeadOvertime.Core
                     RangeMember m = snapshot.Member(i);
                     writer.Write(m.PeerId); writer.Write(m.ConnectionId); writer.Write(m.Slot); writer.Write(m.Ammo);
                     writer.Write((byte)(m.Reloading ? 1 : 0));
-                    writer.Write((float)m.Position.X); writer.Write((float)m.Position.Y); writer.Write((float)m.Position.Z); writer.Write(m.Health);
+                    writer.Write((float)m.Position.X); writer.Write((float)m.Position.Y); writer.Write((float)m.Position.Z); writer.Write(m.Health); writer.Write(m.ReviveTargetSlot); writer.Write(m.ReviveProgress);
                 }
                 return stream.ToArray();
             }
@@ -130,7 +131,7 @@ namespace UndeadOvertime.Core
                     byte slot = reader.ReadByte(), ammo = reader.ReadByte(), reload = reader.ReadByte();
                     if (reload > 1) return false;
                     members[i] = new RangeMember(peer, connection, slot, ammo, reload == 1,
-                        new AimVector(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()), reader.ReadByte());
+                        new AimVector(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 }
                 var parsed = new RangeSnapshot(session, round, phase, members, health, encounter);
                 if (!Valid(parsed)) return false;
@@ -152,8 +153,19 @@ namespace UndeadOvertime.Core
             for (int i = 0; i < snapshot.MemberCount; i++)
             {
                 RangeMember m = snapshot.Member(i);
-                if (m.ConnectionId <= 0 || m.Slot >= LanSession.MaximumPlayers || m.Ammo > HostFireGate.MagazineSize || m.Health > 100 ||
+                if (m.ConnectionId <= 0 || m.Slot >= LanSession.MaximumPlayers || m.Ammo > HostFireGate.MagazineSize || m.Health > 100 || m.ReviveProgress > 99 ||
+                    (m.ReviveTargetSlot == 255 ? m.ReviveProgress != 0 : m.ReviveTargetSlot >= LanSession.MaximumPlayers || m.ReviveTargetSlot == m.Slot || m.Health == 0) ||
                     !HostMoveGate.ValidPosition(m.Position) || !peers.Add(m.PeerId) || !slots.Add(m.Slot)) return false;
+            }
+            for (int i = 0; i < snapshot.MemberCount; i++)
+            {
+                RangeMember reviver = snapshot.Member(i);
+                if (reviver.ReviveTargetSlot == 255) continue;
+                if (enemy.Phase != EncounterPhase.Active && enemy.Phase != EncounterPhase.Cleared) return false;
+                bool validTarget = false;
+                for (int j = 0; j < snapshot.MemberCount; j++)
+                    if (snapshot.Member(j).Slot == reviver.ReviveTargetSlot && snapshot.Member(j).Health == 0) validTarget = true;
+                if (!validTarget) return false;
             }
             for (int i = 0; i < 3; i++) if (snapshot.TargetHealth(i) < 0 || snapshot.TargetHealth(i) > 100) return false;
             return true;

@@ -118,6 +118,39 @@ namespace UndeadOvertime.LanPrototype
             Record("infected-killed");
             while (!Remote().Reloading) yield return null;
             Record("infected-result-acknowledged");
+            Require(range.ReturnToLobby() && range.BeginRound() && range.StartEncounter(), "Could not start the revive scenario round.");
+            Record("revive-round-started");
+            while (Remote().Health > 0) yield return null;
+            Require(range.CurrentSnapshot.Encounter.Phase == EncounterPhase.Active && Local().Health > 0,
+                "Revive scenario lost its living rescuer.");
+            Record("remote-downed-observed");
+            for (int i = 0; i < 4; i++)
+            {
+                Require(range.SendAction(RangeAction.Fire, AimAtInfected()), "Host could not clear the infected before rescue.");
+                yield return new WaitForSecondsRealtime(.25f);
+            }
+            while (range.CurrentSnapshot.Encounter.Phase != EncounterPhase.Cleared) yield return null;
+            while ((Local().Position - Remote().Position).LengthSquared > 1.5 * 1.5)
+            {
+                AimVector delta = Remote().Position - Local().Position;
+                Require(range.SendAction(RangeAction.Move, new Vector3((float)delta.X, 0, (float)delta.Z).normalized * .5f), "Host could not approach teammate.");
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            Require(range.SendAction(RangeAction.Move, Vector3.zero), "Host could not stop before rescue.");
+            yield return new WaitForSecondsRealtime(.2f);
+            bool sawProgress = false;
+            while (Remote().Health == 0)
+            {
+                Require(range.SendAction(RangeAction.Revive, Vector3.forward), "Host could not hold revive intent.");
+                sawProgress |= Local().ReviveTargetSlot == Remote().Slot && Local().ReviveProgress > 0;
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            Require(sawProgress && Remote().Health == HostInfectedEncounter.RevivedHealth, "Host did not observe a timed partial-health revive.");
+            Record("teammate-revived");
+            while (range.CurrentSnapshot.TargetHealth(0) != 75) yield return null;
+            Require(Remote().Ammo == 11, "Revived client's shot did not consume one round.");
+            while (!Remote().Reloading) yield return null;
+            Record("revived-client-action-acknowledged");
             range.StopSession("Automated loopback host shutdown.");
             while (range.IsBusy) yield return null;
             Record("host-shutdown-completed");
@@ -191,6 +224,37 @@ namespace UndeadOvertime.LanPrototype
             Require(range.CurrentSnapshot.Encounter.Health == 0 && Local().Health > 0, "Client infected kill/health mismatch.");
             Record("replicated-infected-kill");
             Require(range.SendAction(RangeAction.Reload, AimAt(0)), "Could not acknowledge infected result.");
+            while (range.CurrentSnapshot.RoundId != 3 || range.CurrentSnapshot.Encounter.Phase != EncounterPhase.Active) yield return null;
+            Require(Local().Health == 100 && Local().Ammo == 12, "Third round did not reset the client.");
+            while (Local().Health > 0) yield return null;
+            Record("replicated-client-downed");
+            AimVector downedPosition = Local().Position;
+            Require(range.SendAction(RangeAction.Move, Vector3.forward), "Could not submit downed movement probe.");
+            Require(range.SendAction(RangeAction.Fire, AimAt(0)), "Could not submit downed fire probe.");
+            yield return new WaitForSecondsRealtime(.4f);
+            Require(Local().Ammo == 12 && (Local().Position - downedPosition).LengthSquared < .0001,
+                "Downed client retained movement/fire authority.");
+            bool sawProgress = false;
+            while (Local().Health == 0)
+            {
+                RangeMember rescuer = HostMember();
+                sawProgress |= rescuer.ReviveTargetSlot == Local().Slot && rescuer.ReviveProgress > 0;
+                yield return null;
+            }
+            Require(sawProgress && Local().Health == HostInfectedEncounter.RevivedHealth, "Client did not receive timed revive progress and 40 HP.");
+            Record("replicated-client-revived");
+            double moveUntil = Time.realtimeSinceStartupAsDouble + .3;
+            while (Time.realtimeSinceStartupAsDouble < moveUntil)
+            {
+                Require(range.SendAction(RangeAction.Move, Vector3.forward), "Revived client could not move.");
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            range.SendAction(RangeAction.Move, Vector3.zero); yield return new WaitForSecondsRealtime(.25f);
+            Require(Local().Position.Z - downedPosition.Z > .4, "Revived movement was not replicated.");
+            Require(range.SendAction(RangeAction.Fire, AimAt(0)), "Revived client could not submit a shot.");
+            while (range.CurrentSnapshot.TargetHealth(0) != 75 || Local().Ammo != 11) yield return null;
+            Record("revived-client-actions-replicated");
+            Require(range.SendAction(RangeAction.Reload, AimAt(0)), "Could not acknowledge restored client actions.");
             while (range.IsBusy || range.IsConnected) yield return null;
             Require(range.MemberCount == 0 && range.Phase == SessionPhase.Stopped, "Host shutdown left stale client membership.");
             Record("host-shutdown-observed");
@@ -206,6 +270,17 @@ namespace UndeadOvertime.LanPrototype
             Require(state != null && state.MemberCount == 2, "Expected exactly two members.");
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId != 0) return state.Member(i);
             throw new InvalidOperationException("Remote member missing from snapshot.");
+        }
+        private RangeMember HostMember()
+        {
+            RangeSnapshot state = range.CurrentSnapshot;
+            for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId == 0) return state.Member(i);
+            throw new InvalidOperationException("Host member missing from snapshot.");
+        }
+        private Vector3 AimAtInfected()
+        {
+            AimVector enemy = range.CurrentSnapshot.Encounter.Position, eye = Local().Position;
+            return new Vector3((float)(enemy.X - eye.X), (float)(enemy.Y - eye.Y), (float)(enemy.Z - eye.Z)).normalized;
         }
         private Vector3 AimAt(int target)
         {

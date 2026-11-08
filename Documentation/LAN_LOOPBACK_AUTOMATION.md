@@ -21,7 +21,7 @@ The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderP
 
 Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
 
-Run all suites after pulling: **104 authored EditMode cases and 26 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md). The infected encounter adds ten core cases and four more PlayMode cases; see [LAN_INFECTED.md](LAN_INFECTED.md).
+Run all suites after pulling: **117 authored EditMode cases and 27 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md). The infected encounter adds ten core cases and four more PlayMode cases; see [LAN_INFECTED.md](LAN_INFECTED.md). Revive adds thirteen core cases and one PlayMode case; see [LAN_REVIVE.md](LAN_REVIVE.md).
 
 Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
 
@@ -54,7 +54,8 @@ Host and client each assert their side of the flow:
 4. The host returns to lobby. The client disconnects and rejoins; the host must observe the departure and a different connection identity on return.
 5. Round two restores targets/ammunition. The assigned spawn position is restored. One client shot produces 75 HP on the left target, replicated back to that client. A reload request acknowledges receipt.
 6. The host starts the optional infected encounter. The client receives pursuing enemy movement and damage to its own health, then fires four shots and receives the enemy kill/Cleared state. A reload request acknowledges that result.
-7. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
+7. In a third round, the client is downed. Its movement/fire probes must have no effect. The host kills the infected, approaches the teammate and holds revive. Both peers must observe timed progress and 40 HP restoration. The rescued client must move and damage a target, then acknowledge the restored actions.
+8. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
 
 Unexpected Unity Error/Exception/Assert log messages observed during the test fail the per-process result. Warnings are counted and retained for review; they are not automatically declared harmless. Timeout, extra peers, missing/mismatched reports, wrong process IDs, a nonzero process exit or missing terminal steps fail the launcher.
 
@@ -125,3 +126,11 @@ Gameplay build hashes recorded by the runner:
 - Player EXE (667,136 bytes): `b70442f90f50cd91f7af7bf2272602645fc5d02c4d3156fb221fc27c328d2436`
 
 No player remained; the editor was ready/stopped and nine generated-file hashes stayed identical. This passes moving-client loopback only. The current infected extension requires a fresh build and its additional encounter markers; it is not covered by this baseline result.
+
+## 2026-11-08: one-infected baseline passed
+
+Exact `5aaf489bf34e65a8dacaed31c582a822c078f24a`: clean compilation, 104/104 EditMode and 26/26 PlayMode (56.19 seconds), Windows build succeeded. The runner reported CLI/pipeline result evidence; no exported XML was found in Logs.
+
+Run `5d59a9d0f73445c4a00fd285009f138a`, reported UTC 13:10:26 to 13:10:45 on 2026-11-08 (18.948-second script duration), host PID 19768/client PID 28116: script and both players exited 0. The new host `infected-result-acknowledged` and client `replicated-infected-kill` markers and all prior steps completed. Both JSON reports had zero runtime errors/warnings. Full logs still contained five native Curl error 7 cloud-endpoint messages each, with no other matching Error/Exception/Assert/Warning lines reported. Host log was 30,696 bytes; client log 24,778 bytes.
+
+All nine preserved generated-file hashes stayed identical. No player remained and the editor was ready/stopped. This establishes the one-infected loopback baseline only; the current revive scenario requires new exact-revision execution. Real-LAN and capacity/visual acceptance remain separate.

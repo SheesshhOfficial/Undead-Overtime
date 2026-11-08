@@ -17,12 +17,20 @@ namespace UndeadOvertime.Core
     public sealed class HostInfectedEncounter
     {
         public const double Speed = 1.6, AttackRange = 1.3, AttackInterval = 1;
-        public const int MeleeDamage = 10;
+        public const int MeleeDamage = 10, RevivedHealth = 40;
+        public const double ReviveRange = 2, ReviveDuration = 3, ReviveInputLifetime = .25;
         public static AimVector Spawn => new AimVector(0, HostMoveGate.EyeHeight, 6);
         private readonly LanSession session;
         private readonly long sessionId, roundId;
         private readonly Dictionary<PlayerTicket, Survivor> survivors = new Dictionary<PlayerTicket, Survivor>();
         private double lastClock, lastStep, nextAttackAt;
+        private readonly Dictionary<PlayerTicket, ReviveState> revives = new Dictionary<PlayerTicket, ReviveState>();
+        private sealed class ReviveState
+        {
+            public bool Held, Channeling;
+            public double LastIntentAt, StartedAt;
+            public PlayerTicket Target;
+        }
         private int health;
         private AimVector position = Spawn;
         public EncounterPhase Phase { get; private set; }
@@ -96,7 +104,61 @@ namespace UndeadOvertime.Core
                 !clearLineOfSight || !Clock(hostTime) || hostTime < nextAttackAt ||
                 (survivor.Position - position).LengthSquared > AttackRange * AttackRange) return false;
             survivor.Health = Math.Max(0, survivor.Health - MeleeDamage); nextAttackAt = hostTime + AttackInterval;
+            CancelReviveFromHost(victim);
             if (!Closest(out _)) Phase = EncounterPhase.Failed;
+            return true;
+        }
+        public static bool ValidReviveIntent(AimVector value) => value.IsFinite && value.X == 0 && value.Y == 0 && (value.Z == 0 || value.Z == 1);
+        private bool CanRevive => Current && (Phase == EncounterPhase.Active || Phase == EncounterPhase.Cleared);
+        public bool HoldReviveFromHost(PlayerTicket reviver, bool held, double hostTime)
+        {
+            if (!CanRevive || !State(reviver, out Survivor survivor) || survivor.Health <= 0 || !Clock(hostTime)) return false;
+            if (!revives.TryGetValue(reviver, out ReviveState revive)) { revive = new ReviveState(); revives.Add(reviver, revive); }
+            if (!held) { revive.Held = revive.Channeling = false; return true; }
+            if (hostTime - revive.LastIntentAt >= ReviveInputLifetime) revive.Channeling = false;
+            revive.Held = true; revive.LastIntentAt = hostTime; return true;
+        }
+        public void CancelReviveFromHost(PlayerTicket reviver)
+        {
+            if (revives.TryGetValue(reviver, out ReviveState revive)) revive.Held = revive.Channeling = false;
+        }
+        public bool ProposeReviveFromHost(PlayerTicket reviver, double hostTime, out PlayerTicket target)
+        {
+            target = default;
+            if (!Clock(hostTime) || !CanRevive || !State(reviver, out Survivor survivor) || survivor.Health <= 0 || !survivor.HasPose ||
+                !revives.TryGetValue(reviver, out ReviveState revive)) return false;
+            if (!revive.Held || hostTime - revive.LastIntentAt >= ReviveInputLifetime)
+            { revive.Held = revive.Channeling = false; return false; }
+            double best = ReviveRange * ReviveRange; bool found = false;
+            foreach (PlayerTicket ticket in session.SnapshotMembers())
+                if (!ticket.Equals(reviver) && survivors.TryGetValue(ticket, out Survivor other) && other.Health == 0 && other.HasPose)
+                {
+                    double distance = (survivor.Position - other.Position).LengthSquared;
+                    if (distance <= best && (!found || distance < best)) { best = distance; target = ticket; found = true; }
+                }
+            if (!found) revive.Channeling = false;
+            return found;
+        }
+        public bool AdvanceReviveFromHost(PlayerTicket reviver, PlayerTicket target, double hostTime, bool clearLineOfSight)
+        {
+            if (!ProposeReviveFromHost(reviver, hostTime, out PlayerTicket expected) || !expected.Equals(target)) return false;
+            ReviveState revive = revives[reviver];
+            if (!clearLineOfSight) { revive.Channeling = false; return false; }
+            if (!revive.Channeling || !revive.Target.Equals(target))
+            { revive.Channeling = true; revive.Target = target; revive.StartedAt = hostTime; }
+            if (hostTime - revive.StartedAt < ReviveDuration) return false;
+            survivors[target].Health = RevivedHealth;
+            revive.Held = revive.Channeling = false;
+            return true;
+        }
+        public bool ReviveStatusFromHost(PlayerTicket reviver, double hostTime, out PlayerTicket target, out byte progress)
+        {
+            target = default; progress = 0;
+            if (!CanRevive || !ValidTime(hostTime) || !State(reviver, out Survivor survivor) || survivor.Health <= 0 ||
+                !revives.TryGetValue(reviver, out ReviveState revive) || !revive.Held || !revive.Channeling ||
+                hostTime - revive.LastIntentAt >= ReviveInputLifetime || !State(revive.Target, out Survivor victim) || victim.Health != 0) return false;
+            target = revive.Target;
+            progress = (byte)Math.Min(99, Math.Max(0, (int)((hostTime - revive.StartedAt) / ReviveDuration * 100)));
             return true;
         }
     }

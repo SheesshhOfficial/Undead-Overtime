@@ -120,5 +120,19 @@ namespace UndeadOvertime.LanPrototype.Tests
                 Is.LessThan(1.3 * 1.3));
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
         }
+        [UnityTest]
+        public IEnumerator ReviveWithoutADownedTeammateCannotHealOrBlockWeaponInput()
+        {
+            Assert.That(range.SendAction(RangeAction.Revive, Vector3.forward), Is.True);
+            Vector3 aim = (new Vector3(0, 1.6f, 10) - LanRange.Station(0)).normalized;
+            Assert.That(range.SendAction(RangeAction.Fire, aim), Is.True);
+            range.SendAction(RangeAction.Revive, Vector3.zero);
+            yield return new WaitForSecondsRealtime(.2f);
+            Assert.That(range.CurrentSnapshot.TargetHealth(1), Is.EqualTo(75));
+            Assert.That(range.CurrentSnapshot.Member(0).Ammo, Is.EqualTo(11));
+            Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
+            Assert.That(range.CurrentSnapshot.Member(0).ReviveTargetSlot, Is.EqualTo(255));
+            Assert.That(range.CurrentSnapshot.Member(0).ReviveProgress, Is.Zero);
+        }
     }
 }

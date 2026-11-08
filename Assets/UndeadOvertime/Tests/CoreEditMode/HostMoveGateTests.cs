@@ -103,7 +103,7 @@ namespace UndeadOvertime.Core.Tests
                 Assert.That(value.Action, Is.EqualTo(RangeAction.Move)); Assert.That(value.Aim.Z, Is.EqualTo(input.Z));
             }
             Assert.Throws<ArgumentException>(() => LanRangeProtocol.Encode(new RangeCommand(RangeAction.Move, 1, 1, 1, new AimVector(0, 1, 0))));
-            byte[] old = LanRangeProtocol.Handshake; old[3] = 2;
+            byte[] old = LanRangeProtocol.Handshake; old[3] = 3;
             Assert.That(LanRangeProtocol.AcceptHandshake(old), Is.False);
         }
         [Test]
@@ -112,7 +112,7 @@ namespace UndeadOvertime.Core.Tests
             var hp = new[] { 100, 100, 100 }; var position = new AimVector(2, 1.6, -4);
             byte[] bytes = LanRangeProtocol.Encode(new RangeSnapshot(1, 1, SessionPhase.Playing,
                 new[] { new RangeMember(0, 1, 0, 12, false, position) }, hp));
-            Assert.That(bytes.Length, Is.EqualTo(83)); Assert.That(LanRangeProtocol.MaximumBytes, Is.EqualTo(371));
+            Assert.That(bytes.Length, Is.EqualTo(85)); Assert.That(LanRangeProtocol.MaximumBytes, Is.EqualTo(391));
             Assert.That(LanRangeProtocol.TrySnapshot(bytes, out RangeSnapshot state), Is.True);
             Assert.That(state.Member(0).Position.X, Is.EqualTo(2)); Assert.That(state.Member(0).Position.Z, Is.EqualTo(-4));
             Array.Copy(BitConverter.GetBytes(float.NaN), 0, bytes, LanRangeProtocol.SnapshotHeaderBytes + 19, 4);

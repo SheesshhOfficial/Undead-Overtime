@@ -15,7 +15,7 @@ namespace UndeadOvertime.LanPrototype
     /// </summary>
     public sealed class LanRange : MonoBehaviour
     {
-        private const string CommandMessage = "uo.range.command.v3", SnapshotMessage = "uo.range.snapshot.v3";
+        private const string CommandMessage = "uo.range.command.v4", SnapshotMessage = "uo.range.snapshot.v4";
         [SerializeField] private Camera worldCamera;
         private readonly LanSession session = new LanSession(LanRangeProtocol.Version);
         private readonly Dictionary<ulong, MemberState> members = new Dictionary<ulong, MemberState>();
@@ -62,7 +62,7 @@ namespace UndeadOvertime.LanPrototype
             public PlayerTicket Ticket;
             public byte Slot;
             public bool Connected;
-            public double Deadline, NextCommandAt, NextMoveAt;
+            public double Deadline, NextCommandAt, NextMoveAt, NextReviveAt;
             public Vector3 Position;
             public ulong LastSequence;
         }
@@ -265,7 +265,7 @@ namespace UndeadOvertime.LanPrototype
             double now = Time.realtimeSinceStartupAsDouble;
             fireGate = new HostFireGate(session, now); moveGate = new HostMoveGate(session, now); encounter = new HostInfectedEncounter(session, now);
             foreach (MemberState member in members.Values)
-            { member.LastSequence = 0; member.NextCommandAt = member.NextMoveAt = 0; member.Position = Station(member.Slot); }
+            { member.LastSequence = 0; member.NextCommandAt = member.NextMoveAt = member.NextReviveAt = 0; member.Position = Station(member.Slot); }
             status = "Round started. Capture controls: WASD move, mouse aim/fire, R reload.";
             PublishSnapshot(); return true;
         }
@@ -275,7 +275,7 @@ namespace UndeadOvertime.LanPrototype
             foreach (MemberState member in members.Values)
                 if (member.Connected) encounter.SetPlayerPositionFromHost(member.Ticket, ToCore(member.Position));
             if (!encounter.StartFromHost(Time.realtimeSinceStartupAsDouble)) return false;
-            status = "Infected encounter active. Stay together, move and shoot. Downed players wait for a new round.";
+            status = "Infected encounter active. Stay together, move and shoot. Hold E near a downed teammate for three seconds to revive.";
             PublishSnapshot(); return true;
         }
         public bool ReturnToLobby()
@@ -313,6 +313,7 @@ namespace UndeadOvertime.LanPrototype
                 }
                 input = Quaternion.Euler(0, yaw, 0) * Vector3.ClampMagnitude(input, 1);
                 SendAction(RangeAction.Move, input);
+                SendAction(RangeAction.Revive, keyboard != null && keyboard.eKey.isPressed ? Vector3.forward : Vector3.zero);
             }
             if (mouse == null) return;
             if (!mouse.leftButton.isPressed) waitForRelease = false;
@@ -356,6 +357,13 @@ namespace UndeadOvertime.LanPrototype
                 Physics.SyncTransforms();
             }
             foreach (MemberState member in members.Values)
+                if (member.Connected && encounter.ProposeReviveFromHost(member.Ticket, now, out PlayerTicket downed) &&
+                    members.TryGetValue(downed.PeerId, out MemberState victim) && victim.Connected && victim.Ticket.Equals(downed))
+                {
+                    bool clear = !Physics.Linecast(member.Position, victim.Position, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                    encounter.AdvanceReviveFromHost(member.Ticket, downed, now, clear);
+                }
+            foreach (MemberState member in members.Values)
             {
                 bool alive = encounter.PlayerHealth(member.Ticket) > 0;
                 fireGate?.SetAliveFromHost(member.Ticket, alive); moveGate?.SetCanMoveFromHost(member.Ticket, alive);
@@ -391,7 +399,8 @@ namespace UndeadOvertime.LanPrototype
         }
         public void ReleaseControls()
         {
-            if (captured && IsConnected && Phase == SessionPhase.Playing) SendAction(RangeAction.Move, Vector3.zero);
+            if (captured && IsConnected && Phase == SessionPhase.Playing)
+            { SendAction(RangeAction.Move, Vector3.zero); SendAction(RangeAction.Revive, Vector3.zero); }
             captured = false; waitForRelease = true;
             if (PresentationEnabled) { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
         }
@@ -401,7 +410,8 @@ namespace UndeadOvertime.LanPrototype
         {
             if (!IsConnected || snapshot == null || Phase != SessionPhase.Playing || sequence == ulong.MaxValue) return false;
             var direction = new AimVector(aim.x, aim.y, aim.z);
-            if (action == RangeAction.Move ? !HostMoveGate.ValidIntent(direction) : !direction.IsUnit) return false;
+            if (action == RangeAction.Move ? !HostMoveGate.ValidIntent(direction) :
+                action == RangeAction.Revive ? !HostInfectedEncounter.ValidReviveIntent(direction) : !direction.IsUnit) return false;
             var command = new RangeCommand(action, snapshot.SessionId, snapshot.RoundId, ++sequence, direction);
             if (IsHosting) HandleCommand(manager.LocalClientId, command);
             else Send(CommandMessage, NetworkManager.ServerClientId, LanRangeProtocol.Encode(command), NetworkDelivery.ReliableSequenced);
@@ -418,11 +428,22 @@ namespace UndeadOvertime.LanPrototype
             if (!IsHosting || fireGate == null || !members.TryGetValue(sender, out MemberState member) || !member.Connected ||
                 command.SessionId != session.SessionId || command.RoundId != session.RoundId ||
                 command.Sequence == 0 || command.Sequence <= member.LastSequence ||
-                (command.Action == RangeAction.Move ? !HostMoveGate.ValidIntent(command.Aim) : !command.Aim.IsUnit)) return;
+                (command.Action == RangeAction.Move ? !HostMoveGate.ValidIntent(command.Aim) :
+                    command.Action == RangeAction.Revive ? !HostInfectedEncounter.ValidReviveIntent(command.Aim) : !command.Aim.IsUnit)) return;
             member.LastSequence = command.Sequence;
             double now = Time.realtimeSinceStartupAsDouble;
+            if (command.Action == RangeAction.Revive)
+            {
+                if (encounter != null && (now >= member.NextReviveAt || command.Aim.Z == 0))
+                {
+                    member.NextReviveAt = now + .02;
+                    encounter.HoldReviveFromHost(member.Ticket, command.Aim.Z == 1, now);
+                }
+                return;
+            }
             if (command.Action == RangeAction.Move)
             {
+                if (command.Aim.LengthSquared > 0) encounter?.CancelReviveFromHost(member.Ticket);
                 // Movement and fire have independent pacing so a walking packet cannot eat a shot.
                 // A fresh explicit stop must not be dropped just because it follows a walk packet.
                 if (moveGate != null && (now >= member.NextMoveAt || command.Aim.LengthSquared == 0))
@@ -432,6 +453,7 @@ namespace UndeadOvertime.LanPrototype
                 }
                 return;
             }
+            encounter?.CancelReviveFromHost(member.Ticket);
             if (now < member.NextCommandAt) return;
             member.NextCommandAt = now + .02;
             Vector3 origin = member.Position;
@@ -465,8 +487,14 @@ namespace UndeadOvertime.LanPrototype
             var rows = new List<RangeMember>();
             foreach (PlayerTicket ticket in session.SnapshotMembers())
                 if (members.TryGetValue(ticket.PeerId, out MemberState m) && m.Connected)
+                {
+                    byte targetSlot = 255, progress = 0;
+                    if (encounter != null && encounter.ReviveStatusFromHost(ticket, Time.realtimeSinceStartupAsDouble, out PlayerTicket target, out progress) &&
+                        members.TryGetValue(target.PeerId, out MemberState downed) && downed.Connected && downed.Ticket.Equals(target)) targetSlot = downed.Slot;
+                    else progress = 0;
                     rows.Add(new RangeMember(ticket.PeerId, ticket.ConnectionId, m.Slot,
-                        (byte)(fireGate?.Ammo(ticket) ?? 0), fireGate?.IsReloading(ticket) ?? false, ToCore(m.Position), (byte)(encounter?.PlayerHealth(ticket) ?? 100)));
+                        (byte)(fireGate?.Ammo(ticket) ?? 0), fireGate?.IsReloading(ticket) ?? false, ToCore(m.Position), (byte)(encounter?.PlayerHealth(ticket) ?? 100), targetSlot, progress));
+                }
             if (rows.Count == 0) return;
             var state = new RangeSnapshot(session.SessionId, session.RoundId, session.Phase, rows.ToArray(), health, encounter?.Snapshot ?? InfectedSnapshot.Dormant);
             ApplySnapshot(state); byte[] bytes = LanRangeProtocol.Encode(state);
@@ -558,6 +586,8 @@ namespace UndeadOvertime.LanPrototype
                     if (snapshot.Member(i).PeerId == manager.LocalClientId)
                         GUILayout.Label("Your slot " + (snapshot.Member(i).Slot + 1) + " | Health " + snapshot.Member(i).Health + (snapshot.Member(i).Health == 0 ? " (DOWNED)" : "") + " | Ammo " + snapshot.Member(i).Ammo +
                             (snapshot.Member(i).Reloading ? " | Reloading..." : " | R reload"));
+                if (TryGetLocalMember(out RangeMember local) && local.ReviveTargetSlot != 255)
+                    GUILayout.Label("Reviving slot " + (local.ReviveTargetSlot + 1) + ": " + local.ReviveProgress + "%");
                 GUILayout.BeginHorizontal();
                 if (IsHosting && Phase == SessionPhase.Lobby && GUILayout.Button("Start round")) BeginRound();
                 if (IsHosting && Phase == SessionPhase.Playing && snapshot.Encounter.Phase == EncounterPhase.Dormant && GUILayout.Button("Start infected")) StartEncounter();
@@ -565,7 +595,7 @@ namespace UndeadOvertime.LanPrototype
                 if (Phase == SessionPhase.Playing && !captured && GUILayout.Button("Capture mouse to aim/fire")) CaptureControls();
                 if (GUILayout.Button("Disconnect")) StopSession();
                 GUILayout.EndHorizontal();
-                GUILayout.Label("WASD walk, R reload, Esc releases controls. Flat ground only; no jump/prediction yet.");
+                GUILayout.Label("WASD walk, R reload, hold E nearby to revive, Esc releases controls. Flat ground only; no jump/prediction yet.");
             }
             GUILayout.EndArea();
             if (captured) GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");

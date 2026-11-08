@@ -69,6 +69,7 @@ try {
     if ($hostReport.steps -notcontains 'host-shutdown-completed' -or $clientReport.steps -notcontains 'host-shutdown-observed') { throw 'A terminal lifecycle check is missing.' }
     if ($hostReport.steps -notcontains 'remote-movement-observed' -or $clientReport.steps -notcontains 'replicated-movement-and-expiry') { throw 'The movement/expiry check is missing.' }
     if ($hostReport.steps -notcontains 'infected-result-acknowledged' -or $clientReport.steps -notcontains 'replicated-infected-kill') { throw 'The infected encounter check is missing.' }
+    if ($hostReport.steps -notcontains 'revived-client-action-acknowledged' -or $clientReport.steps -notcontains 'revived-client-actions-replicated') { throw 'The co-op revive check is missing.' }
     if ($hostProcess.ExitCode -ne 0 -or $clientProcess.ExitCode -ne 0) { throw 'A test player returned a nonzero exit code.' }
     $summary = [ordered]@{
         formatVersion = 1; success = $true; runId = $run; requestedRevision = $Revision.ToLowerInvariant()
