@@ -48,6 +48,7 @@ namespace UndeadOvertime.LanPrototype
             }
             catch { Destroy(root); throw; }
         }
+        public static Material LoadConcreteMaterial() => LoadMaterial("concrete_material");
         private static Material LoadMaterial(string name)
         {
             // Serialized Resources materials anchor the required Lit/PBR variants and texture dependencies in player builds.

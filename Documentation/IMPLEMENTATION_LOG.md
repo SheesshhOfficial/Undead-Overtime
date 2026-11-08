@@ -235,3 +235,10 @@ Added three pure-core retirement/repeated-round cases and one native reset/power
 While the user may be trying the accepted 917d94 player, prepared a cloud-only fixed-objective HUD distance/bearing line on top of a150bc3. It is wired directly into the mission HUD/menu and reads published mission/player state plus the view orientation; it never authorizes interaction or changes gameplay state. No PC or local acceptance action was performed. The reviewed guidance is published after the replay candidate; local validation remains on hold while the user plays.
 
 Actual pure-core run passed 310/310 including 26 new direction/lifecycle/numeric cases. Static and syntax checks passed; independent review caught and corrected an exact-float spawn assertion in the authored native case. Expected future native inventory is 334 EditMode /67 PlayMode, not yet run. Native visual readability and ordinary manual input require later review. See MISSION_NAVIGATION.md and its core result.
+
+
+## 2026-11-08: bounded original-material depot architecture candidate
+
+Reused the accepted original wall-concrete maps/material on the two existing mission partitions, with runtime-owned meter-scaled UV mesh copies. Added twenty small collider-free painted gate ribs/edges using the existing cube mesh/materials, parented under the current gate so authoritative opening hides them together. Existing collider geometry, console/extraction, host gameplay and headless behavior are retained. No assets, materials, importers, settings or user-PC files were rewritten.
+
+Actual unchanged core run passed 310/310. Static/syntax checks passed; independent source review found and corrected coplanar rib/stripe overlap, with a native separation assertion. Seven native regression cases are authored, not run. Combined expected native inventory is 334 EditMode /74 PlayMode. The user requested building first and a single later validation batch, so native tests/build/loopback/visual review remain pending. See DEPOT_ARCHITECTURE.md and its result record.

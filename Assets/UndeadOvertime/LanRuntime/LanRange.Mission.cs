@@ -69,7 +69,8 @@ namespace UndeadOvertime.LanPrototype
         private void CreateMissionPresentation(long sessionId, long roundId)
         {
             missionPresentation = new DepotMissionPresentation(generated, sessionId, roundId, PresentationEnabled,
-                missionPartitionMaterial, missionControlMaterial, missionExtractionMaterial);
+                missionPartitionMaterial, missionControlMaterial, missionExtractionMaterial,
+                PresentationEnabled ? DepotFloorPresentation.LoadConcreteMaterial() : null);
         }
         private void BeginMissionRound(double now)
         {

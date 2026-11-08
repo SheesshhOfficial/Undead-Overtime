@@ -19,11 +19,12 @@ namespace UndeadOvertime.LanPrototype
         public Transform Root { get; private set; }
         public bool RenderingEnabled { get; }
         public bool GateUnlocked { get; private set; }
+        public bool ArchitecturalDetailsEnabled { get; }
         public CoopMissionPhase Phase { get; private set; }
         private bool Available => !disposed && Root != null;
 
         public DepotMissionPresentation(Transform parent, long sessionId, long roundId, bool enablePresentation,
-            Material partitionMaterial = null, Material controlMaterial = null, Material extractionMaterial = null)
+            Material partitionMaterial = null, Material controlMaterial = null, Material extractionMaterial = null, Material concreteMaterial = null)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (!Application.isPlaying) throw new InvalidOperationException("Create mission geometry only during Play Mode.");
@@ -36,15 +37,21 @@ namespace UndeadOvertime.LanPrototype
             RenderingEnabled = enablePresentation && SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
             if (RenderingEnabled && (partitionMaterial == null || controlMaterial == null || extractionMaterial == null))
                 throw new ArgumentException("Rendered mission geometry requires all three caller-owned materials.");
+            ArchitecturalDetailsEnabled = RenderingEnabled && concreteMaterial != null;
             this.sessionId = sessionId; this.roundId = roundId; Phase = CoopMissionPhase.RestorePower;
             Root = new GameObject("Undead Overtime depot mission - prototype geometry").transform;
             Root.SetParent(parent, false);
             try
             {
                 // Existing range walls close the outer ends at x=+/-16. A four-meter opening remains at center.
-                Part("Mission west partition", new Vector3(-9, 1.5f, PartitionZ), new Vector3(14, 3, .4f), partitionMaterial, true);
-                Part("Mission east partition", new Vector3(9, 1.5f, PartitionZ), new Vector3(14, 3, .4f), partitionMaterial, true);
+                GameObject west = Part("Mission west partition", new Vector3(-9, 1.5f, PartitionZ), new Vector3(14, 3, .4f), partitionMaterial, true);
+                GameObject east = Part("Mission east partition", new Vector3(9, 1.5f, PartitionZ), new Vector3(14, 3, .4f), partitionMaterial, true);
                 gate = Part("Mission route gate", new Vector3(0, 1.5f, PartitionZ), new Vector3(GateWidth, 3, .4f), partitionMaterial, true);
+                if (ArchitecturalDetailsEnabled)
+                {
+                    DepotWallSurface.Apply(west, concreteMaterial); DepotWallSurface.Apply(east, concreteMaterial);
+                    AddGateRelief(partitionMaterial, controlMaterial);
+                }
                 // Eye-level interaction point lies above and just in front of the physical control pedestal.
                 Part("Mission power console", new Vector3(-9, .6f, -5.6f), new Vector3(1.2f, 1.2f, .8f), controlMaterial, true);
                 // This is a marker, never a second floor or blocking/trigger collision surface.
@@ -70,6 +77,31 @@ namespace UndeadOvertime.LanPrototype
             part.name = name; part.transform.SetParent(Root, false);
             part.transform.localPosition = position; part.transform.localScale = scale;
             return part;
+        }
+        private void AddGateRelief(Material steel, Material caution)
+        {
+            // A bounded painted-shutter treatment, not another collision object or a newly imported asset.
+            // Children follow the existing gate's active state exactly. Maximum relief is 2 cm beyond its faces.
+            Mesh cube = gate.GetComponent<MeshFilter>().sharedMesh;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                // Keep rib ends short of caution edges; overlapping coplanar color patches would z-fight.
+                for (int row = 0; row < 8; row++)
+                    GateDetail("Gate shutter rib " + side + ":" + row, new Vector3(0, .2f + row * .37f, PartitionZ + side * .205f),
+                        new Vector3(3.64f, .065f, .03f), steel, cube);
+                foreach (float x in new[] { -1.91f, 1.91f })
+                    GateDetail("Gate caution edge " + side + ":" + x, new Vector3(x, 1.5f, PartitionZ + side * .205f),
+                        new Vector3(.12f, 2.9f, .03f), caution, cube);
+            }
+        }
+        private void GateDetail(string name, Vector3 position, Vector3 scale, Material material, Mesh sharedCube)
+        {
+            // Do not CreatePrimitive here: purely visual relief must never acquire even a transient collider.
+            var part = new GameObject(name); part.transform.SetParent(Root, false);
+            part.transform.localPosition = position; part.transform.localScale = scale;
+            part.AddComponent<MeshFilter>().sharedMesh = sharedCube;
+            part.AddComponent<MeshRenderer>().sharedMaterial = material;
+            part.transform.SetParent(gate.transform, true);
         }
         /// <summary>Apply only same-round authoritative/view-validated state. A late frame cannot relock the gate
         /// or regress an objective. Network frame sequence/sender checks belong to CoopMissionReplica/transport.</summary>
