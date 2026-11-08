@@ -1,0 +1,8 @@
+{
+  "name": "UndeadOvertime.Prototype.PlayModeTests",
+  "rootNamespace": "UndeadOvertime.Prototype.Tests",
+  "references": ["UndeadOvertime.Prototype"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "autoReferenced": false
+}
