@@ -1,8 +1,10 @@
 # Host-owned co-op revive milestone
 
+Current core correction: see [revive continuity](REVIVE_CONTINUITY.md) for verified-tick timing, interruption handling and the 264-case cloud result. It still requires native Unity acceptance. The v4 protocol and original candidate sections below retain historical milestone context.
+
 ## Scope and status
 
-A living player can rescue a downed teammate by standing within 2 metres and holding E for 3 continuous seconds. The host checks all eligibility, timing and line of sight. A successful revive restores 40 HP at the downed player's current position, without refilling ammunition. The player can capture controls again to move/fire.
+A living player can rescue a downed teammate by standing within 2 metres and holding E for 3 seconds of continuously verified host progress. The host checks all eligibility, timing and line of sight. A successful revive restores 40 HP at the downed player's current position, without refilling ammunition. The player can capture controls again to move/fire.
 
 This is a candidate extension to the tested one-infected arena, not waves or finished co-op gameplay. Baseline `5aaf489bf34e65a8dacaed31c582a822c078f24a` passed compilation, 104 EditMode / 26 PlayMode, Windows build and actual two-process infected pursuit/injury/kill. Revive revision `cae6b4db487acdf44c41a8ceaff1ec1b945fbfe3` compiled and passed 117 EditMode / 27 PlayMode cases, but its complete loopback acceptance failed at the final reload acknowledgment. Both peers observed the revive and the client restored movement/fire. This correction separates reload pacing from fire and strengthens the final receipt; its exact-revision execution is pending.
 
@@ -11,9 +13,9 @@ This is a candidate extension to the tested one-infected arena, not waves or fin
 - The client sends only held/released revive intent, plus existing session/round/sequence identity. It does not name a victim, position, duration or health result.
 - The host chooses the nearest current downed teammate within 2 metres. Self, living players, stale tickets and disconnected players are ineligible. Equal-distance ties keep stable connection order.
 - The rescuer must be alive, in an active or cleared encounter, with a fresh accepted hold update. Normal input refreshes at 20 Hz. Missing input for 250 ms cancels the channel. A single packet cannot become a delayed revive.
-- Three uninterrupted host-time seconds with clear eye-height line of sight are required. Release, range loss, target change, obstruction, walking intent, firing, reloading or taking damage resets progress. Fresh release bypasses pacing; dropping a release still cannot exceed the hold-expiry window.
+- Three verified seconds with clear eye-height line of sight are required. Each check credits at most 0.1 seconds, and a validation gap of 250 ms or longer restarts progress even if input stays fresh. Release, range loss, target change, obstruction, walking intent, firing, reloading or taking damage resets progress. Fresh release bypasses pacing; dropping a release still cannot exceed the hold-expiry window.
 - Taking damage cancels held state. If E remains pressed, a later accepted refresh may start a fresh channel; previously accumulated time is not retained.
-- Two rescuers can channel toward one victim, but only the first valid completion changes zero health to 40. The other channel becomes ineligible, with no extra healing.
+- Two rescuers can channel toward one victim, but only the first valid completion changes zero health to 40. All channels targeting the revived survivor are reset, so a later downing cannot reuse another helper's old progress.
 - Downed players cannot rescue themselves or others. If everybody is down, the encounter stays Failed and the host must restart the round.
 - Revive is allowed after the infected is cleared, so the rescuer can first remove the threat. It does not restart the infected or give extra ammo. Movement's held/pending input was cleared when the player was downed; fresh input is needed afterward.
 - Health, revive progress and completion are host snapshots. Clients do not run an independent healing timer. Progress is shown for the selected teammate; no timer UI is proof of completion without replicated health.
@@ -44,4 +46,4 @@ The final smoke exchange now verifies the client actually sees reload completion
 
 Corrected revision `90c7b28cc7b6a3c0e951732d3111be367f413199` passed all 117 EditMode / 28 PlayMode cases, build and the complete two-process revive/reload receipt run. See [the execution record](LAN_LOOPBACK_AUTOMATION.md) for exact timestamps, hashes and retained cloud-connectivity diagnostics.
 
-The later [wave candidate](LAN_HORDE.md) preserves revive in one round-level owner through intermissions and moves snapshots to protocol v5. The v4 layout above describes this revive milestone's historical protocol, not the latest wave wire layout. Its source inventory is now 132 EditMode / 32 PlayMode; new wave acceptance is pending.
+The later [wave candidate](LAN_HORDE.md) preserves revive in one round-level owner through intermissions and moves snapshots to protocol v5. The v4 layout above describes this revive milestone's historical protocol, not the latest wave wire layout. That wave revision, `6b3df43657689622e70189704072893b0e899ada`, subsequently passed 132 EditMode / 32 PlayMode, build and full three-wave loopback. Current-main material and core corrections remain separately unaccepted natively; consult the README instead of treating historical inventories as current.

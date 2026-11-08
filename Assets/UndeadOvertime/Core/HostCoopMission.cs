@@ -57,7 +57,13 @@ namespace UndeadOvertime.Core
         public bool SetPlayerPositionFromHost(PlayerTicket player, AimVector position, double hostTime)
         {
             if (advancing || !State(player, out Member member) || !Clock(hostTime)) return false;
-            if (!HostMoveGate.ValidPosition(position)) { member.HasPose = false; member.ExitInterrupted = true; Cancel(member); return false; }
+            if (!HostMoveGate.ValidPosition(position))
+            {
+                member.HasPose = false; member.ExitInterrupted = true; Cancel(member);
+                // The owned encounter must see the invalidation too; a quick corrected pose cannot hide it from revive rules.
+                Encounter.SetPlayerPositionFromHost(player, position);
+                return false;
+            }
             if (!Encounter.SetPlayerPositionFromHost(player, position)) return false;
             if (member.HasPose && hostTime - member.PoseAt >= PoseLifetime)
             { member.ExitInterrupted = true; Cancel(member); }
