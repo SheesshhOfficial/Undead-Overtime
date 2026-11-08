@@ -1,3 +1,4 @@
+using UndeadOvertime.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -22,9 +23,15 @@ namespace UndeadOvertime.Prototype
         private LineRenderer tracer;
         private PrototypeRange range;
         private InputActionMap controls;
-        private InputAction move, mouseLook, stickLook, fire, sprint, jump, toggleView, reset, release;
+        private InputAction move, mouseLook, stickLook, fire, sprint, jump, toggleView, reset, release, reload, interact;
         private Vector3 spawnPosition;
         private float yaw, pitch, verticalVelocity, nextShotAt, tracerUntil, hitMarkerUntil;
+        private readonly PrototypeMagazine magazine = new PrototypeMagazine();
+        public int CurrentHealth { get; private set; } = 100;
+        public bool IsAlive => CurrentHealth > 0;
+        public int Ammo => magazine.Ammo;
+        public bool IsReloading => magazine.IsReloading;
+
         private bool initialized, inputEnabled = true, captured, waitForFireRelease;
 
         public bool IsThirdPerson { get; private set; }
@@ -61,7 +68,9 @@ namespace UndeadOvertime.Prototype
             sprint = Button("Sprint", "<Keyboard>/leftShift", "<Gamepad>/leftStickPress");
             jump = Button("Jump", "<Keyboard>/space", "<Gamepad>/buttonSouth");
             toggleView = Button("ToggleView", "<Keyboard>/v", "<Gamepad>/select");
-            reset = Button("Reset", "<Keyboard>/r", "<Gamepad>/start");
+            reset = Button("Reset", range.IsSurvivalMode ? "<Keyboard>/t" : "<Keyboard>/r", "<Gamepad>/start");
+            reload = Button("Reload", "<Keyboard>/r", "<Gamepad>/buttonWest");
+            interact = Button("Interact", "<Keyboard>/e", "<Gamepad>/buttonNorth");
             release = Button("ReleaseCursor", "<Keyboard>/escape", "<Gamepad>/buttonEast");
 
             GameObject tracerObject = new GameObject("Shot tracer");
@@ -135,13 +144,20 @@ namespace UndeadOvertime.Prototype
             if (!initialized) return;
             if (tracer.enabled && Time.time >= tracerUntil) tracer.enabled = false;
             if (!fire.IsPressed()) waitForFireRelease = false;
-            bool allowInput = inputEnabled && captured;
+            bool terminal = range.Survival != null && range.Survival.IsTerminal;
+            if (range.IsSurvivalMode) magazine.Advance(range.GameplayTime);
+            if (range.IsSurvivalMode && inputEnabled && reset.WasPressedThisFrame())
+            {
+                range.ResetRange();
+                return;
+            }
+            bool allowInput = inputEnabled && captured && !terminal;
             if (inputEnabled && release.WasPressedThisFrame())
             {
                 SetCaptured(false);
                 allowInput = false;
             }
-            else if (inputEnabled && !captured && Application.isFocused && fire.WasPressedThisFrame())
+            else if (inputEnabled && !terminal && !captured && Application.isFocused && fire.WasPressedThisFrame())
             {
                 SetCaptured(true);
                 // The recapture click must not accidentally fire a shot.
@@ -157,12 +173,14 @@ namespace UndeadOvertime.Prototype
                 pitch = Mathf.Clamp(pitch - look.y, -80f, 80f);
                 transform.rotation = Quaternion.Euler(0f, yaw, 0f);
                 if (toggleView.WasPressedThisFrame()) SetThirdPerson(!IsThirdPerson);
+                if (range.IsSurvivalMode && reload.WasPressedThisFrame()) TryReload();
                 if (reset.WasPressedThisFrame())
                 {
                     range.ResetRange();
                     return;
                 }
             }
+            if (range.Survival != null) range.Survival.SetInteractHeld(allowInput && interact.IsPressed());
             MovePlayer(allowInput);
             UpdateCamera();
             if (allowInput && !waitForFireRelease && fire.IsPressed()) TryFire();
@@ -215,8 +233,16 @@ namespace UndeadOvertime.Prototype
         /// <summary>Runs the same local shot path for input and automated scene checks.</summary>
         public bool TryFire()
         {
-            if (!initialized || Time.time < nextShotAt) return false;
-            nextShotAt = Time.time + FireInterval;
+            if (!initialized || !IsAlive || (range.Survival != null && range.Survival.IsTerminal)) return false;
+            if (range.IsSurvivalMode)
+            {
+                if (!magazine.TryFire(range.GameplayTime)) return false;
+            }
+            else
+            {
+                if (Time.time < nextShotAt) return false;
+                nextShotAt = Time.time + FireInterval;
+            }
             ShotsFired++;
             Ray aim = view.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             Vector3 aimPoint = aim.GetPoint(ShotRange);
@@ -248,8 +274,27 @@ namespace UndeadOvertime.Prototype
             return true;
         }
 
+        public bool TryReload() => initialized && IsAlive && range.IsSurvivalMode &&
+            (range.Survival == null || !range.Survival.IsTerminal) && magazine.TryReload(range.GameplayTime);
+
+        public void ReleaseControls() => SetCaptured(false);
+
+        public void TakeDamage(int damage)
+        {
+            if (!initialized || !range.IsSurvivalMode || !IsAlive || damage <= 0 || range.Survival.IsTerminal) return;
+            CurrentHealth = Mathf.Max(0, CurrentHealth - Mathf.Min(CurrentHealth, damage));
+            if (!IsAlive) range.Survival.Lose();
+        }
+
+        public void RestoreHealth(int amount)
+        {
+            if (IsAlive && amount > 0) CurrentHealth += Mathf.Min(100 - CurrentHealth, amount);
+        }
+
         public void ResetPlayer()
         {
+            CurrentHealth = 100;
+            magazine.Reset();
             motor.enabled = false;
             transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
             motor.enabled = true;
@@ -257,6 +302,8 @@ namespace UndeadOvertime.Prototype
             ShotsFired = Hits = Kills = 0;
             tracer.enabled = false;
             SetThirdPerson(false);
+            if (range.IsSurvivalMode) SetCaptured(inputEnabled && Application.isFocused);
         }
     }
 }
+

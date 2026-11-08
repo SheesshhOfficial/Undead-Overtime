@@ -87,3 +87,8 @@ The two suites are committed test sources. Their actual results must be recorded
 ## Known omissions
 
 No production meshes, weapon rig, animations, audio, zombie navigation, networking, health for players, death/revive flow, UI scaling pass, accessibility settings, rebinding, save system, player build, performance budget, or polished visual treatment. Materials are transient copies of the active pipeline's default material; a standalone build still needs shader/build validation.
+
+
+## Separate solo encounter scene
+
+`Scenes/SurvivalYard.unity` now opts into an isolated zombie-wave/extraction experiment. Read [SURVIVAL_YARD.md](SURVIVAL_YARD.md) for its different reload/restart controls and verification limits. This original mechanics scene remains the regression baseline with stationary targets and R reset.

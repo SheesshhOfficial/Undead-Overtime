@@ -8,13 +8,12 @@ namespace UndeadOvertime.Prototype.Tests
 {
     public sealed class PrototypeSceneTests
     {
-        private const string ScenePath = "Assets/UndeadOvertime/Scenes/PrototypeRange.unity";
-
-        [Test]
-        public void DedicatedSceneHasOneBootstrapAndAssignedCamera()
+        [TestCase("Assets/UndeadOvertime/Scenes/PrototypeRange.unity", false)]
+        [TestCase("Assets/UndeadOvertime/Scenes/SurvivalYard.unity", true)]
+        public void DedicatedSceneHasOneBootstrapAndAssignedCamera(string scenePath, bool survival)
         {
-            Assert.That(AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath), Is.Not.Null);
-            Scene scene = EditorSceneManager.OpenPreviewScene(ScenePath);
+            Assert.That(AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath), Is.Not.Null);
+            Scene scene = EditorSceneManager.OpenPreviewScene(scenePath);
             try
             {
                 PrototypeRange found = null;
@@ -32,6 +31,7 @@ namespace UndeadOvertime.Prototype.Tests
                 }
                 Assert.That(count, Is.EqualTo(1));
                 Assert.That(found.WorldCamera, Is.Not.Null);
+                Assert.That(found.IsSurvivalMode, Is.EqualTo(survival));
                 Assert.That(found.IsBuilt, Is.False, "Opening the scene must not generate or edit objects in Edit Mode.");
             }
             finally
@@ -41,3 +41,4 @@ namespace UndeadOvertime.Prototype.Tests
         }
     }
 }
+

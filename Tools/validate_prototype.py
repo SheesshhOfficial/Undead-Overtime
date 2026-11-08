@@ -51,17 +51,19 @@ for path in ASSETS.rglob("*.asmdef"):
     else:
         check("Unity.InputSystem" in data["references"], "Missing Input System assembly reference")
 
-scene_path = ASSETS / "Scenes" / "PrototypeRange.unity"
-scene = scene_path.read_text()
-anchors = re.findall(r"^--- !u!\d+ &(-?\d+)$", scene, re.MULTILINE)
-check(len(anchors) == len(set(anchors)), "Duplicate scene object file IDs")
-anchor_set = set(anchors)
-for ref in re.findall(r"\{fileID: (-?\d+)\}", scene):
-    check(ref == "0" or ref in anchor_set, f"Unresolved in-scene file ID: {ref}")
 bootstrap_guid = guid(ASSETS / "Runtime" / "PrototypeRange.cs.meta")
-check(scene.count(f"guid: {bootstrap_guid}") == 1, "Expected one range bootstrap script reference")
-check("worldCamera: {fileID: 330585545}" in scene, "Missing serialized range camera")
-check("  - {fileID: 1000002}" in scene, "Bootstrap is missing from scene roots")
+for name, survival in [("PrototypeRange", False), ("SurvivalYard", True)]:
+    scene_path = ASSETS / "Scenes" / f"{name}.unity"
+    scene = scene_path.read_text()
+    anchors = re.findall(r"^--- !u!\d+ &(-?\d+)$", scene, re.MULTILINE)
+    check(len(anchors) == len(set(anchors)), f"Duplicate scene object file IDs: {name}")
+    anchor_set = set(anchors)
+    for ref in re.findall(r"\{fileID: (-?\d+)\}", scene):
+        check(ref == "0" or ref in anchor_set, f"Unresolved in-scene file ID: {name}/{ref}")
+    check(scene.count(f"guid: {bootstrap_guid}") == 1, f"Expected one range bootstrap: {name}")
+    check("worldCamera: {fileID: 330585545}" in scene, f"Missing serialized camera: {name}")
+    check("  - {fileID: 1000002}" in scene, f"Bootstrap missing from scene roots: {name}")
+    check(("survivalMode: 1" in scene) == survival, f"Incorrect opt-in survival mode: {name}")
 check("[ExecuteAlways]" not in "".join(p.read_text() for p in ASSETS.rglob("*.cs")), "Unexpected editor execution hook")
 check(not any(p.name in ("Library", "Temp", "Logs") for p in ASSETS.rglob("*")), "Generated Unity data under source assets")
 

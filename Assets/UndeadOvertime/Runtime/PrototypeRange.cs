@@ -9,11 +9,15 @@ namespace UndeadOvertime.Prototype
     public sealed class PrototypeRange : MonoBehaviour
     {
         [SerializeField] private Camera worldCamera;
+        [SerializeField] private bool survivalMode;
         private readonly List<Material> materials = new List<Material>();
         private readonly List<PrototypeTarget> targets = new List<PrototypeTarget>();
         private Transform generatedRoot;
 
         public bool IsBuilt { get; private set; }
+        public bool IsSurvivalMode => survivalMode;
+        public PrototypeSurvival Survival { get; private set; }
+        public double GameplayTime => Survival != null ? Survival.SimulationTime : Time.time;
         public PrototypePlayer Player { get; private set; }
         public IReadOnlyList<PrototypeTarget> Targets => targets;
         public Camera WorldCamera => worldCamera;
@@ -21,6 +25,13 @@ namespace UndeadOvertime.Prototype
         private void Start()
         {
             if (!IsBuilt) Build(worldCamera);
+        }
+
+        public void BuildSurvival(Camera camera)
+        {
+            if (IsBuilt) throw new InvalidOperationException("BuildSurvival must be selected before construction.");
+            survivalMode = true;
+            Build(camera);
         }
 
         /// <summary>Explicit entry point also used by PlayMode tests. Repeated calls are harmless.</summary>
@@ -47,14 +58,16 @@ namespace UndeadOvertime.Prototype
             Box("East boundary", new Vector3(16f, 1.5f, 0f), new Vector3(0.5f, 3f, 32f), wall);
             Box("North boundary", new Vector3(0f, 1.5f, 16f), new Vector3(32f, 3f, 0.5f), wall);
             Box("South boundary", new Vector3(0f, 1.5f, -16f), new Vector3(32f, 3f, 0.5f), wall);
-            Box("Tall cover", new Vector3(-6f, 0.75f, 0f), new Vector3(4f, 1.5f, 2f), cover);
-            Box("Low cover", new Vector3(5f, 0.5f, 2f), new Vector3(3f, 1f, 2f), cover);
-            Box("One metre calibration cube", new Vector3(-10f, 0.5f, -5f), Vector3.one, marker);
-            Box("Firing line", new Vector3(0f, 0.012f, -6f), new Vector3(20f, 0.02f, 0.08f), marker, false);
-            AddTarget("Target A", new Vector3(-5f, 1f, 8f), target);
-            AddTarget("Target B", new Vector3(0f, 1f, 10f), target);
-            AddTarget("Target C", new Vector3(5f, 1f, 8f), target);
-
+            if (!survivalMode)
+            {
+                Box("Tall cover", new Vector3(-6f, 0.75f, 0f), new Vector3(4f, 1.5f, 2f), cover);
+                Box("Low cover", new Vector3(5f, 0.5f, 2f), new Vector3(3f, 1f, 2f), cover);
+                Box("One metre calibration cube", new Vector3(-10f, 0.5f, -5f), Vector3.one, marker);
+                Box("Firing line", new Vector3(0f, 0.012f, -6f), new Vector3(20f, 0.02f, 0.08f), marker, false);
+                AddTarget("Target A", new Vector3(-5f, 1f, 8f), target);
+                AddTarget("Target B", new Vector3(0f, 1f, 10f), target);
+                AddTarget("Target C", new Vector3(5f, 1f, 8f), target);
+            }
             GameObject playerObject = new GameObject("Prototype player (local only)");
             playerObject.transform.SetParent(generatedRoot, false);
             playerObject.transform.position = new Vector3(0f, 0.10f, -9f);
@@ -79,8 +92,17 @@ namespace UndeadOvertime.Prototype
             body.sharedMaterial = player;
             Player = playerObject.AddComponent<PrototypePlayer>();
             Player.Initialize(worldCamera, body, marker, this);
+            if (survivalMode)
+            {
+                Material infected = CreateMaterial("Prototype infected", new Color(0.32f, 0.48f, 0.18f));
+                Material exit = CreateMaterial("Prototype extraction", new Color(0.15f, 0.95f, 0.45f));
+                GameObject zone = Box("Extraction zone (after waves)", new Vector3(0f, 0.015f, -12f), new Vector3(4f, 0.02f, 4f), exit, false);
+                Survival = generatedRoot.gameObject.AddComponent<PrototypeSurvival>();
+                Survival.Initialize(this, generatedRoot, infected, zone.GetComponent<Renderer>());
+            }
             IsBuilt = true;
-            Debug.Log("Undead Overtime: local prototype range ready. V toggles FPS/TPS, R resets. No networking is active.", this);
+            Debug.Log(survivalMode ? "Undead Overtime: solo Survival Yard ready. R reloads, T restarts. Placeholder infected; no networking." :
+                "Undead Overtime: local prototype range ready. V toggles FPS/TPS, R resets. No networking is active.", this);
         }
 
         private Material CreateMaterial(string label, Color color)
@@ -140,6 +162,7 @@ namespace UndeadOvertime.Prototype
         {
             if (!IsBuilt) return;
             foreach (PrototypeTarget target in targets) target.ResetTarget();
+            if (Survival != null) Survival.ResetEncounter();
             Player.ResetPlayer();
         }
 
@@ -153,20 +176,52 @@ namespace UndeadOvertime.Prototype
             }
         }
 
+        private void DrawSurvivalHud(float width)
+        {
+            GUI.Box(new Rect(12f, 12f, width, 166f), GUIContent.none);
+            string objective;
+            switch (Survival.Waves.Phase)
+            {
+                case UndeadOvertime.Core.SurvivalPhase.Preparation:
+                    objective = $"Next wave in {Survival.PreparationRemaining:0.0}s";
+                    break;
+                case UndeadOvertime.Core.SurvivalPhase.Fighting:
+                    objective = $"Wave {Survival.Waves.WaveNumber}/{Survival.Waves.TotalWaves} | Alive {Survival.Waves.ActiveEnemies} | Incoming {Survival.Waves.RemainingToSpawn}";
+                    break;
+                case UndeadOvertime.Core.SurvivalPhase.Extraction:
+                    objective = $"Reach the GREEN zone and hold E / North to extract: {Survival.ExtractionProgress:P0}";
+                    break;
+                case UndeadOvertime.Core.SurvivalPhase.Won: objective = "EXTRACTED. T / Start: restart the encounter."; break;
+                default: objective = "YOU DIED. T / Start: restart the encounter."; break;
+            }
+            GUI.Label(new Rect(24f, 20f, width - 24f, 152f),
+                "UNDEAD OVERTIME | SURVIVAL YARD | SOLO PROTOTYPE\n" +
+                "WASD / LS: move | Mouse / RS: look | Shift / L3: sprint | Space / South: jump\n" +
+                "Fire: LMB / RT | Reload: R / West | FPS/TPS: V / Select | Restart: T / Start\n" +
+                $"Health: {Player.CurrentHealth}/100 | Ammo: {Player.Ammo}/12 {(Player.IsReloading ? "RELOADING" : "")} | Kills: {Player.Kills}\n" +
+                objective + "\n" +
+                (Survival.IsTerminal ? "Encounter ended: T / Start restarts" :
+                    Player.IsInputCaptured ? "Esc / East: release cursor and pause encounter" : "PAUSED: click / RT to capture; release before firing") + "\n" +
+                "Placeholder capsules. Three waves, then extraction. No multiplayer or production art.");
+        }
+
         private void OnGUI()
         {
             if (!IsBuilt) return;
             float panelWidth = Mathf.Min(590f, Screen.width - 24f);
-            GUI.Box(new Rect(12f, 12f, panelWidth, 142f), GUIContent.none);
-            string captureHint = Player.IsInputCaptured ? "Esc: release cursor" : "Click / right trigger: capture controls";
-            GUI.Label(new Rect(24f, 20f, panelWidth - 24f, 130f),
-                "UNDEAD OVERTIME | MECHANICS RANGE | SOLO ONLY\n" +
-                "WASD / left stick: move | Mouse / right stick: look | Shift / L3: sprint\n" +
-                "Space / South: jump | Left click / RT: fire | V / Select: FPS/TPS\n" +
-                "R / Start: reset | " + captureHint + "\n" +
-                $"View: {(Player.IsThirdPerson ? "TPS" : "FPS")} | Shots: {Player.ShotsFired} | Hits: {Player.Hits} | Targets: {Player.Kills}/3\n" +
-                "100 HP per target, 25 damage per hit. Orange targets are stationary test dummies.");
-
+            if (survivalMode) DrawSurvivalHud(panelWidth);
+            else
+            {
+                GUI.Box(new Rect(12f, 12f, panelWidth, 142f), GUIContent.none);
+                string captureHint = Player.IsInputCaptured ? "Esc: release cursor" : "Click / right trigger: capture controls";
+                GUI.Label(new Rect(24f, 20f, panelWidth - 24f, 130f),
+                    "UNDEAD OVERTIME | MECHANICS RANGE | SOLO ONLY\n" +
+                    "WASD / left stick: move | Mouse / right stick: look | Shift / L3: sprint\n" +
+                    "Space / South: jump | Left click / RT: fire | V / Select: FPS/TPS\n" +
+                    "R / Start: reset | " + captureHint + "\n" +
+                    $"View: {(Player.IsThirdPerson ? "TPS" : "FPS")} | Shots: {Player.ShotsFired} | Hits: {Player.Hits} | Targets: {Player.Kills}/3\n" +
+                    "100 HP per target, 25 damage per hit. Orange targets are stationary test dummies.");
+            }
             if (!Player.IsInputCaptured) return;
             Color old = GUI.color;
             GUI.color = Player.ShowHitMarker ? Color.yellow : Color.white;
@@ -178,3 +233,4 @@ namespace UndeadOvertime.Prototype
         }
     }
 }
+

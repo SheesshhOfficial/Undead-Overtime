@@ -42,3 +42,15 @@ Tickets are correlation values, not secrets. Adapter sender binding and trusted 
 Use the existing project, Unity 6000.6.5f1, and the exact new revision supplied with the published result. Record clean state and remote/head first, fetch and fast-forward only, then run all EditMode tests and the original range's PlayMode tests according to [PROTOTYPE_RANGE.md](PROTOTYPE_RANGE.md). Include the new core assembly in EditMode results. Return exact commit, editor version, exit codes, XML, logs and any runtime screenshots to cloud authoring. Do not repair code or upgrade packages on the local execution side.
 
 Current acceptance: **authored and statically reviewed only; local compilation/tests pending**. Add execution evidence as a new dated entry without replacing this record.
+
+## 2026-11-08: solo Survival Yard candidate
+
+Goal: produce an isolated end-to-end solo combat loop while LAN transport and production asset work remain separate. The user requested starting the game now, so this is explicitly a parallel gameplay experiment, not a claim that the network acceptance gates have passed.
+
+Changes: new opt-in SurvivalYard scene, WaveProgression/PrototypeMagazine core rules, runtime survival director and placeholder infected, player health/reload/restart/extraction, HUD, five core tests, seven PlayMode tests, expanded scene test and static validator. Existing mechanics scene and template scene bytes remain unchanged; its runtime behavior is intended to remain compatible. No package/settings/build-list/network/security/local-PC changes, new branches or backup copies.
+
+Cloud checks: static consistency PASS (24 source/assets, five assemblies, 32 metadata GUIDs); Python validator syntax PASS. Independent source review and publication hashes are recorded with the completion handoff. No Unity/C# runtime exists in this cloud environment; compilation, all test execution and user play acceptance remain unrun until local execution.
+
+Local handoff: exact published revision, existing Unity 6000.6.5f1 project; fast-forward only after a clean/divergence check. Run all EditMode and PlayMode suites, then the original range regression and [Survival Yard checklist](SURVIVAL_YARD.md). Return exact XML/logs/screenshots and reproduction for cloud fixes, with no local source repairs.
+
+Acceptance: authored playable-loop candidate only. Caps and timer rules are proposed test balance. Real LAN, Mixamo/production art, audio/effects/gore, city progression and runtime performance remain open.

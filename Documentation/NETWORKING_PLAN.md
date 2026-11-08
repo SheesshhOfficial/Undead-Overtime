@@ -33,3 +33,7 @@ Production art, a city block, moving zombies, and a wave loop follow the verifie
 ## Implemented preparatory slice (2026-11-08)
 
 A transport-independent host lifecycle and fire-admission core now exists in `Assets/UndeadOvertime/Core`, with separate EditMode test sources. Read [LAN_HOST_CORE.md](LAN_HOST_CORE.md) for integration rules and current verification limits. It does not activate networking, change the solo range or replace the real-process acceptance gates above. Local Unity compilation/tests remain required before transport wiring.
+
+## Parallel solo combat experiment
+
+The user requested continuing playable game work while local/network gates are pending. The separate [Survival Yard](SURVIVAL_YARD.md) therefore exercises a solo encounter loop in parallel. It is explicitly not the multiplayer implementation and must not be networked by trusting its direct input-to-damage path. The transport and real-process acceptance gates above remain mandatory.

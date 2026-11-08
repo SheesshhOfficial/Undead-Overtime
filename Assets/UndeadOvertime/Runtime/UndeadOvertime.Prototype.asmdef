@@ -1,6 +1,7 @@
 {
   "name": "UndeadOvertime.Prototype",
   "rootNamespace": "UndeadOvertime.Prototype",
-  "references": ["Unity.InputSystem"],
+  "references": ["Unity.InputSystem", "UndeadOvertime.Core"],
   "autoReferenced": true
 }
+
