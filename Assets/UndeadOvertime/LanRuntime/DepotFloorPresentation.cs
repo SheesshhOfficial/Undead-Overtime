@@ -34,8 +34,9 @@ namespace UndeadOvertime.LanPrototype
                     {
                         var instance = Instantiate(models[i], tile.transform, false); instance.name = "Original floor LOD" + i;
                         Renderer[] renderers = instance.GetComponentsInChildren<Renderer>(true);
-                        if (renderers.Length != 1 || renderers[0].sharedMaterials.Length != 2 || instance.GetComponentsInChildren<Collider>(true).Length != 0)
-                            throw new InvalidOperationException("Depot floor import must have one two-slot renderer and no collider.");
+                        if (renderers.Length != 1 || renderers[0].sharedMaterials.Length != 2 || instance.GetComponentsInChildren<Collider>(true).Length != 0 ||
+                            instance.GetComponentsInChildren<LODGroup>(true).Length != 0)
+                            throw new InvalidOperationException("Depot floor import must have one two-slot renderer, no collider and no nested LODGroup.");
                         renderers[0].sharedMaterials = new[] { topMaterial, sideMaterial };
                         renderers[0].shadowCastingMode = ShadowCastingMode.Off; renderers[0].receiveShadows = true;
                         lods[i] = new LOD(i == 0 ? .25f : i == 1 ? .08f : 0, renderers);
@@ -52,10 +53,15 @@ namespace UndeadOvertime.LanPrototype
             // Serialized Resources materials anchor the required Lit/PBR variants and texture dependencies in player builds.
             // These shared assets are never mutated or destroyed by an arena instance.
             Material material = Resources.Load<Material>(ResourceRoot + name);
-            if (material == null || material.shader == null || material.shader.name != "Universal Render Pipeline/Lit" ||
-                material.GetTexture("_BaseMap") == null || material.GetTexture("_BumpMap") == null || material.GetTexture("_MetallicGlossMap") == null ||
-                !material.IsKeywordEnabled("_NORMALMAP") || !material.IsKeywordEnabled("_METALLICSPECGLOSSMAP"))
-                throw new InvalidOperationException("Missing or invalid serialized depot floor PBR material " + name + ".");
+            if (material == null) throw new InvalidOperationException("Missing serialized depot floor material " + name + ".");
+            if (material.shader == null || material.shader.name != "Universal Render Pipeline/Lit")
+                throw new InvalidOperationException("Depot floor material " + name + " has invalid shader " + (material.shader == null ? "null" : material.shader.name) + ".");
+            foreach (string property in new[] { "_BaseMap", "_BumpMap", "_MetallicGlossMap" })
+                if (material.GetTexture(property) == null)
+                    throw new InvalidOperationException("Depot floor material " + name + " has missing texture " + property + ".");
+            foreach (string keyword in new[] { "_NORMALMAP", "_METALLICSPECGLOSSMAP" })
+                if (!material.IsKeywordEnabled(keyword))
+                    throw new InvalidOperationException("Depot floor material " + name + " has missing shader keyword " + keyword + ".");
             return material;
         }
     }

@@ -80,6 +80,21 @@ for path in files:
         check(path.parent == approved, f"Binary asset outside reviewed runtime packet: {path.relative_to(ROOT)}")
         signature = b"Kaydara FBX Binary  \x00\x1a\x00" if path.suffix.lower() == ".fbx" else b"\x89PNG\r\n\x1a\n"
         check(raw.startswith(signature), f"Invalid native asset signature: {path.relative_to(ROOT)}")
+        # GUID-only metadata falls back to importer schema version 1 in native Unity,
+        # which is rejected before our AssetPostprocessor can enforce the intended settings.
+        meta = Path(str(path) + ".meta").read_text()
+        importer_name, minimum_version = ("ModelImporter", 25) if path.suffix.lower() == ".fbx" else ("TextureImporter", 10)
+        block = re.search(rf"^{importer_name}:\n((?:[ \t].*\n|\n)*)", meta, re.MULTILINE)
+        schema = re.search(r"^  serializedVersion: ([0-9]+)$", block[1], re.MULTILINE) if block else None
+        check(schema is not None and int(schema[1]) >= minimum_version,
+              f"Missing/unsupported {importer_name} serializedVersion in {path.relative_to(ROOT)}.meta")
+        if importer_name == "TextureImporter":
+            check(block is not None and re.search(r"^  textureShape: 1$", block[1], re.MULTILINE) is not None,
+                  f"Floor texture must explicitly import as Texture2D, not a cubemap: {path.relative_to(ROOT)}.meta")
+        required_sections = ("materials", "animations", "meshes", "tangentSpace", "humanDescription") if importer_name == "ModelImporter" else ("mipmaps", "bumpmap", "textureSettings", "platformSettings")
+        for section in required_sections:
+            check(block is not None and re.search(rf"^  {section}:", block[1], re.MULTILINE) is not None,
+                  f"Incomplete {importer_name} {section} schema in {path.relative_to(ROOT)}.meta")
     else:
         check(b"\r" not in raw, f"Expected LF line endings: {path.relative_to(ROOT)}")
         check(raw.endswith(b"\n"), f"Missing final newline: {path.relative_to(ROOT)}")

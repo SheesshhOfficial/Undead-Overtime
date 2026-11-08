@@ -15,8 +15,9 @@ namespace UndeadOvertime.LanPrototype.Tests
             string path = Root + "UO_DepotFloor_4m_LOD" + lod + ".fbx";
             var asset = AssetDatabase.LoadAssetAtPath<GameObject>(path); Assert.That(asset, Is.Not.Null, path);
             var importer = AssetImporter.GetAtPath(path) as ModelImporter;
-            Assert.That(importer, Is.Not.Null); Assert.That(importer.globalScale, Is.EqualTo(1));
-            Assert.That(importer.importAnimation, Is.False); Assert.That(importer.addCollider, Is.False);
+            Assert.That(importer, Is.Not.Null, path + " ModelImporter"); Assert.That(importer.globalScale, Is.EqualTo(1), path + " globalScale");
+            Assert.That(importer.importAnimation, Is.False); Assert.That(importer.animationType, Is.EqualTo(ModelImporterAnimationType.None));
+            Assert.That(importer.addCollider, Is.False);
             Assert.That(importer.materialImportMode, Is.EqualTo(ModelImporterMaterialImportMode.None));
             Assert.That(importer.generateSecondaryUV, Is.False); Assert.That(importer.importTangents, Is.EqualTo(ModelImporterTangents.CalculateMikk));
             var instance = Object.Instantiate(asset);
@@ -39,6 +40,7 @@ namespace UndeadOvertime.LanPrototype.Tests
                 Assert.That(bounds.min.z, Is.EqualTo(0).Within(.001)); Assert.That(bounds.max.z, Is.EqualTo(4).Within(.001));
                 Assert.That(instance.GetComponentsInChildren<Collider>(true), Is.Empty);
                 Assert.That(instance.GetComponentsInChildren<Animation>(true), Is.Empty);
+                Assert.That(instance.GetComponentsInChildren<LODGroup>(true), Is.Empty, "The runtime tile owns the only LODGroup; each standalone FBX must not create its own.");
             }
             finally { Object.DestroyImmediate(instance); }
         }
@@ -46,15 +48,19 @@ namespace UndeadOvertime.LanPrototype.Tests
         public void SerializedMaterialsAnchorLitVariantsAndOriginalTextureDependencies(string prefix)
         {
             Material material = AssetDatabase.LoadAssetAtPath<Material>(Root + prefix + "_material.mat");
-            Assert.That(material, Is.Not.Null); Assert.That(material.shader, Is.Not.Null); Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
+            Assert.That(material, Is.Not.Null, prefix + " serialized material"); Assert.That(material.shader, Is.Not.Null, prefix + " shader reference");
+            Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"), prefix + " shader name");
             Assert.That(AssetDatabase.GetAssetPath(material.shader), Is.EqualTo("Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader"));
-            Assert.That(material.IsKeywordEnabled("_NORMALMAP"), Is.True); Assert.That(material.IsKeywordEnabled("_METALLICSPECGLOSSMAP"), Is.True);
+            Assert.That(material.IsKeywordEnabled("_NORMALMAP"), Is.True, prefix + " _NORMALMAP keyword");
+            Assert.That(material.IsKeywordEnabled("_METALLICSPECGLOSSMAP"), Is.True, prefix + " _METALLICSPECGLOSSMAP keyword");
             Texture2D color = AssetDatabase.LoadAssetAtPath<Texture2D>(Root + prefix + "_basecolor.png");
             Texture2D normal = AssetDatabase.LoadAssetAtPath<Texture2D>(Root + prefix + "_normal_opengl.png");
             Texture2D packed = AssetDatabase.LoadAssetAtPath<Texture2D>(Root + prefix + "_metallic_smoothness.png");
-            Assert.That(color, Is.Not.Null); Assert.That(normal, Is.Not.Null); Assert.That(packed, Is.Not.Null);
-            Assert.That(material.GetTexture("_BaseMap"), Is.EqualTo(color)); Assert.That(material.GetTexture("_BumpMap"), Is.EqualTo(normal));
-            Assert.That(material.GetTexture("_MetallicGlossMap"), Is.EqualTo(packed));
+            Assert.That(color, Is.Not.Null, prefix + " basecolor asset"); Assert.That(normal, Is.Not.Null, prefix + " normal asset");
+            Assert.That(packed, Is.Not.Null, prefix + " packed metallic/smoothness asset");
+            Assert.That(material.GetTexture("_BaseMap"), Is.EqualTo(color), prefix + " _BaseMap reference");
+            Assert.That(material.GetTexture("_BumpMap"), Is.EqualTo(normal), prefix + " _BumpMap reference");
+            Assert.That(material.GetTexture("_MetallicGlossMap"), Is.EqualTo(packed), prefix + " _MetallicGlossMap reference");
             Assert.That(material.GetFloat("_Smoothness"), Is.EqualTo(1)); Assert.That(material.GetFloat("_SmoothnessTextureChannel"), Is.Zero);
         }
         [TestCase("floor", "basecolor", 2048)] [TestCase("floor", "normal_opengl", 2048)] [TestCase("floor", "metallic_smoothness", 2048)]
@@ -62,14 +68,17 @@ namespace UndeadOvertime.LanPrototype.Tests
         public void FullResolutionMapsHaveExplicitColorNormalAndDataImport(string prefix, string suffix, int dimension)
         {
             string path = Root + prefix + "_" + suffix + ".png";
-            var importer = AssetImporter.GetAtPath(path) as TextureImporter; Assert.That(importer, Is.Not.Null);
-            Assert.That(importer.sRGBTexture, Is.EqualTo(suffix == "basecolor"));
-            Assert.That(importer.textureType, Is.EqualTo(suffix == "normal_opengl" ? TextureImporterType.NormalMap : TextureImporterType.Default));
-            Assert.That(importer.convertToNormalmap, Is.False); Assert.That(importer.flipGreenChannel, Is.False);
-            Assert.That(importer.textureCompression, Is.EqualTo(TextureImporterCompression.Uncompressed));
-            Assert.That(importer.wrapMode, Is.EqualTo(TextureWrapMode.Repeat)); Assert.That(importer.mipmapEnabled, Is.True);
-            Assert.That(importer.alphaIsTransparency, Is.False);
-            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path); Assert.That(texture, Is.Not.Null);
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter; Assert.That(importer, Is.Not.Null, path + " TextureImporter");
+            Assert.That(importer.textureShape, Is.EqualTo(TextureImporterShape.Texture2D), path + " textureShape");
+            Assert.That(importer.sRGBTexture, Is.EqualTo(suffix == "basecolor"), path + " sRGBTexture");
+            Assert.That(importer.textureType, Is.EqualTo(suffix == "normal_opengl" ? TextureImporterType.NormalMap : TextureImporterType.Default), path + " textureType");
+            Assert.That(importer.convertToNormalmap, Is.False, path + " convertToNormalmap");
+            Assert.That(importer.flipGreenChannel, Is.False, path + " flipGreenChannel");
+            Assert.That(importer.textureCompression, Is.EqualTo(TextureImporterCompression.Uncompressed), path + " textureCompression");
+            Assert.That(importer.wrapMode, Is.EqualTo(TextureWrapMode.Repeat), path + " wrapMode");
+            Assert.That(importer.mipmapEnabled, Is.True, path + " mipmapEnabled");
+            Assert.That(importer.alphaIsTransparency, Is.False, path + " alphaIsTransparency");
+            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path); Assert.That(texture, Is.Not.Null, path + " Texture2D asset");
             Assert.That(texture.width, Is.EqualTo(dimension)); Assert.That(texture.height, Is.EqualTo(dimension));
         }
     }

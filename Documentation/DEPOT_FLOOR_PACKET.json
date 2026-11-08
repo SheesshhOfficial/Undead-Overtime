@@ -46,20 +46,20 @@
     {
       "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD0.fbx",
       "bytes": 37772,
-      "sha256": "9bbd8b205823a1f96d6fb54bd26a661d7629183b4c305838f287f81dac5ba5e6",
-      "git_blob_sha1": "7bbbf4aa2a025dd762b3545ba86da2fd19ebfaad"
+      "sha256": "f412f2a28f8229158cc4924c5e970191f46e3914e246b6a7afab7c437ab58811",
+      "git_blob_sha1": "5b2d87461b1b47d77256ca9adfc041aeed3a1ee6"
     },
     {
       "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD1.fbx",
       "bytes": 27308,
-      "sha256": "7af83f437c4515ab1c53a2a4c61505df821329da45e6d3347c63903e1dba1cac",
-      "git_blob_sha1": "3124d7180512369417059d758bfc95a1cdfd7160"
+      "sha256": "1b3280dfb0c78cfed3c2bd882b41f8ff8859a393cc792de0806ddb70bc2ddcce",
+      "git_blob_sha1": "d3fc4219434b5aaf99156d5b7d612ec07716a76b"
     },
     {
       "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/UO_DepotFloor_4m_LOD2.fbx",
       "bytes": 18972,
-      "sha256": "d60c4e0b25ad3926e525d9436e873fa20bdfe5bd907bc80699822459a83f0b6c",
-      "git_blob_sha1": "dd17a22e59ab97b872965f014a45df98d51cc01b"
+      "sha256": "9066f90b2c92e5a9b23d3968cca762bdd2ccdead321714438a72b6b8c1ec8225",
+      "git_blob_sha1": "04906cb79e6f13a5d0d1fea1176654d5df900b15"
     },
     {
       "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFloor/concrete_basecolor.png",
@@ -135,5 +135,7 @@
       "color_space": "linear normal data",
       "source_bytes_unchanged": true
     }
-  ]
+  ],
+  "fbx_internal_names": "Detail0/1/2 and Detail0/1/2_Mesh; no Unity automatic _LOD naming. Filenames remain LOD0/1/2; runtime owns all LODGroups.",
+  "name_revision_validation": "PASS: all Geometry child payloads and Model transform payloads byte-equal to initial exports; topology, normals, tangent vectors, UVs and material assignments unchanged. All six texture bytes unchanged."
 }
