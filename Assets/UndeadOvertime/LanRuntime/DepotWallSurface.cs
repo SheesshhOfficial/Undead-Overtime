@@ -11,6 +11,7 @@ namespace UndeadOvertime.LanPrototype
         {
             if (wall == null) throw new ArgumentNullException(nameof(wall));
             if (sharedConcrete == null) throw new ArgumentNullException(nameof(sharedConcrete));
+            if (!wall.activeInHierarchy) throw new InvalidOperationException("Wall must be active while attaching mesh ownership.");
             if (!Application.isPlaying) throw new InvalidOperationException("Depot wall surfaces are runtime-only.");
             if (wall.GetComponent<DepotWallSurface>() != null) throw new InvalidOperationException("Wall already owns a surface copy.");
             var filter = wall.GetComponent<MeshFilter>(); var renderer = wall.GetComponent<MeshRenderer>();

@@ -1,0 +1,49 @@
+{
+  "base": "4e7bffc9ef703ed53af18ec6ab7a9703dac05fb0",
+  "scope": "Cloud source review, static consistency and syntax only. No native Unity execution.",
+  "source_assets": 88,
+  "assemblies": 9,
+  "metadata_guids": 103,
+  "attribute_assertions": 48,
+  "malformed_importer_fixtures": 15,
+  "csharp9_syntax_files": 65,
+  "csharp9_syntax_errors": 0,
+  "core_result_reused": "DEPOT_ARCHITECTURE_CORE_RESULT.json",
+  "core_source_hashes_match": true,
+  "core_passed": 310,
+  "native_expected": {
+    "EditMode": 334,
+    "PlayMode": 77
+  },
+  "native_status": "Not run; later combined acceptance.",
+  "sources": [
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotPerimeterPresentation.cs",
+      "sha256": "1ae1a20e42f2aef881a48a37e6bf65a77cea6301b82de2cca51b0e41702fd9b1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotPerimeterPresentation.cs.meta",
+      "sha256": "6e7460450d96a1d49ab18d09bd55e50a0cf5bcd04abddfe27006c71f0940ac80"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/DepotWallSurface.cs",
+      "sha256": "a4366a1cf1276bc8b22c60030c1b204f2b2015347a666fbe0ff6b1e47e8926c2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/LanRuntime/LanRange.Mission.cs",
+      "sha256": "ab6524f9b3a3262ee637c61dc06d06a733b0221084224f19717bc0c326deca16"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotPerimeterTests.cs",
+      "sha256": "19d58f069523977579c0406104b383ea38edc5dc8b0c192f4ae4071b0b6d3417"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotPerimeterTests.cs.meta",
+      "sha256": "c22a3e7df836a4a9d8165ec9e08821f44f87056dafef9f333f5dd374bd456157"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/LanPlayMode/DepotArchitectureTests.cs",
+      "sha256": "d88a9a67e1fbb4133f6f295a01fa4417e1e34d701c7af7cb4fa37be2f3d71f80"
+    }
+  ]
+}

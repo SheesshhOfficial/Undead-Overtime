@@ -242,3 +242,10 @@ Actual pure-core run passed 310/310 including 26 new direction/lifecycle/numeric
 Reused the accepted original wall-concrete maps/material on the two existing mission partitions, with runtime-owned meter-scaled UV mesh copies. Added twenty small collider-free painted gate ribs/edges using the existing cube mesh/materials, parented under the current gate so authoritative opening hides them together. Existing collider geometry, console/extraction, host gameplay and headless behavior are retained. No assets, materials, importers, settings or user-PC files were rewritten.
 
 Actual unchanged core run passed 310/310. Static/syntax checks passed; independent source review found and corrected coplanar rib/stripe overlap, with a native separation assertion. Seven native regression cases are authored, not run. Combined expected native inventory is 334 EditMode /74 PlayMode. The user requested building first and a single later validation batch, so native tests/build/loopback/visual review remain pending. See DEPOT_ARCHITECTURE.md and its result record.
+
+
+## 2026-11-08: mission perimeter concrete reuse candidate
+
+Extended the accepted original concrete treatment to renderer-only coincident copies of the four outer walls during a rendered mission. Existing source meshes/materials/colliders remain unchanged and prior renderer visibility is restored on lobby, disposal and constructor failure. Ownership attaches while active before mirroring inactive sources; headless creation is bypassed. No PC or imported asset/settings change.
+
+Source review passed; static validation covers 88 source/assets, nine assemblies, 103 GUIDs, 48 attribute assertions and 15 importer fixtures; syntax-only 65 files passed. Production core hashes remain identical to the actual prior 310/310 run, not a new execution. Three new native cases plus expanded existing integration tests are authored. Combined expected 334 EditMode /77 PlayMode and all native/visual stages remain pending for the user's requested later batch.

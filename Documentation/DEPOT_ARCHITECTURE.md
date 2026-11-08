@@ -43,3 +43,7 @@ Per the user's latest instruction, finish the bounded build first and test toget
 5. Verify owned process cleanup and protected hashes. Report automatic Unity serialization changes rather than restoring user files.
 
 No native compile/test/build result, screenshot acceptance, manual play quality, cross-computer LAN, ten-player behavior or performance benchmark is claimed for this candidate yet.
+
+## Later perimeter extension
+
+`DEPOT_PERIMETER.md` documents the follow-up reuse on the four existing outer walls, with exact renderer restoration and no collision changes. Its combined expected test count supersedes this earlier candidate's count; original stage results above remain historical evidence.
