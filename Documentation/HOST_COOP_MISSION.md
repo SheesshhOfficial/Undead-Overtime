@@ -6,7 +6,7 @@ This slice connects the engine-independent mission rules to a real `HostInfected
 
 The class owns its encounter rather than accepting an arbitrary encounter argument. Session, round, member lifetimes, health, revive and the three-wave state therefore come from the same authoritative objects. The constructor accepts an original power-control position and extraction rectangle inside the existing flat arena bounds. Gate collision and rendered objective props remain subsequent Unity work.
 
-Cloud static checks and source review are distinct from native acceptance. The new C# tests are authored; they have not been compiled or run in Unity. No new player-build, rendered mission, network mission, physical LAN or performance result is claimed. The independent two-material save approval is still pending and is not exercised by this change.
+Cloud static checks and source review are distinct from native acceptance. The 29 coordinator cases pass in the standalone core harness and the combined replication fixture also passes; see [executed core evidence](COOP_MISSION_REPLICATION_TESTS.md). These mission cases have not compiled or run in Unity. No new player-build, rendered mission, network mission, physical LAN or performance result is claimed. The independent two-material save approval is still pending and is not exercised by this change.
 
 ## Trust boundary
 

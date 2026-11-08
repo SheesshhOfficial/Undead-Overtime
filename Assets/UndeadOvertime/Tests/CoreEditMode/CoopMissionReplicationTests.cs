@@ -20,7 +20,6 @@ namespace UndeadOvertime.Core.Tests
             public bool PlaceSucceeds = true, LineClear = true;
             public byte[] LastPacket;
             private readonly ulong[] powerSequences, fireSequences;
-            private ulong frameSequence;
             public double Now => Tick * .05;
             public static AimVector Power => new AimVector(-9, HostMoveGate.EyeHeight, -5);
             public static AimVector Exit => new AimVector(0, HostMoveGate.EyeHeight, 12);
@@ -56,7 +55,7 @@ namespace UndeadOvertime.Core.Tests
                 }
                 Fire.AdvanceReloadsFromHost(Now);
             }
-            public MissionFrame CurrentFrame()
+            public MissionFrame CurrentFrame(ulong sequence = 1)
             {
                 var rows = new List<RangeMember>();
                 foreach (PlayerTicket ticket in Session.SnapshotMembers())
@@ -68,11 +67,15 @@ namespace UndeadOvertime.Core.Tests
                 }
                 var range = new RangeSnapshot(Session.SessionId, Session.RoundId, Session.Phase, rows.ToArray(), new[] { 100, 100, 100 },
                     Mission.Encounter.Phase, Mission.Encounter.SnapshotEnemies(), Mission.Encounter.HordeAt(Now));
-                return new MissionFrame(++frameSequence, range, Mission.Snapshot);
+                return new MissionFrame(sequence, range, Mission.Snapshot);
             }
             public void Publish(bool flush = false)
             {
-                MissionFrame source = CurrentFrame(); byte[] bytes = CoopMissionProtocol.Encode(source);
+                var slots = new Dictionary<PlayerTicket, byte>();
+                for (byte i = 0; i < Tickets.Length; i++) slots.Add(Tickets[i], i);
+                Assert.That(Mission.TryCaptureFrame(Now, Fire, slots, new[] { 100, 100, 100 }, out MissionFrame source, out byte[] bytes), Is.True);
+                AssertEquivalent(CurrentFrame(source.Sequence), source); // Independently assembled expected aggregate.
+
                 Assert.That(bytes.Length, Is.LessThanOrEqualTo(CoopMissionProtocol.MaximumFrameBytes));
                 Assert.That(CoopMissionProtocol.TryFrame(bytes, out MissionFrame decoded), Is.True);
                 AssertEquivalent(source, decoded); MaximumPacket = Math.Max(MaximumPacket, bytes.Length); Frames++;

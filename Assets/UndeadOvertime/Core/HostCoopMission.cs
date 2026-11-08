@@ -16,6 +16,7 @@ namespace UndeadOvertime.Core
         private readonly double exitHalfWidth, exitHalfDepth;
         private double lastClock, lastTick;
         private bool hasTick, advancing;
+        private ulong frameSequence;
         private sealed class Member
         {
             public AimVector Position;
@@ -84,6 +85,42 @@ namespace UndeadOvertime.Core
         /// Tick also detects health loss; event cancellation covers actions between adjacent host ticks.</summary>
         public void CancelPowerFromHost(PlayerTicket player)
         { if (!advancing && State(player, out Member member)) Cancel(member); }
+
+        /// <summary>Capture immediately after the coherent host tick and weapon life/reload synchronization.
+        /// Uses this coordinator's fresh host poses and owned encounter, never client-reported aggregate fields.
+        /// Slots are host-held, stable per connection; legacy range target health is explicit host state.
+        /// No clock/objective/weapon mutation occurs. Only a validated encoded capture consumes a frame sequence.
+        /// Codec validation cannot prove caller tick ordering. Not a transport or authentication boundary.</summary>
+        public bool TryCaptureFrame(double hostTime, HostFireGate fireGate, IReadOnlyDictionary<PlayerTicket, byte> slots,
+            int[] targetHealth, out MissionFrame frame, out byte[] payload)
+        {
+            frame = null; payload = null;
+            if (advancing || !progression.IsCurrent || !ValidTime(hostTime) || hostTime < lastClock ||
+                frameSequence == ulong.MaxValue || fireGate == null || !fireGate.IsBoundToCurrentRound(session) ||
+                slots == null || targetHealth == null || targetHealth.Length != 3) return false;
+            for (int i = 0; i < targetHealth.Length; i++) if (targetHealth[i] < 0 || targetHealth[i] > 100) return false;
+            var rows = new List<RangeMember>(); var usedSlots = new HashSet<byte>();
+            foreach (PlayerTicket ticket in session.SnapshotMembers())
+            {
+                if (!members.TryGetValue(ticket, out Member member) || !member.HasPose || hostTime < member.PoseAt ||
+                    hostTime - member.PoseAt >= PoseLifetime || !HostMoveGate.ValidPosition(member.Position) ||
+                    !slots.TryGetValue(ticket, out byte slot) || slot >= LanSession.MaximumPlayers || !usedSlots.Add(slot)) return false;
+                byte targetSlot = 255, progress = 0;
+                if (Encounter.ReviveStatusFromHost(ticket, hostTime, out PlayerTicket target, out progress))
+                {
+                    if (!session.IsCurrent(target) || !slots.TryGetValue(target, out targetSlot) || targetSlot >= LanSession.MaximumPlayers) return false;
+                }
+                rows.Add(new RangeMember(ticket.PeerId, ticket.ConnectionId, slot, (byte)fireGate.Ammo(ticket), fireGate.IsReloading(ticket),
+                    member.Position, (byte)Encounter.PlayerHealth(ticket), targetSlot, progress));
+            }
+            var range = new RangeSnapshot(session.SessionId, session.RoundId, session.Phase, rows.ToArray(), targetHealth,
+                Encounter.Phase, Encounter.SnapshotEnemies(), Encounter.HordeAt(hostTime));
+            var candidate = new MissionFrame(frameSequence + 1, range, Snapshot);
+            byte[] encoded;
+            try { encoded = CoopMissionProtocol.Encode(candidate); }
+            catch (ArgumentException) { return false; } // A torn/invalid aggregate must not be published or consume sequence.
+            frameSequence = candidate.Sequence; frame = candidate; payload = encoded; return true;
+        }
 
         /// <summary>Call once after authoritative movement, damage and revive processing. Fresh poses, health,
         /// membership and host LOS form the observation. Places each new wave exactly once before it can act.

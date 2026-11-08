@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "scope": "Pure C# core only; not Unity, physics, materials, rendering, player build or LAN acceptance.",
+  "success": true,
+  "sdk_version": "10.0.403",
+  "core_target": "netstandard2.1",
+  "runner_target": "net10.0",
+  "language_version": "9.0",
+  "nunit_version": "3.14.0",
+  "nunitlite_version": "3.14.0",
+  "test_exit_code": 0,
+  "result": "Passed",
+  "counts": {
+    "total": 234,
+    "passed": 234,
+    "failed": 0,
+    "warnings": 0,
+    "inconclusive": 0,
+    "skipped": 0
+  },
+  "start_time_utc": "2026-11-08T18:46:58.8168988Z",
+  "end_time_utc": "2026-11-08T18:47:06.5695146Z",
+  "duration_seconds": "7.752510",
+  "sources_and_locks_unchanged": true,
+  "sources": [
+    {
+      "path": "Assets/UndeadOvertime/Core/CoopMissionProgression.cs",
+      "bytes": 6477,
+      "sha256": "4b39cb244080f63862dc7b1e1f9dee3e861dc3710cb8264b0e386212f37fc01c",
+      "git_blob_sha1": "b22c482a86d8998abac30ea1e13c7526f064a0d8"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/CoopMissionProtocol.cs",
+      "bytes": 9738,
+      "sha256": "8d82600504a42d430f1ef4196d6846df5ca0cf91316c6865e0cdea9b0be68d9b",
+      "git_blob_sha1": "7249f4884a31d9a430aa5fdffbcdbfe50841bb93"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/HostCoopMission.cs",
+      "bytes": 13732,
+      "sha256": "694b70e0f209cd65b327571f9ba89678e99ef880b97df31e03e50038621fb9bf",
+      "git_blob_sha1": "190eb864d99cb5ce0971577422f08d4148df78e2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/HostFireGate.cs",
+      "bytes": 10007,
+      "sha256": "e2f948cb71b35c3ec6bf3ee2a63e97df74ed6882aca889ff72a4cb1642da68d0",
+      "git_blob_sha1": "98c368d638434a4f70f47491618254e3619c4b44"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/HostInfectedEncounter.cs",
+      "bytes": 16370,
+      "sha256": "99ec671847651570a65592eb060a1905c38da91ac9934ff7aa431fc316021bc0",
+      "git_blob_sha1": "f1a12d4303cd6a526c0b12128cf901c7ada2ca2c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/HostMoveGate.cs",
+      "bytes": 5619,
+      "sha256": "5e0a8251ec29be395c69a92e4a84837dc9fd75dc2864398c9b4a67da839a4f01",
+      "git_blob_sha1": "19f5a32e858078e8b7c4d6e13a02eb6006f22349"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/LanEndpoint.cs",
+      "bytes": 1371,
+      "sha256": "282332ede77a23d8ef9be1ca8f3343ba5962308250f5d5fa2ec2e1cb07508434",
+      "git_blob_sha1": "ad6036ea90401fd7976d3c9ac69dd43d58823381"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/LanRangeProtocol.cs",
+      "bytes": 15436,
+      "sha256": "59c847c2c11bc6cdacbed1ecf44ca835f5f36cdf0c2f7185b54408b156d82e5a",
+      "git_blob_sha1": "ad72f1122da9e22f58d446bddd9980426ebc3d78"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/LanSession.cs",
+      "bytes": 5442,
+      "sha256": "1cd759196ea88dd52ad61159c6e33d34a2722279b90c06c9ea668e761f6bcce1",
+      "git_blob_sha1": "77df8e8cf36ed3c830706bafa6e79f5056708fa0"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/LoopbackSmokeOptions.cs",
+      "bytes": 2929,
+      "sha256": "668fc3927488eb16e422b2bc2f60d6608f28ce6023d39875f1e8b010bec44928",
+      "git_blob_sha1": "70da0a56710f3d888e97e9af2f3b565ac579f8eb"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/PrototypeMagazine.cs",
+      "bytes": 1645,
+      "sha256": "c288e115599b199478dc4d7cc0a4fcd2114bba8c8af773cc0a82e32b216f70e4",
+      "git_blob_sha1": "a1548f20b4e1f4848678b2d4677f84d0bbd5b05a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Core/WaveProgression.cs",
+      "bytes": 2851,
+      "sha256": "3d810304f7646a40b23931ee796eda873211391c8edac37b9f7361ae19fecb24",
+      "git_blob_sha1": "6cca548eb725209059086b9a3ead2c5d8307045f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/CoopMissionProgressionTests.cs",
+      "bytes": 10762,
+      "sha256": "6f3575ca476cad69add774a0e6dcbd3968717ca60489dc1e519a647c206ba485",
+      "git_blob_sha1": "7711193fd3c731dcf795c2c7b18c4fd609a994ef"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/CoopMissionProtocolTests.cs",
+      "bytes": 21913,
+      "sha256": "edf42a76871ee43fed0877cbf3dd828e88ebe2c86eda78c349cb1a8370898c86",
+      "git_blob_sha1": "8de2244fb158281219435c2265b803c5dddc0dc8"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/CoopMissionReplicationTests.cs",
+      "bytes": 22900,
+      "sha256": "375fb622738c31d558243865007368f3b4f5b05e682e39ca346b6d0804025024",
+      "git_blob_sha1": "9b69d13cd0a8435861ff7501f680f12087ad5bda"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostCoopMissionTests.cs",
+      "bytes": 19364,
+      "sha256": "2e0ee8c87cca3099bc7b5672f786257b6ced0de30f6668d5461083493d3c518f",
+      "git_blob_sha1": "35b02b0afd7ea90a74fc3719d5736464b1f1dbef"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostFireGateTests.cs",
+      "bytes": 10465,
+      "sha256": "3469c4f2a973afc8024864d00df0624bb3a82fae37a0f5b7ccf6e66b88ee8ad8",
+      "git_blob_sha1": "4860b2b0e3b083b87f5c73b70392893f098e5d15"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostHordeTests.cs",
+      "bytes": 13834,
+      "sha256": "a1a1ec1110db6022af8ebb0abffdae13a91334b8c4bf0fdc2e833d827fa83455",
+      "git_blob_sha1": "36fa413d609bae229cbebcd23d18cdc998984117"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostInfectedEncounterTests.cs",
+      "bytes": 7919,
+      "sha256": "282bd7f0d8986d0c008ded76234886bb4f97a2006f2ea6061369f90ec6173e88",
+      "git_blob_sha1": "2830bcb31a6f597cd4e91a969513b4b556ab3155"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostMissionCaptureTests.cs",
+      "bytes": 10780,
+      "sha256": "29cadbedaf7f8c098ec4aa704163f5aac57b8739eef3eaf4117578bf6219441f",
+      "git_blob_sha1": "f130d3e920076be8d5a927bd1e4c84258431b9b4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostMoveGateTests.cs",
+      "bytes": 6973,
+      "sha256": "6ae49d29d92842c7fd98d69d47f1be71eaf74c16b6c535782cdd846a2c0ceab6",
+      "git_blob_sha1": "083e7e65464331c0008c037ba6d486b86cf46070"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/HostReviveTests.cs",
+      "bytes": 8869,
+      "sha256": "6fbaa36a0224b6e8dd5d887e0186b08af1a8bcc1cfdd4a70037fb345567ed5ea",
+      "git_blob_sha1": "993a37add6618431c5faa3ff25e9b9b26c59beb2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/LanRangeProtocolTests.cs",
+      "bytes": 6974,
+      "sha256": "8606d19714c801399170dc11bfee5dca467a451cc8b1c1041b4a4a0df3746a51",
+      "git_blob_sha1": "c2af4a8b88c7c9f728692abc720787aec9fcea18"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/LanSessionTests.cs",
+      "bytes": 5087,
+      "sha256": "abb71774f3be1294b9cf8176a14b199505e33a9318a44dbfe43bb7672968de53",
+      "git_blob_sha1": "84d7ba310a668949ff0ac84116dfb239efec2d16"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/LoopbackSmokeOptionsTests.cs",
+      "bytes": 2257,
+      "sha256": "e4a3af645e2e83cac14bdd03a754cc75c316eac0d8a48bfa8735b5e16b732f64",
+      "git_blob_sha1": "aa0146054dfdd61920e4b9f7b680c20a6d511663"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Tests/CoreEditMode/SurvivalRulesTests.cs",
+      "bytes": 4816,
+      "sha256": "3fc4273f7a6a097ab7bb334608c68ff918ff02e4b226f13373fe7d63bbec2f67",
+      "git_blob_sha1": "f14673b5cf48b372a5e907b004455e573d6a342a"
+    }
+  ],
+  "lockfile_sha256": {
+    "Core/packages.lock.json": "a0374e7de4d2cb70210104be9139bc441372fdbc6f9996eb7290032e7bab6a22",
+    "Runner/packages.lock.json": "42ac28a42a1e1c0f33c487c957190176fdd07360f31b1e170bef5f893dab0a32"
+  },
+  "fixtures": [
+    {
+      "name": "UndeadOvertime.Core.Tests.CoopMissionProgressionTests",
+      "result": "Passed",
+      "total": 21,
+      "passed": 21,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.CoopMissionProtocolTests",
+      "result": "Passed",
+      "total": 36,
+      "passed": 36,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.CoopMissionReplicationTests",
+      "result": "Passed",
+      "total": 11,
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostCoopMissionTests",
+      "result": "Passed",
+      "total": 29,
+      "passed": 29,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostFireGateTests",
+      "result": "Passed",
+      "total": 25,
+      "passed": 25,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostHordeTests",
+      "result": "Passed",
+      "total": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostInfectedEncounterTests",
+      "result": "Passed",
+      "total": 10,
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostMissionCaptureTests",
+      "result": "Passed",
+      "total": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostMoveGateTests",
+      "result": "Passed",
+      "total": 13,
+      "passed": 13,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.HostReviveTests",
+      "result": "Passed",
+      "total": 13,
+      "passed": 13,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.LanRangeProtocolTests",
+      "result": "Passed",
+      "total": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.LanSessionTests",
+      "result": "Passed",
+      "total": 11,
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.LoopbackSmokeOptionsTests",
+      "result": "Passed",
+      "total": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "name": "UndeadOvertime.Core.Tests.SurvivalRulesTests",
+      "result": "Passed",
+      "total": 5,
+      "passed": 5,
+      "failed": 0
+    }
+  ],
+  "nunit_xml_sha256": "fbc33049dc78e32d0d1e46544f0d96575a93f9980d1067cefd1b2426ee989102",
+  "base_commit": "a45dc7fa0b8c61519207b47dcbad384a567ba63d",
+  "changed_source_paths": [
+    "Assets/UndeadOvertime/Core/HostCoopMission.cs",
+    "Assets/UndeadOvertime/Core/HostFireGate.cs",
+    "Assets/UndeadOvertime/Tests/CoreEditMode/CoopMissionReplicationTests.cs"
+  ],
+  "new_source_paths": [
+    "Assets/UndeadOvertime/Tests/CoreEditMode/HostMissionCaptureTests.cs"
+  ],
+  "source_verification": "All 22 other source hashes match the base commit. The two production changes, updated integration fixture and new capture fixture are identified by exact hashes below.",
+  "platform": "Debian 13 x86_64",
+  "runtime_version": "10.0.14",
+  "compiler_errors": 0,
+  "compiler_warnings": 0
+}

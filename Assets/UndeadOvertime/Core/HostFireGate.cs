@@ -105,6 +105,9 @@ namespace UndeadOvertime.Core
 
         public bool IsCurrentRound => session.Phase == SessionPhase.Playing && session.SessionId == sessionId && session.RoundId == roundId;
 
+        /// <summary>Read-only identity check for host snapshot assembly; equal numeric IDs in another owner are insufficient.</summary>
+        public bool IsBoundToCurrentRound(LanSession owner) => ReferenceEquals(session, owner) && IsCurrentRound;
+
         public bool SetPoseFromHost(PlayerTicket player, AimVector origin, AimVector aim)
         {
             if (!TryState(player, out WeaponState state) || !origin.IsFinite || !aim.IsUnit) return false;

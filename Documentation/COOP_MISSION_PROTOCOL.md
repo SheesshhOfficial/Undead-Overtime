@@ -4,7 +4,7 @@
 
 This adds an inactive transport-independent codec and view-only receiver guard. It does not register an NGO handler, change the active range v5 handshake, alter controls or scenes, or send any traffic. The host mission coordinator is still not connected to the current range. The two local material files and pending material validation operation are untouched.
 
-Cloud static checks and independent source review are not native compilation, executed NUnit results or network acceptance. The 36 new cases are authored only. No runtime mission, physical LAN, ten-machine throughput, latency or rendering result is claimed.
+All 36 codec cases now pass as executed NUnit cases in the standalone core harness; see [cloud evidence](CLOUD_CORE_VERIFICATION.md) and [combined mission replication checks](COOP_MISSION_REPLICATION_TESTS.md). This is not Unity compilation or network acceptance. No runtime mission, physical LAN, ten-machine throughput, latency or rendering result is claimed.
 
 The candidate uses distinct mission magic `0x554F4D31`, little-endian version 1 and handshake bytes `55 4F 4D 01`. Current range packets use different magic and handshake, and are deliberately rejected as top-level mission packets. A mission-capable transport session must explicitly negotiate the new mission handshake before accepting a peer. **Do not silently enable mission mode for a peer admitted only by the old range handshake.** The future adapter must adopt the new handshake/session version as one coordinated change; this candidate alone does not make a mixed-version session safe.
 
@@ -74,7 +74,7 @@ Received values drive HUD/visuals only. They never award rewards, enable host co
 
 ## Authored checks and remaining acceptance
 
-Thirty-six authored NUnit cases cover held/released command round trips, strict command IDs/sequence/boolean, all truncations and extra bytes, every mission phase, the 465-byte maximum, both nested/outer headers, length constraints, bad holds, mission/encounter/gate coherence, nested malformed members, explicit failures/intermission, distinct handshake/type compatibility, replica replay/order/round/terminal guards, dropped transitions/countdown resets, immutable copied bytes and invalid replica bindings. A deterministic random malformed sweep and mutations throughout a valid maximum-size frame exercise nonthrowing decoding. They are authored tests, not an executed fuzzing or allocation-profile result.
+Thirty-six authored NUnit cases cover held/released command round trips, strict command IDs/sequence/boolean, all truncations and extra bytes, every mission phase, the 465-byte maximum, both nested/outer headers, length constraints, bad holds, mission/encounter/gate coherence, nested malformed members, explicit failures/intermission, distinct handshake/type compatibility, replica replay/order/round/terminal guards, dropped transitions/countdown resets, immutable copied bytes and invalid replica bindings. A deterministic random malformed sweep and mutations throughout a valid maximum-size frame exercise nonthrowing decoding. These cases and their bounded mutation loops now execute successfully in the standalone harness. They are not a coverage-guided fuzzer, allocation profile or native Unity result.
 
 Before integrating into the active range:
 

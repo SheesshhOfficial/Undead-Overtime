@@ -4,7 +4,7 @@
 
 This is an engine-independent rules candidate, not an active mission in the current LAN range. It adds only a core class, its immutable observation/snapshot values, tests and this document. It does not change a scene, network protocol, player build, material, imported asset, local settings or current gameplay. The pending depot-floor material setup is independent and must not be resumed without its required approval.
 
-Cloud static consistency and independent source review pass. Native C# compilation and these new EditMode cases have not run. No game-engine acceptance, actual LAN behavior, rendered objective, persistence or performance claim follows from this candidate.
+Cloud static consistency and independent source review pass. All 21 progression cases now pass in the standalone core harness; see [executed core evidence](CLOUD_CORE_VERIFICATION.md). Actual Unity compilation and EditMode execution of this mission layer remain pending. No game-engine acceptance, actual LAN behavior, rendered objective, persistence or performance claim follows from this candidate.
 
 ## First mission proposal: power the depot and escape
 
