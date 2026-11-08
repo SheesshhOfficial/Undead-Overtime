@@ -81,5 +81,53 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.IsBusy, Is.False); Assert.That(range.MemberCount, Is.Zero);
             Assert.That(range.Phase, Is.EqualTo(SessionPhase.Stopped));
         }
+        [UnityTest]
+        public IEnumerator HostWalkingStopsInsidePacingWindowExpiresAndUsesMovedShotOrigin()
+        {
+            Assert.That(range.StartHosting("127.0.0.1", port), Is.True);
+            for (int i = 0; i < 60 && !range.IsConnected; i++) yield return null;
+            Assert.That(range.BeginRound(), Is.True);
+            Assert.That(range.SendAction(RangeAction.Move, Vector3.forward), Is.True);
+            Assert.That(range.SendAction(RangeAction.Move, Vector3.zero), Is.True); // Same frame, inside 20 ms pacing window.
+            yield return new WaitForSecondsRealtime(.15f);
+            Assert.That(range.TryGetLocalMember(out RangeMember initiallyStopped), Is.True);
+            Assert.That((initiallyStopped.Position - HostMoveGate.Spawn(0)).LengthSquared, Is.LessThan(.0001));
+            double until = Time.realtimeSinceStartupAsDouble + .65;
+            while (Time.realtimeSinceStartupAsDouble < until)
+            {
+                Assert.That(range.SendAction(RangeAction.Move, Vector3.forward), Is.True);
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            yield return new WaitForSecondsRealtime(.5f);
+            Assert.That(range.TryGetLocalMember(out RangeMember moved), Is.True);
+            Assert.That(moved.Position.Z - LanRange.Station(0).z, Is.InRange(1d, 4d));
+            yield return new WaitForSecondsRealtime(.35f);
+            Assert.That(range.TryGetLocalMember(out RangeMember stopped), Is.True);
+            Assert.That((stopped.Position - moved.Position).LengthSquared, Is.LessThan(.0001));
+            Vector3 origin = new Vector3((float)stopped.Position.X, (float)stopped.Position.Y, (float)stopped.Position.Z);
+            Assert.That(range.WorldCamera.transform.position, Is.EqualTo(origin));
+            Assert.That(range.SendAction(RangeAction.Fire, (new Vector3(0, 1.6f, 10) - origin).normalized), Is.True);
+            yield return new WaitForSecondsRealtime(.15f);
+            Assert.That(range.CurrentSnapshot.TargetHealth(1), Is.EqualTo(75));
+            Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.BeginRound(), Is.True);
+            Assert.That(range.TryGetLocalMember(out RangeMember reset), Is.True);
+            Assert.That((reset.Position - HostMoveGate.Spawn(0)).LengthSquared, Is.LessThan(.0001));
+        }
+        [Test]
+        public void WalkingCapsuleCannotCrossWallsAndSlidesAlongAnObstacle()
+        {
+            GameObject wall = new GameObject("Walking test obstacle"); wall.transform.SetParent(root.transform);
+            wall.transform.position = new Vector3(0, 1, -4); wall.AddComponent<BoxCollider>().size = new Vector3(5, 2, .5f);
+            Physics.SyncTransforms();
+            Vector3 position = new Vector3(0, 1.6f, -8);
+            for (int i = 0; i < 50; i++) position = LanRange.ResolvePlanarMovement(position, Vector3.forward * .2f);
+            Assert.That(position.z, Is.InRange(-4.8f, -4.55f));
+            for (int i = 0; i < 5; i++) position = LanRange.ResolvePlanarMovement(position, new Vector3(.1f, 0, .1f));
+            Assert.That(position.x, Is.GreaterThan(.3f)); Assert.That(position.z, Is.LessThan(-4.55f));
+            position = new Vector3(0, 1.6f, -8);
+            for (int i = 0; i < 200; i++) position = LanRange.ResolvePlanarMovement(position, Vector3.right * .2f);
+            Assert.That(position.x, Is.InRange(15f, 15.301f)); Assert.That(position.y, Is.EqualTo(1.6f));
+            Assert.That(LanRange.ResolvePlanarMovement(position, Vector3.right * 50), Is.EqualTo(position));
+        }
     }
 }

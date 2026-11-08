@@ -21,7 +21,7 @@ The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderP
 
 Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
 
-Run all suites after pulling: **81 authored EditMode cases and 20 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers.
+Run all suites after pulling: **94 authored EditMode cases and 22 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md).
 
 Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
 
@@ -48,11 +48,11 @@ No game code launches another executable. The game accepts only role, port, run 
 
 Host and client each assert their side of the flow:
 
-1. Two members appear in the host-owned lobby and receive round one.
+1. Two members appear in the host-owned lobby and receive round one. The client walks forward with repeated bounded intents; the host observes movement and the client receives the new position. The client then sends no movement input and verifies the host expires its held intent, with no further displacement.
 2. The client sends four valid shots. The host kills the shared center target and accounts for exactly four rounds; the client receives the same HP/ammunition result.
 3. The client reloads. Both observe reload start/completion. A deliberate upward miss acknowledges that the client actually received the refilled magazine before the host changes phase.
 4. The host returns to lobby. The client disconnects and rejoins; the host must observe the departure and a different connection identity on return.
-5. Round two restores targets/ammunition. One client shot produces 75 HP on the left target, replicated back to that client. A reload request acknowledges receipt.
+5. Round two restores targets/ammunition. The assigned spawn position is restored. One client shot produces 75 HP on the left target, replicated back to that client. A reload request acknowledges receipt.
 6. The host shuts down cleanly. The client observes disconnection and an empty/stopped session.
 
 Unexpected Unity Error/Exception/Assert log messages observed during the test fail the per-process result. Warnings are counted and retained for review; they are not automatically declared harmless. Timeout, extra peers, missing/mismatched reports, wrong process IDs, a nonzero process exit or missing terminal steps fail the launcher.
@@ -102,3 +102,11 @@ unity command script recompile_status --project-path 'G:\Unity Projects\Undead O
 ```
 
 Resolve returned completed/applied with `requiresRecompile: true`. Recompile status was polled through compiling and a transient editor-unavailable domain reload until ready, with completed/failed:false and no errors. Do not change package versions or treat that transient reload status as a reason to launch a second editor.
+
+## 2026-11-08: fixed-station baseline loopback passed
+
+Local execution reported exact source `4be3f12c6c0841cacba167604ee06388187c34ea` compiled cleanly, passed 81/81 EditMode and 20/20 PlayMode, and rebuilt its Windows LAN player. Run `3c0205911a8643b8bb7f1797c9ed46db` passed with script exit 0, host PID 13708 and client PID 26200 on port 64575, from `2026-11-08T12:41:31.4208346Z` to `2026-11-08T12:41:37.9975748Z`. Both process exits were 0. Both reports had success:true, runtimeErrorCount:0 and warningCount:0; host observed connection identity change from 2 to 3. The reports covered membership, remote damage/reload, departure/rejoin, round reset, second-round acknowledgement and host shutdown.
+
+No player process remained. Editor was ready/stopped; all nine preserved generated files remained byte-for-byte unchanged. Full logs were not entirely free of diagnostic failures: host.log had five and client.log four Curl error 7 messages to unreachable Unity cloud/telemetry endpoints. Those lines were not counted by the game's Unity log callback. No cloud/security setting was changed, and this pass does not establish telemetry connectivity.
+
+This validates only the fixed-station two-process loopback baseline. The current protocol-v2 movement extension must pass a newly rebuilt run with the additional movement/expiry markers. Real LAN, ten-player capacity/performance and manual visual/control acceptance remain open.

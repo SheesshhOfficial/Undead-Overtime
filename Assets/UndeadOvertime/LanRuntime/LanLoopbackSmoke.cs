@@ -77,6 +77,11 @@ namespace UndeadOvertime.LanPrototype
             Require(range.MemberCount == 2, "Unexpected extra peer in controlled test.");
             report.firstRemoteConnection = Remote().ConnectionId; Record("two-process-membership");
             Require(range.BeginRound(), "Could not begin first round."); Record("round-one-started");
+            Vector3 spawn = LanRange.Station(Remote().Slot);
+            while (Remote().Position.Z - spawn.z < 1) yield return null;
+            Require(Math.Abs(Remote().Position.X - spawn.x) < .05 && Remote().Position.Z - spawn.z < 5,
+                "Remote movement was not bounded and planar.");
+            Record("remote-movement-observed");
             while (range.CurrentSnapshot.TargetHealth(1) != 0) { Require(range.MemberCount == 2, "Client left before damage test."); yield return null; }
             Require(Remote().Ammo == 8, "Four target hits did not consume exactly four remote rounds."); Record("remote-four-hit-kill");
             while (!Remote().Reloading) yield return null;
@@ -114,6 +119,21 @@ namespace UndeadOvertime.LanPrototype
             while (range.Phase != SessionPhase.Playing) { Require(range.IsBusy, "Client connection failed: " + range.Status); yield return null; }
             Require(range.MemberCount == 2 && range.CurrentSnapshot.RoundId == 1, "First round membership/identity mismatch.");
             Record("first-round-received");
+            Vector3 spawn = LanRange.Station(Local().Slot);
+            double walkingUntil = Time.realtimeSinceStartupAsDouble + .7;
+            while (Time.realtimeSinceStartupAsDouble < walkingUntil)
+            {
+                Require(range.SendAction(RangeAction.Move, Vector3.forward), "Could not submit walking intent.");
+                yield return new WaitForSecondsRealtime(.05f);
+            }
+            // Stop transmitting without an explicit stop packet; the host must expire held intent.
+            yield return new WaitForSecondsRealtime(.6f);
+            AimVector settled = Local().Position;
+            Require(settled.Z - spawn.z > 1 && settled.Z - spawn.z < 5 && Math.Abs(settled.X - spawn.x) < .05,
+                "Client did not receive bounded host-resolved movement.");
+            yield return new WaitForSecondsRealtime(.4f);
+            Require((Local().Position - settled).LengthSquared < .0001, "Expired walking intent kept moving the client.");
+            Record("replicated-movement-and-expiry");
             for (int i = 0; i < 4; i++)
             {
                 Require(range.SendAction(RangeAction.Fire, AimAt(1)), "Could not submit first-round shot.");
@@ -136,6 +156,8 @@ namespace UndeadOvertime.LanPrototype
             Require(range.MemberCount == 2 && range.CurrentSnapshot.RoundId == 2, "Second round membership/identity mismatch.");
             Require(range.CurrentSnapshot.TargetHealth(0) == 100 && range.CurrentSnapshot.TargetHealth(1) == 100 && Local().Ammo == 12,
                 "Client did not receive the complete round reset.");
+            Require((Local().Position - HostMoveGate.Spawn(Local().Slot)).LengthSquared < .0001,
+                "Round reset did not restore the assigned spawn.");
             Record("rejoined-reset-received");
             Require(range.SendAction(RangeAction.Fire, AimAt(0)), "Could not submit second-round shot.");
             while (range.CurrentSnapshot.TargetHealth(0) != 75 || Local().Ammo != 11) yield return null;
@@ -147,12 +169,8 @@ namespace UndeadOvertime.LanPrototype
         }
         private RangeMember Local()
         {
-            // The client's station is the only one matching its camera's fixed host-assigned position.
-            RangeSnapshot state = range.CurrentSnapshot;
-            Require(state != null, "Missing snapshot.");
-            for (int i = 0; i < state.MemberCount; i++)
-                if ((LanRange.Station(state.Member(i).Slot) - range.WorldCamera.transform.position).sqrMagnitude < .001f) return state.Member(i);
-            throw new InvalidOperationException("Local station missing from snapshot.");
+            Require(range.TryGetLocalMember(out RangeMember member), "Local member missing from snapshot.");
+            return member;
         }
         private RangeMember Remote()
         {
@@ -161,7 +179,11 @@ namespace UndeadOvertime.LanPrototype
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId != 0) return state.Member(i);
             throw new InvalidOperationException("Remote member missing from snapshot.");
         }
-        private Vector3 AimAt(int target) => (new Vector3((target - 1) * 5, 1.6f, 10) - LanRange.Station(Local().Slot)).normalized;
+        private Vector3 AimAt(int target)
+        {
+            AimVector eye = Local().Position;
+            return (new Vector3((target - 1) * 5, 1.6f, 10) - new Vector3((float)eye.X, (float)eye.Y, (float)eye.Z)).normalized;
+        }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
         private void Record(string step) { steps.Add(step); Debug.Log("UO_LAN_SMOKE_STEP " + report.role + " " + step); }
         private void ObserveLog(string condition, string stackTrace, LogType type)

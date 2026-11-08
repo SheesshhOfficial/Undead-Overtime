@@ -67,6 +67,7 @@ try {
         $hostReport.processId -ne $hostProcess.Id -or $clientReport.processId -ne $clientProcess.Id -or
         $hostProcess.Id -eq $clientProcess.Id) { throw 'Reports do not prove two distinct launched processes.' }
     if ($hostReport.steps -notcontains 'host-shutdown-completed' -or $clientReport.steps -notcontains 'host-shutdown-observed') { throw 'A terminal lifecycle check is missing.' }
+    if ($hostReport.steps -notcontains 'remote-movement-observed' -or $clientReport.steps -notcontains 'replicated-movement-and-expiry') { throw 'The movement/expiry check is missing.' }
     if ($hostProcess.ExitCode -ne 0 -or $clientProcess.ExitCode -ne 0) { throw 'A test player returned a nonzero exit code.' }
     $summary = [ordered]@{
         formatVersion = 1; success = $true; runId = $run; requestedRevision = $Revision.ToLowerInvariant()
