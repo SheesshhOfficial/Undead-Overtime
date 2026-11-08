@@ -160,6 +160,29 @@ namespace UndeadOvertime.LanPrototype
             while (Remote().Ammo != 11) yield return null;
             Require(range.CurrentSnapshot.TargetHealth(0) == 75, "Final receipt unexpectedly damaged a target.");
             Record("revived-client-action-acknowledged");
+            Require(range.ReturnToLobby() && range.BeginRound() && range.StartWaves(), "Could not start fourth-round waves.");
+            Record("wave-round-started");
+            int waveMask = 0, breakMask = 0;
+            while (range.CurrentSnapshot.Horde.Phase != HordePhase.Completed)
+            {
+                RangeSnapshot state = range.CurrentSnapshot;
+                Require(state.Encounter.Phase == EncounterPhase.Active && Remote().Health > 0 && Local().Health > 0, "Wave scenario lost a player or failed.");
+                Require(state.EnemyCount == state.Horde.Wave + 1, "Host wave enemy count mismatch.");
+                waveMask |= 1 << state.Horde.Wave;
+                if (state.Horde.Phase == HordePhase.Intermission) breakMask |= 1 << state.Horde.Wave;
+                yield return null;
+            }
+            Require(waveMask == 14 && breakMask == 6 && range.CurrentSnapshot.Horde.Wave == 3,
+                "Host skipped a wave or intermission.");
+            for (int i = 0; i < range.CurrentSnapshot.EnemyCount; i++) Require(range.CurrentSnapshot.Enemy(i).Health == 0, "Completed wave retained a living infected.");
+            Record("three-waves-cleared");
+            while (!Remote().Reloading) yield return null;
+            Record("wave-result-reload-started");
+            while (Remote().Reloading || Remote().Ammo != 12) yield return null;
+            Record("wave-result-reload-completed");
+            while (Remote().Ammo != 11) yield return null;
+            Require(range.CurrentSnapshot.Horde.Phase == HordePhase.Completed, "Final receipt changed completed waves.");
+            Record("wave-result-acknowledged");
             range.StopSession("Automated loopback host shutdown.");
             while (range.IsBusy) yield return null;
             Record("host-shutdown-completed");
@@ -269,6 +292,39 @@ namespace UndeadOvertime.LanPrototype
             while (Local().Reloading || Local().Ammo != 12) yield return null;
             Record("revived-client-reload-completion-received");
             Require(range.SendAction(RangeAction.Fire, Vector3.up), "Could not acknowledge the revived client's observed reload completion.");
+            while (range.CurrentSnapshot.RoundId != 4 || range.CurrentSnapshot.Horde.Phase != HordePhase.Fighting) yield return null;
+            Require(Local().Health == 100 && Local().Ammo == 12, "Wave round did not reset player state.");
+            Record("wave-round-received");
+            int waveMask = 0, breakMask = 0, lastWave = 1, breakAmmo = -1;
+            while (range.CurrentSnapshot.Horde.Phase != HordePhase.Completed)
+            {
+                RangeSnapshot state = range.CurrentSnapshot; RangeMember player = Local();
+                Require(state.Encounter.Phase == EncounterPhase.Active && player.Health > 0, "Client wave encounter failed.");
+                Require(state.EnemyCount == state.Horde.Wave + 1, "Client wave enemy count mismatch.");
+                waveMask |= 1 << state.Horde.Wave;
+                if (state.Horde.Phase == HordePhase.Intermission)
+                {
+                    breakMask |= 1 << state.Horde.Wave; breakAmmo = player.Ammo;
+                    yield return new WaitForSecondsRealtime(.05f); continue;
+                }
+                if (state.Horde.Wave != lastWave)
+                {
+                    Require(player.Ammo == breakAmmo, "Wave transition silently refilled client ammo.");
+                    lastWave = state.Horde.Wave;
+                }
+                if (player.Reloading) { yield return new WaitForSecondsRealtime(.05f); continue; }
+                Require(player.Ammo == 0 ? range.SendAction(RangeAction.Reload, Vector3.up) : range.SendAction(RangeAction.Fire, AimAtNearestEnemy()),
+                    "Could not send a wave combat action.");
+                yield return new WaitForSecondsRealtime(.22f);
+            }
+            Require(waveMask == 14 && breakMask == 6 && Local().Health > 0, "Client skipped a wave/intermission or failed to survive.");
+            for (int i = 0; i < range.CurrentSnapshot.EnemyCount; i++) Require(range.CurrentSnapshot.Enemy(i).Health == 0, "Client completion retained a live enemy.");
+            Record("replicated-three-waves-cleared");
+            Require(range.SendAction(RangeAction.Reload, Vector3.up), "Could not acknowledge final wave outcome.");
+            while (!Local().Reloading) yield return null;
+            while (Local().Reloading || Local().Ammo != 12) yield return null;
+            Record("wave-reload-completion-received");
+            Require(range.SendAction(RangeAction.Fire, Vector3.up), "Could not send final wave receipt.");
             while (range.IsBusy || range.IsConnected) yield return null;
             Require(range.MemberCount == 0 && range.Phase == SessionPhase.Stopped, "Host shutdown left stale client membership.");
             Record("host-shutdown-observed");
@@ -290,6 +346,17 @@ namespace UndeadOvertime.LanPrototype
             RangeSnapshot state = range.CurrentSnapshot;
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId == 0) return state.Member(i);
             throw new InvalidOperationException("Host member missing from snapshot.");
+        }
+        private Vector3 AimAtNearestEnemy()
+        {
+            AimVector eye = Local().Position, toward = default; double closest = double.MaxValue;
+            for (int i = 0; i < range.CurrentSnapshot.EnemyCount; i++)
+            {
+                EnemySnapshot enemy = range.CurrentSnapshot.Enemy(i); AimVector delta = enemy.Position - eye;
+                if (enemy.Health > 0 && delta.LengthSquared < closest) { closest = delta.LengthSquared; toward = delta; }
+            }
+            Require(closest < double.MaxValue, "Active wave has no living enemy.");
+            return new Vector3((float)toward.X, (float)toward.Y, (float)toward.Z).normalized;
         }
         private Vector3 AimAtInfected()
         {

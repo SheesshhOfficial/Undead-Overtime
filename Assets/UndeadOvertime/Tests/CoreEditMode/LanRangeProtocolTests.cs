@@ -45,7 +45,7 @@ namespace UndeadOvertime.Core.Tests
             var original = new RangeSnapshot(5, 2, SessionPhase.Playing, members, hp);
             members[0] = default; hp[0] = -1;
             byte[] bytes = LanRangeProtocol.Encode(original);
-            Assert.That(bytes.Length, Is.EqualTo(LanRangeProtocol.MaximumBytes));
+            Assert.That(bytes.Length, Is.EqualTo(LanRangeProtocol.SnapshotHeaderBytes + 10 * LanRangeProtocol.MemberBytes));
             Assert.That(LanRangeProtocol.TrySnapshot(bytes, out RangeSnapshot value), Is.True);
             Assert.That(value.MemberCount, Is.EqualTo(10)); Assert.That(value.Member(2).Reloading, Is.True);
             Assert.That(value.Member(0).ConnectionId, Is.EqualTo(1)); Assert.That(value.TargetHealth(0), Is.EqualTo(100));

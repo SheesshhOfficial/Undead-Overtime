@@ -116,3 +116,13 @@ Revive cae6b4d passed compilation, 117 EditMode / 27 PlayMode and rebuilt Window
 Cloud source review identified shared 20 ms fire/reload adapter pacing that could discard an immediate reload acknowledgment. Reload now has its own pacing clock; alive/ammo/round/sequence validation and idempotent weapon reload remain. Added a same-frame fire/reload regression with repeated reload requests across the timer. Expected source inventory is 117 EditMode / 28 PlayMode. The smoke now observes reload start, reload completion and a harmless client receipt before the host shuts down; the launcher mandates the new completion markers. Added aligned UTC step timestamps, without changing protocol v4 or deadlines.
 
 Cloud static consistency PASS: 46 source/assets, nine assemblies, 58 GUIDs. Local compilation/tests/new build and expanded corrected loopback remain pending. No package/settings/security changes, local source fix, new branch or backup.
+
+## 2026-11-08: bounded multi-infected waves candidate
+
+Corrected revive baseline 90c7b28 passed clean compile, 117 EditMode / 28 PlayMode, rebuilt Windows player and a complete 43.745-second two-process run, including confirmed reload receipt before shutdown. Native Unity cloud Curl diagnostics remained in full logs. The nine generated local files were preserved and no player remained. Exact evidence is in LAN_LOOPBACK_AUTOMATION.md.
+
+Added optional three-wave mode with 2/3/4 host-owned infected and five-second breaks. The original single-infected mode remains. Every enemy has independent host tick/cooldown and a round-unique ID. One survivor/revive owner and weapon gate persist across waves, preserving HP/ammo/rescue progress. Spawn placement checks world, connected players and other chosen enemies using a bounded deterministic search, failing closed if no complete placement exists. No client spawn, damage or target claim is accepted.
+
+Protocol v5 carries bounded enemy-array and wave state (maximum 442 bytes), with exact-length/count/identity/phase validation. Four capsule objects form the fixed pool. Fifteen new core and four PlayMode cases bring expected totals to 132 EditMode / 32 PlayMode. The actual two-process harness retains all previous checks then clears all three waves in round four and confirms completion through a reload/miss receipt. No deadline was increased.
+
+Cloud static consistency PASS: 48 source/assets, nine assemblies, 60 GUIDs. Independent review and exact remote checks accompany publication. Compilation/tests/player build/new wave loopback remain unrun in cloud. No package/settings/security changes, licensed-asset import, branch, backup or local source repair. Full game, real LAN, ten-player scale, animation and performance remain open.

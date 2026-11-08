@@ -39,3 +39,9 @@ Manual acceptance remains separate: capture/release focus, E key hold/release, v
 The failed run exposed a gameplay input issue, not failed revive replication: the adapter shared a 20 ms pacing gate for fire and reload. A valid reload arriving immediately after an accepted shot could be discarded even though SendAction returned that it submitted the command. Reload now has its own 20 ms pacing clock, reset each round. HostFireGate still checks alive/full-magazine/in-progress state, and repeated requests cannot extend the reload timer. No protocol change or longer smoke deadline is used.
 
 The final smoke exchange now verifies the client actually sees reload completion before the host accepts its upward-miss receipt. New host/client completion markers are mandatory in the launcher. UTC timestamps accompany every step in logs and report stepUtcTimes, aiding diagnosis without guessing timing. A client-only success or host-disconnect observation is never overall acceptance; both reports, exits and complete required steps must pass.
+
+## Validated baseline and later wave extension
+
+Corrected revision `90c7b28cc7b6a3c0e951732d3111be367f413199` passed all 117 EditMode / 28 PlayMode cases, build and the complete two-process revive/reload receipt run. See [the execution record](LAN_LOOPBACK_AUTOMATION.md) for exact timestamps, hashes and retained cloud-connectivity diagnostics.
+
+The later [wave candidate](LAN_HORDE.md) preserves revive in one round-level owner through intermissions and moves snapshots to protocol v5. The v4 layout above describes this revive milestone's historical protocol, not the latest wave wire layout. Its source inventory is now 132 EditMode / 32 PlayMode; new wave acceptance is pending.
