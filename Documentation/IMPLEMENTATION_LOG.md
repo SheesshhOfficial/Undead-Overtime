@@ -126,3 +126,15 @@ Added optional three-wave mode with 2/3/4 host-owned infected and five-second br
 Protocol v5 carries bounded enemy-array and wave state (maximum 442 bytes), with exact-length/count/identity/phase validation. Four capsule objects form the fixed pool. Fifteen new core and four PlayMode cases bring expected totals to 132 EditMode / 32 PlayMode. The actual two-process harness retains all previous checks then clears all three waves in round four and confirms completion through a reload/miss receipt. No deadline was increased.
 
 Cloud static consistency PASS: 48 source/assets, nine assemblies, 60 GUIDs. Independent review and exact remote checks accompany publication. Compilation/tests/player build/new wave loopback remain unrun in cloud. No package/settings/security changes, licensed-asset import, branch, backup or local source repair. Full game, real LAN, ten-player scale, animation and performance remain open.
+
+## 2026-11-08: FPS/TPS camera and hands-on control candidate
+
+Wave baseline 6b3df43 passed compile, 132 EditMode / 32 PlayMode, Windows build and the full three-wave two-process run, with the same preserved generated files and known native Unity cloud Curl diagnostics. Full evidence/fingerprints are in LAN_LOOPBACK_AUTOMATION.md.
+
+Added a local V/menu FPS/TPS switch, sphere-swept shoulder camera, reticle convergence from the actual player eye, backwards-hit guard, third-person local placeholder body, compact captured HUD, bounded mouse-sensitivity slider and clear start/downed hints. View changes do not capture the mouse or alter player/round authority. Headless presentation stays disabled. No protocol or network behavior is intentionally changed.
+
+Seven new physics/view-lifecycle PlayMode cases bring expected source totals to 132 EditMode / 39 PlayMode. Static consistency PASS: 50 source/assets, nine assemblies, 62 GUIDs. Compilation/tests/build, unchanged full network regression and actual rendered/manual camera checks remain pending. Root README was updated from the obsolete first-range-only description to distinguish the verified co-op baseline from this new candidate.
+
+No private source asset, licensed Mixamo download, package/settings/security change, new branch, backup or local authored fix is included. Production assets require a separately verified import/provenance route; placeholder capsules are not represented as completed realistic characters.
+
+Independent camera review found and corrected a presentation/authority crossover before publication: changing view originally called the broad snapshot visual application, which could rewind host enemy colliders to an older snapshot before the next fixed tick. View switching now touches only local-avatar visibility and camera placement. A seventh regression explicitly exercises newer-than-snapshot enemy physics and verifies position/active state is unchanged by repeated toggles.

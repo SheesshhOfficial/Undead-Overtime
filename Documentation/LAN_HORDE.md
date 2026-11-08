@@ -4,7 +4,7 @@
 
 The host can choose **Start waves** after Start round, instead of the existing single-infected test. This isolated arena has three waves containing 2, 3 and 4 infected, with five-second intermissions. All nine enemies must be defeated. A team wipe fails the encounter; the host can return to lobby and begin a fresh round.
 
-This candidate is authored and statically checked, not yet Unity/runtime accepted. Its baseline `90c7b28cc7b6a3c0e951732d3111be367f413199` passed compilation, 117 EditMode / 28 PlayMode, Windows build and actual two-process revive/combat/lifecycle acceptance. The new wave extension needs its own exact-revision tests, rebuild and loopback execution.
+Revision `6b3df43657689622e70189704072893b0e899ada` passed local compilation, 132 EditMode / 32 PlayMode, Windows build and a complete 66.571-second two-process wave run. The later [camera/control candidate](LAN_CONTROLS.md) requires its own validation; real LAN, ten-player capacity and full-game quality are not established. See [the exact execution record](LAN_LOOPBACK_AUTOMATION.md).
 
 ## Rules and authority
 

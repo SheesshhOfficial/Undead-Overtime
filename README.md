@@ -1,18 +1,32 @@
 # Undead Overtime
 
-Unity project for the planned solo and 1–10-player LAN cooperative zombie shooter, with first-person and third-person views. The long-term setting is a realistic American city.
+Unity prototype for a planned Windows solo and 1–10-player LAN co-op zombie shooter in an original American-style city. This repository contains the game implementation; it is not yet a finished game.
 
-## Current playable scope
+## Playable prototype
 
-The first implementation is an **isolated, single-player mechanics test range**, not the game or a multiplayer build. It uses temporary primitives: movement, jumping, FPS/TPS switching, cover-aware hitscan, three stationary targets, and reset controls. There are no imported production assets, zombies, waves, networking, city content, or progression yet.
+Use **Unity 6000.6.5f1** and open `Assets/UndeadOvertime/Scenes/LanRange.unity`.
 
-- Unity: **6000.6.5f1** (use the exact project version).
-- Open `Assets/UndeadOvertime/Scenes/PrototypeRange.unity`, then enter Play Mode.
-- The greybox is generated at runtime. Opening the scene in Edit Mode does not create or save gameplay objects.
-- `Assets/Scenes/SampleScene.unity` remains the original template. The existing build-scene list is unchanged.
+The isolated LAN arena supports host/join, planar movement, host-authoritative shooting/reload, single infected or three bounded waves (2/3/4 enemies), damage/downing, timed teammate revive, intermissions and round reset. Current camera/control work adds a local FPS/TPS switch and clearer HUD. Models are temporary primitives; the city, production characters/animation, missions, audio and polish are not integrated.
 
-See [range controls, test commands, and acceptance checks](Documentation/PROTOTYPE_RANGE.md) and [the next multiplayer boundary](Documentation/NETWORKING_PLAN.md).
+Quick start: enter Play Mode → Host on `127.0.0.1:7777` → Start round → Start waves → Capture mouse. WASD moves, mouse aims/fires, R reloads, E revives, V switches view, Esc releases capture. Join a second process before the host starts a round. See [the hands-on guide](Documentation/LAN_CONTROLS.md).
 
-## Verification status
+Build explicitly with **Undead Overtime > Build LAN test player (Windows)**. The output is `Builds/LanRange/UndeadOvertimeLanRange.exe`. This helper includes only LanRange and does not rewrite the existing build-scene list. Normal launch is manual; automation requires explicit opt-in flags.
 
-Cloud static checks cover text structure, assembly definitions, metadata GUIDs, and scene references. Unity import/compilation, EditMode/PlayMode execution, graphical behavior, and a standalone build must be verified with the installed Unity editor. Do not interpret static checks or test source files as a successful Unity test run.
+The original `PrototypeRange.unity` mechanics scene and `SurvivalYard.unity` solo scene remain separate and preserved. `Assets/Scenes/SampleScene.unity` is the original template. Runtime greyboxes are generated on entry; simply opening a scene in Edit Mode does not save generated geometry.
+
+## Verified baseline and current candidate
+
+Wave baseline `6b3df43657689622e70189704072893b0e899ada` passed compilation, 132 EditMode / 32 PlayMode tests, Windows build and an actual two-process loopback test covering movement, combat/reload, rejoin/reset, downing/revive and all three waves. Full logs retained Unity cloud Curl diagnostics, documented separately from zero gameplay callback error counts.
+
+The newer FPS/TPS/control candidate needs its own exact-revision execution. Its expected inventory is 132 EditMode / 39 PlayMode. Static source checks and authored tests are not runtime acceptance. Real LAN, ten-player scale, hands-on visual/input quality and performance remain unverified. Do not expose this unauthenticated prototype to the Internet.
+
+## Documentation
+
+- [Agent workflow and repository boundaries](AGENTS.md)
+- [LAN runbook](Documentation/LAN_RANGE.md)
+- [Co-op waves](Documentation/LAN_HORDE.md)
+- [Revive and reload correction](Documentation/LAN_REVIVE.md)
+- [Two-process automation and exact execution evidence](Documentation/LAN_LOOPBACK_AUTOMATION.md)
+- [Implementation history](Documentation/IMPLEMENTATION_LOG.md)
+
+Run `python Tools/validate_prototype.py` for cloud static consistency. Compile, run tests and build with the actual Unity editor. Preserve local user/editor changes and follow the exact-revision cloud-authoring/local-execution workflow.

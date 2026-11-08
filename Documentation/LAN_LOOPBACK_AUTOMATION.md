@@ -21,7 +21,7 @@ The seven generated paths are DefaultVolumeProfile, PC_RPAsset, UniversalRenderP
 
 Use the existing Unity 6000.6.5f1 project. Explicitly finish package resolution before assessing compiler errors; an idle package status alone did not establish that the initial new package references had resolved. Use the current editor's supported package-resolution operation, without changing package versions as a workaround.
 
-Run all suites after pulling: **132 authored EditMode cases and 32 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md). The infected encounter adds ten core cases and four more PlayMode cases; see [LAN_INFECTED.md](LAN_INFECTED.md). Revive adds thirteen core cases and one PlayMode case; a later reload correction adds one PlayMode regression for immediate fire/reload plus idempotent retry timing; see [LAN_REVIVE.md](LAN_REVIVE.md). The bounded horde adds fifteen core and four PlayMode cases; see [LAN_HORDE.md](LAN_HORDE.md).
+Run all suites after pulling: **132 authored EditMode cases and 39 authored PlayMode cases**. These are expected source counts, not new pass results. The eight new cases check that only complete explicit smoke flags can activate automation, including rejected duplicate/unknown flags and path-like run IDs. Two further PlayMode regressions force the collider-only path on any editor graphics device, checking headless geometry and host-authoritative damage/reload/reset without renderers. The movement slice adds thirteen core cases and two more PlayMode cases; see [LAN_MOVEMENT.md](LAN_MOVEMENT.md). The infected encounter adds ten core cases and four more PlayMode cases; see [LAN_INFECTED.md](LAN_INFECTED.md). Revive adds thirteen core cases and one PlayMode case; a later reload correction adds one PlayMode regression for immediate fire/reload plus idempotent retry timing; see [LAN_REVIVE.md](LAN_REVIVE.md). The bounded horde adds fifteen core and four PlayMode cases; see [LAN_HORDE.md](LAN_HORDE.md). The later camera/control slice adds seven PlayMode cases; see [LAN_CONTROLS.md](LAN_CONTROLS.md).
 
 Rebuild the Windows LAN player with the existing menu/build helper described in [LAN_RANGE.md](LAN_RANGE.md). Verify exact source HEAD and successful build result before launching. Do not run an old player from the preceding revision: it does not implement these flags.
 
@@ -156,4 +156,18 @@ Verified baseline build SHA-256 fingerprints from the local summary:
 - UndeadOvertime.Core.dll, 30,208 bytes: `0ad3eaa21291ef80da80e7cbaa7624f8369c0db5d51446dc94753334cb26bbfe`
 - UndeadOvertime.LanPrototype.dll, 52,224 bytes: `9721f1b08054a7dc1573acea899c2ce3d125be8cdec42c85d187d5165c790230`
 - UndeadOvertime.Prototype.dll, 30,208 bytes: `28fa5a86be70b588164ba5b367cb03e0ed7437f0caeed35d032e34c8b378316e`
+- Player EXE, 667,136 bytes: `b70442f90f50cd91f7af7bf2272602645fc5d02c4d3156fb221fc27c328d2436`
+
+## Three-wave acceptance (baseline for camera controls)
+
+Revision `6b3df43657689622e70189704072893b0e899ada` passed local compilation, 132/132 EditMode, 32/32 PlayMode (79.73 seconds) and Windows build. The synchronous helper logged UO_LAN_BUILD_OK at `2026-11-08T13:59:01.520815Z`. An unchanged Unity EXE timestamp alone was not a stale-build failure: fresh gameplay DLLs and the successful BuildPipeline result established the rebuild.
+
+One harness run `aa91c2db915b4bbc91df984c7ae644dd` passed in 66.571 seconds, script exit 0. Summary UTC `2026-11-08T14:04:19.8961976Z` through `14:05:26.1235081Z`, port 64843, host PID 28460/client PID 23992; both players exited 0. All prior and new wave acknowledgment markers passed. Host clear was 14:05:22.9558485Z, reload completion 24.6774973Z, final receipt 24.6785021Z and shutdown 24.6961383Z. Client clear was 23.1760653Z, reload completion 24.6774973Z and shutdown observed 24.6886002Z.
+
+Both callback reports had zero errors/warnings. Full logs each retained six Unity cloud/analytics Curl errors, with no other matching Error/Exception/Assert/Warning lines reported. All nine local generated hashes remained unchanged, no test player process remained, and the editor was stopped/ready. This is loopback acceptance, not real LAN or camera/manual acceptance.
+
+Summary SHA-256 fingerprints:
+- UndeadOvertime.Core.dll, 34,304 bytes: `29ab9a518c0967f614ae6b9f900960b2121caa4678d3a412f9b5796cfe37e0d6`
+- UndeadOvertime.LanPrototype.dll, 57,856 bytes: `90bf340187f5a3bd4c3d11765cdfd4223b614f5123a7a8f3d4218548106f28cc`
+- UndeadOvertime.Prototype.dll, 30,208 bytes: `b468aff0356482fc9ff6f6ce5c7f7207c61296b9c2805e91d59e36bb39007aaa`
 - Player EXE, 667,136 bytes: `b70442f90f50cd91f7af7bf2272602645fc5d02c4d3156fb221fc27c328d2436`

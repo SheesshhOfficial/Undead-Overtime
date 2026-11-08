@@ -36,12 +36,29 @@ namespace UndeadOvertime.LanPrototype
         private string status = "Offline. Loopback is not proof of LAN connectivity.";
         private bool wasBackground, captured, waitForRelease, stopping, handlersRegistered;
         private float yaw, pitch;
+        private PlayerViewMode viewMode;
+        private float sensitivity = .12f;
         private double nextSnapshotAt, connectDeadline, nextLocalShotAt, nextLocalMoveAt;
         private ulong sequence;
         private int localSlot = -1;
         public bool IsBuilt { get; private set; }
         public bool PresentationEnabled { get; private set; }
         public Camera WorldCamera => worldCamera;
+        public PlayerViewMode ViewMode => viewMode;
+        public bool ControlsCaptured => captured;
+        public bool SetViewMode(PlayerViewMode mode)
+        {
+            if (!IsBuilt || (mode != PlayerViewMode.FirstPerson && mode != PlayerViewMode.ThirdPerson)) return false;
+            viewMode = mode;
+            // Do not replay the last network snapshot into host physics while changing presentation.
+            // FixedUpdate may have advanced enemies since that snapshot was published.
+            UpdateView(); return true;
+        }
+        public bool SetMouseSensitivity(float value)
+        {
+            if (!AimVector.Finite(value) || value < .03f || value > .35f) return false;
+            sensitivity = value; return true;
+        }
         public bool IsHosting => manager != null && manager.IsHost && !stopping;
         public bool IsConnected => manager != null && manager.IsConnectedClient && !stopping;
         public bool IsBusy => manager != null && (manager.IsListening || manager.ShutdownInProgress || stopping || connectDeadline > 0);
@@ -339,6 +356,8 @@ namespace UndeadOvertime.LanPrototype
             if (!captured || !IsConnected || Phase != SessionPhase.Playing) return;
             Keyboard keyboard = Keyboard.current; Mouse mouse = Mouse.current;
             if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) { ReleaseControls(); return; }
+            if (keyboard != null && keyboard.vKey.wasPressedThisFrame)
+                SetViewMode(viewMode == PlayerViewMode.FirstPerson ? PlayerViewMode.ThirdPerson : PlayerViewMode.FirstPerson);
             if (now >= nextLocalMoveAt)
             {
                 nextLocalMoveAt = now + .05;
@@ -354,12 +373,35 @@ namespace UndeadOvertime.LanPrototype
             }
             if (mouse == null) return;
             if (!mouse.leftButton.isPressed) waitForRelease = false;
-            Vector2 delta = mouse.delta.ReadValue(); yaw = Mathf.Repeat(yaw + delta.x * .12f + 180, 360) - 180;
-            pitch = Mathf.Clamp(pitch - delta.y * .12f, -75, 75);
-            worldCamera.transform.rotation = Quaternion.Euler(pitch, yaw, 0);
-            if (keyboard != null && keyboard.rKey.wasPressedThisFrame) SendAction(RangeAction.Reload, worldCamera.transform.forward);
+            Vector2 delta = mouse.delta.ReadValue(); yaw = Mathf.Repeat(yaw + delta.x * sensitivity + 180, 360) - 180;
+            pitch = Mathf.Clamp(pitch - delta.y * sensitivity, -75, 75);
+            UpdateView();
+            Vector3 aim = ViewShotDirection();
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame) SendAction(RangeAction.Reload, aim);
             if (!waitForRelease && mouse.leftButton.isPressed && now >= nextLocalShotAt)
-            { nextLocalShotAt = now + HostFireGate.FireInterval; SendAction(RangeAction.Fire, worldCamera.transform.forward); }
+            { nextLocalShotAt = now + HostFireGate.FireInterval; SendAction(RangeAction.Fire, aim); }
+        }
+        private void LateUpdate() { if (IsBuilt) UpdateView(); }
+        private void UpdateView()
+        {
+            if (!TryGetLocalMember(out RangeMember player)) return;
+            Vector3 eye = ToUnity(player.Position);
+            if (!PresentationEnabled)
+            {
+                worldCamera.transform.position = eye;
+                if (localSlot >= 0) avatars[localSlot].SetActive(false);
+                return;
+            }
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
+            Physics.SyncTransforms();
+            Vector3 position = LanCameraRig.ResolvePosition(eye, rotation, viewMode);
+            worldCamera.transform.SetPositionAndRotation(position, rotation);
+            if (localSlot >= 0) avatars[localSlot].SetActive(LanCameraRig.ShowLocalBody(viewMode, eye, position));
+        }
+        private Vector3 ViewShotDirection()
+        {
+            if (!TryGetLocalMember(out RangeMember player)) return worldCamera.transform.forward;
+            return LanCameraRig.ResolveShotDirection(ToUnity(player.Position), worldCamera.transform.position, worldCamera.transform.rotation);
         }
         private void FixedUpdate()
         {
@@ -599,11 +641,8 @@ namespace UndeadOvertime.LanPrototype
             if (state.Phase != SessionPhase.Playing) ReleaseControls();
             for (int i = 0; i < 3; i++) health[i] = state.TargetHealth(i);
             ApplyVisuals();
-            if (TryGetLocalMember(out RangeMember local))
-            {
-                worldCamera.transform.position = ToUnity(local.Position);
-                if (local.Health == 0) ReleaseControls();
-            }
+            if (TryGetLocalMember(out RangeMember local) && local.Health == 0) ReleaseControls();
+            UpdateView();
         }
         private void ApplyVisuals()
         {
@@ -614,7 +653,7 @@ namespace UndeadOvertime.LanPrototype
                 RangeMember row = snapshot.Member(i);
                 avatars[row.Slot].transform.position = ToUnity(row.Position) - Vector3.up * (row.Health > 0 ? .7f : 1.35f);
                 avatars[row.Slot].transform.localScale = row.Health > 0 ? new Vector3(.65f, .9f, .65f) : new Vector3(.65f, .25f, .65f);
-                avatars[row.Slot].SetActive(row.Slot != localSlot);
+                avatars[row.Slot].SetActive(row.Slot != localSlot); // Local visibility is camera-distance-dependent in UpdateView.
             }
             for (int i = 0; i < 3; i++) ApplyTarget(i);
             for (int i = 0; i < infectedObjects.Length; i++)
@@ -628,7 +667,22 @@ namespace UndeadOvertime.LanPrototype
         private void OnGUI()
         {
             if (!IsBuilt || !PresentationEnabled) return;
-            GUILayout.BeginArea(new Rect(14, 14, 570, 360), GUI.skin.box);
+            if (captured && TryGetLocalMember(out RangeMember hud))
+            {
+                GUILayout.BeginArea(new Rect(14, 14, 430, 150), GUI.skin.box);
+                GUILayout.Label("UNDEAD OVERTIME | " + (viewMode == PlayerViewMode.FirstPerson ? "FIRST PERSON" : "THIRD PERSON"));
+                GUILayout.Label("Health " + hud.Health + "/100  |  Ammo " + hud.Ammo + "/12" + (hud.Reloading ? "  RELOADING" : ""));
+                if (snapshot.Horde.Phase != HordePhase.Disabled)
+                    GUILayout.Label("Wave " + snapshot.Horde.Wave + "/" + snapshot.Horde.Total + "  " + snapshot.Horde.Phase +
+                        (snapshot.Horde.Phase == HordePhase.Intermission ? "  " + Math.Ceiling(snapshot.Horde.IntermissionSeconds) + "s" : ""));
+                else GUILayout.Label("Encounter " + snapshot.Encounter.Phase);
+                if (hud.ReviveTargetSlot != 255) GUILayout.Label("Reviving teammate " + (hud.ReviveTargetSlot + 1) + "  " + hud.ReviveProgress + "%");
+                GUILayout.Label("WASD move | Mouse shoot | R reload | E revive | V view | Esc menu");
+                GUILayout.EndArea();
+                GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
+                return;
+            }
+            GUILayout.BeginArea(new Rect(14, 14, 650, 440), GUI.skin.box);
             GUILayout.Label("UNDEAD OVERTIME | LAN transport firing range");
             GUILayout.Label("Host-owned walking, targets, infected and bounded co-op waves. Prototype art.");
             GUILayout.Label(status);
@@ -667,7 +721,17 @@ namespace UndeadOvertime.LanPrototype
                 if (Phase == SessionPhase.Playing && !captured && GUILayout.Button("Capture mouse to aim/fire")) CaptureControls();
                 if (GUILayout.Button("Disconnect")) StopSession();
                 GUILayout.EndHorizontal();
-                GUILayout.Label("WASD walk, R reload, hold E nearby to revive, Esc releases controls. Flat ground only; no jump/prediction yet.");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(viewMode == PlayerViewMode.FirstPerson ? "Switch to third person (V)" : "Switch to first person (V)"))
+                    SetViewMode(viewMode == PlayerViewMode.FirstPerson ? PlayerViewMode.ThirdPerson : PlayerViewMode.FirstPerson);
+                GUILayout.Label("Mouse sensitivity " + sensitivity.ToString("0.00"));
+                SetMouseSensitivity(GUILayout.HorizontalSlider(sensitivity, .03f, .35f, GUILayout.Width(140)));
+                GUILayout.EndHorizontal();
+                if (TryGetLocalMember(out RangeMember player) && player.Health == 0)
+                    GUILayout.Label("DOWNED: a living teammate must hold E nearby to revive you. After rescue, capture controls again.");
+                GUILayout.Label("WASD walk | Mouse shoot | R reload | Hold E revive | V first/third person | Esc menu.");
+                GUILayout.Label("Start: Host/Join, host Start round, choose Start waves or Start infected, then Capture mouse.");
+                GUILayout.Label("Flat ground only; no jump/prediction yet. Teammates and infected are placeholder capsules.");
             }
             GUILayout.EndArea();
             if (captured) GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
