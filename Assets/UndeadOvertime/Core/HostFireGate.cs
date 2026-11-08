@@ -124,6 +124,16 @@ namespace UndeadOvertime.Core
 
         public int Ammo(PlayerTicket player) => TryState(player, out WeaponState state) ? state.Ammo : 0;
 
+        public bool IsReloading(PlayerTicket player) => TryState(player, out WeaponState state) && state.IsReloading;
+
+        /// <summary>Trusted host tick: completes reloads even when no further command arrives.</summary>
+        public bool AdvanceReloadsFromHost(double hostTime)
+        {
+            if (!IsCurrentRound || !AdvanceTime(hostTime)) return false;
+            foreach (WeaponState state in weapons.Values) CompleteReload(state, hostTime);
+            return true;
+        }
+
         public bool TryBeginReloadFromHost(PlayerTicket player, double hostTime)
         {
             if (!TryState(player, out WeaponState state) || !AdvanceTime(hostTime)) return false;

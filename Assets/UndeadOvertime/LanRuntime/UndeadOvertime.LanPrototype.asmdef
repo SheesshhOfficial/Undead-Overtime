@@ -1,0 +1,6 @@
+{
+  "name": "UndeadOvertime.LanPrototype",
+  "rootNamespace": "UndeadOvertime.LanPrototype",
+  "references": ["UndeadOvertime.Core", "Unity.Netcode.Runtime", "Unity.Networking.Transport", "Unity.Collections", "Unity.InputSystem"],
+  "autoReferenced": true
+}

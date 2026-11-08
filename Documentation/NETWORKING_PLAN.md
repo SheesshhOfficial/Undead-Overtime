@@ -37,3 +37,7 @@ A transport-independent host lifecycle and fire-admission core now exists in `As
 ## Parallel solo combat experiment
 
 The user requested continuing playable game work while local/network gates are pending. The separate [Survival Yard](SURVIVAL_YARD.md) therefore exercises a solo encounter loop in parallel. It is explicitly not the multiplayer implementation and must not be networked by trusting its direct input-to-damage path. The transport and real-process acceptance gates above remain mandatory.
+
+## Direct-IP integration candidate
+
+The prior core and solo slice now have reported local compile/test results. The next bounded integration is [LanRange](LAN_RANGE.md), using verified NGO 2.13.3/UTP 2.6.0 APIs with a fixed-station shared-target test. It exercises host/join, membership, host fire admission and replication before introducing movement or networked zombies. Source publication is not end-to-end acceptance; the real-process/LAN/ten-member gates above still apply.

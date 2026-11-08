@@ -43,16 +43,21 @@ for path in ASSETS.rglob("*.asmdef"):
     assembly_names.add(data["name"])
     if "Tests" in path.parts:
         check("TestAssemblies" in data.get("optionalUnityReferences", []), f"Missing test marker: {path}")
-        expected = "UndeadOvertime.Core" if "CoreEditMode" in path.parts else "UndeadOvertime.Prototype"
+        expected = ("UndeadOvertime.Core" if "CoreEditMode" in path.parts else
+                    "UndeadOvertime.LanPrototype" if any(part in ("LanEditMode", "LanPlayMode") for part in path.parts)
+                    else "UndeadOvertime.Prototype")
         check(expected in data["references"], f"Missing runtime reference: {path}")
     elif data["name"] == "UndeadOvertime.Core":
         check(data.get("noEngineReferences") is True, "Core must remain engine independent")
         check(not data["references"], "Core must not acquire package dependencies")
+    elif data["name"] == "UndeadOvertime.Lan.Editor":
+        check(data.get("includePlatforms") == ["Editor"], "LAN build helper must be editor-only")
     else:
         check("Unity.InputSystem" in data["references"], "Missing Input System assembly reference")
 
 bootstrap_guid = guid(ASSETS / "Runtime" / "PrototypeRange.cs.meta")
-for name, survival in [("PrototypeRange", False), ("SurvivalYard", True)]:
+for name, survival in [("PrototypeRange", False), ("SurvivalYard", True), ("LanRange", False)]:
+    scene_guid = guid(ASSETS / "LanRuntime" / "LanRange.cs.meta") if name == "LanRange" else bootstrap_guid
     scene_path = ASSETS / "Scenes" / f"{name}.unity"
     scene = scene_path.read_text()
     anchors = re.findall(r"^--- !u!\d+ &(-?\d+)$", scene, re.MULTILINE)
@@ -60,7 +65,7 @@ for name, survival in [("PrototypeRange", False), ("SurvivalYard", True)]:
     anchor_set = set(anchors)
     for ref in re.findall(r"\{fileID: (-?\d+)\}", scene):
         check(ref == "0" or ref in anchor_set, f"Unresolved in-scene file ID: {name}/{ref}")
-    check(scene.count(f"guid: {bootstrap_guid}") == 1, f"Expected one range bootstrap: {name}")
+    check(scene.count(f"guid: {scene_guid}") == 1, f"Expected one range bootstrap: {name}")
     check("worldCamera: {fileID: 330585545}" in scene, f"Missing serialized camera: {name}")
     check("  - {fileID: 1000002}" in scene, f"Bootstrap missing from scene roots: {name}")
     check(("survivalMode: 1" in scene) == survival, f"Incorrect opt-in survival mode: {name}")

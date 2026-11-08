@@ -1,0 +1,7 @@
+{
+  "name": "UndeadOvertime.Lan.Editor",
+  "rootNamespace": "UndeadOvertime.LanPrototype.Editor",
+  "references": [],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

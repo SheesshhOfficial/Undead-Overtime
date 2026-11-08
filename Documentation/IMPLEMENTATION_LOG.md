@@ -54,3 +54,17 @@ Cloud checks: static consistency PASS (24 source/assets, five assemblies, 32 met
 Local handoff: exact published revision, existing Unity 6000.6.5f1 project; fast-forward only after a clean/divergence check. Run all EditMode and PlayMode suites, then the original range regression and [Survival Yard checklist](SURVIVAL_YARD.md). Return exact XML/logs/screenshots and reproduction for cloud fixes, with no local source repairs.
 
 Acceptance: authored playable-loop candidate only. Caps and timer rules are proposed test balance. Real LAN, Mixamo/production art, audio/effects/gore, city progression and runtime performance remain open.
+
+## 2026-11-08: direct-IP LAN firing-range candidate
+
+Prior local result reported to cloud: exact `0396ea46014893235bc295c892dd0ed56b283a13` clean compile, 50 EditMode/13 PlayMode passed, basic scene smoke rendered. No full-game, LAN or performance acceptance was implied.
+
+Next goal: connect the already-tested host membership/fire core to a real transport without making the solo prototype authoritative by accident. Added opt-in LanRange scene, host/join/stop UI, ten bounded fixed firing stations, host round controls, server-origin shooting/shared target HP, ammunition/reload snapshots, binary protocol and endpoint validation. Movement and zombies are deliberately excluded until the networking gate passes. Added trusted reload tick to HostFireGate without changing its existing rules.
+
+Package selection: official NGO 2.13.3 and Unity Transport 2.6.0, compatible minimum editor declarations checked against Unity 6000.6.5f1. Manifest and lock gain only those package entries; existing versions remain. Local resolution is still required. New original code, scene, tests, metadata and [LAN runbook](LAN_RANGE.md); no source art or third-party character content. Build helper is explicit opt-in and does not edit the persistent scene build list.
+
+Cloud checks: static metadata/scene/assembly consistency; validator Python syntax; dependency-minimum comparison against current lock; source/codec boundary review. Independent review found and corrected NGO named-message reader offset handling before publication, with an eight-byte-prefix regression test. New authored suites bring the total to 73 EditMode and 18 PlayMode cases. These counts are source inventory, not new test results.
+
+Local handoff: exact published revision; clean fast-forward; resolve packages/compile; run all suites and original scene regressions; build the dedicated player; test two real processes on loopback, then separately on LAN. Ten-member behavior/performance needs ten actual connections. Return compiler/test/log/screenshots and package-resolution diff for cloud fixes. No local authored repairs, no firewall/security changes without approval.
+
+Acceptance at publication: authored and statically checked candidate. New C#/Unity tests, player build, remote client exchange, actual LAN and performance remain unrun here.
