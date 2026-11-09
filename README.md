@@ -11,6 +11,8 @@ Select **Depot mission** before Host/Join on every peer; restore power with F, s
 
 A later presentation-only candidate adds host-confirmed local health-loss text and an optional subtle damage border. It changes no combat authority or packets; its cloud checks and pending combined native batch are described in [local damage feedback](Documentation/LOCAL_DAMAGE_FEEDBACK.md).
 
+A validation-only pass now checks modelled teams of 1–10 through the full host mission and repeated disconnect/rejoin/reset cycles. **347 pure-core tests pass**; this is not ten-player network or Unity acceptance. The pending combined native inventory is 383 EditMode /112 PlayMode. [Scope, exact results and limits](Documentation/MISSION_TEAM_SIZE_VALIDATION.md).
+
 ## Playable prototype
 
 Use **Unity 6000.6.5f1** and open `Assets/UndeadOvertime/Scenes/LanRange.unity`.
