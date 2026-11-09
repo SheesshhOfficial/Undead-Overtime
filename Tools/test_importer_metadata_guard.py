@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "Tools/validate_prototype.py"
 PACKET = json.loads((ROOT / "Documentation/DEPOT_FLOOR_PACKET.json").read_text())
 PACKET["files"] += json.loads((ROOT / "Documentation/DEPOT_CONSOLE_PACKET.json").read_text())["files"]
+PACKET["files"] += json.loads((ROOT / "Documentation/DEPOT_FACADE_PACKET.json").read_text())["files"]
 read_text = Path.read_text
 checks = 0
 for entry in PACKET["files"]:
@@ -33,4 +34,4 @@ for entry in PACKET["files"]:
         else:
             raise AssertionError("Validator accepted malformed importer metadata: " + str(meta))
         checks += 1
-print(f"PASS: {checks} malformed importer fixtures rejected (fifteen GUID-only, nine cubemap); no file writes or Unity execution.")
+print(f"PASS: {checks} malformed importer fixtures rejected (twenty-one GUID-only, twelve cubemap); no file writes or Unity execution.")

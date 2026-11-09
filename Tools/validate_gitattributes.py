@@ -13,6 +13,9 @@ assert len(selected) == 9 and len(set(selected)) == 9
 console = json.loads((ROOT / "Documentation/DEPOT_CONSOLE_PACKET.json").read_text())
 selected += [entry["path"] for entry in console["files"]]
 assert len(selected) == 15 and len(set(selected)) == 15
+facade = json.loads((ROOT / "Documentation/DEPOT_FACADE_PACKET.json").read_text())
+selected += [entry["path"] for entry in facade["files"]]
+assert len(selected) == 21 and len(set(selected)) == 21
 controls = ["Assets/Unrelated/model.fbx", "Assets/Unrelated/image.png", "Assets/Unrelated/model.obj"]
 env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
 with tempfile.TemporaryDirectory(prefix="uo-attributes-") as temp:
@@ -31,4 +34,4 @@ with tempfile.TemporaryDirectory(prefix="uo-attributes-") as temp:
         for attribute in ("filter", "diff", "merge"):
             assert results[path, attribute] == "lfs", (path, attribute, results.get((path, attribute)))
         assert results[path, "text"] == "unset"
-print("PASS: fifteen reviewed binaries use ordinary Git storage with LFS filtering unset; unrelated LFS rules retained (72 attribute assertions).")
+print("PASS: twenty-one reviewed binaries use ordinary Git storage with LFS filtering unset; unrelated LFS rules retained (96 attribute assertions).")

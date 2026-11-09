@@ -76,7 +76,7 @@ check(not any(p.name in ("Library", "Temp", "Logs") for p in ASSETS.rglob("*")),
 for path in files:
     raw = path.read_bytes()
     if path.suffix.lower() in (".fbx", ".png"):
-        approved = {ASSETS / "Resources" / "UndeadOvertime" / name for name in ("DepotFloor", "DepotConsole")}
+        approved = {ASSETS / "Resources" / "UndeadOvertime" / name for name in ("DepotFloor", "DepotConsole", "DepotFacade")}
         check(path.parent in approved, f"Binary asset outside reviewed runtime packet: {path.relative_to(ROOT)}")
         signature = b"Kaydara FBX Binary  \x00\x1a\x00" if path.suffix.lower() == ".fbx" else b"\x89PNG\r\n\x1a\n"
         check(raw.startswith(signature), f"Invalid native asset signature: {path.relative_to(ROOT)}")
@@ -132,6 +132,23 @@ if packet_path.exists():
         if path.is_file():
             data = path.read_bytes()
             check(len(data) == entry["bytes"] and hashlib.sha256(data).hexdigest() == entry["sha256"], f"Cabinet packet hash mismatch: {relative}")
+
+packet_path = ROOT / "Documentation" / "DEPOT_FACADE_PACKET.json"
+if packet_path.exists():
+    packet = json.loads(packet_path.read_text())
+    check(len(packet["files"]) == 6, "Expected exactly six original facade runtime binaries")
+    allowed = Path("Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade")
+    expected = {f"UO_DepotFacade32m_LOD{i}.fbx" for i in range(3)} | {"brick_basecolor.png", "brick_normal_opengl.png", "brick_metallic_smoothness.png"}
+    check({Path(e["path"]).name for e in packet["files"]} == expected, "Facade packet paths are not the exact selected six files")
+    for entry in packet["files"]:
+        relative = Path(entry["path"])
+        check(relative.parent == allowed, "Unexpected facade packet path")
+        if relative.parent != allowed: continue
+        path = ROOT / relative
+        check(path.is_file(), f"Missing facade runtime file: {relative}")
+        if path.is_file():
+            data = path.read_bytes()
+            check(len(data) == entry["bytes"] and hashlib.sha256(data).hexdigest() == entry["sha256"], f"Facade packet hash mismatch: {relative}")
 
 if errors:
     raise SystemExit("STATIC CHECK FAILED\n" + "\n".join(errors))

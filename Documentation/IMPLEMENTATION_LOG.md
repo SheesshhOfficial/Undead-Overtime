@@ -263,3 +263,19 @@ The approved physical change replaces the oversized console cube with the measur
 Added one runtime-owned mesh/renderer for four loading-bay outlines, a cabinet clearance U and dashed centre-lane edges. It shares the existing amber material, has 41 disjoint quads/82 triangles and no collider, downloaded asset, new material or shader. Gate clearance and extraction remain unpainted; the U's centre approach is inside the existing two-metre power reach. The paint does not authorize power or promise an open gate. Creation rejects inactive/non-finite/transformed parents before allocation, and cleanup destroys only owned geometry.
 
 Independent source review and design arithmetic found no blocker; 820 rectangle pairs have no positive-area overlap. Twelve native paint cases and expanded existing lifecycle/headless assertions are authored. Static validation passes 100 source/assets, nine assemblies and 116 GUIDs; 72 Git attribute assertions and 24 malformed importer fixtures pass; 71 C# 9 syntax files have no errors. All 32 core source/lock hashes match the prior actual 310/310 run; no new core execution is claimed. Combined native inventory is 340 EditMode / 94 PlayMode, all later stages still pending. No user-PC operation or protected material/settings change. See DEPOT_SAFETY_MARKINGS.md and check receipt.
+
+
+## 2026-11-08: combined depot candidate accepted natively
+
+Exact b7e07802 passed fresh compilation, 340/340 EditMode, 94/94 PlayMode, one Windows build and both actual same-PC two-process loopbacks. The expanded mission passed lobby reset, disconnect/rejoin and fresh-round interaction after extraction. Actual FPS/TPS and clearly labelled temporary inspection views showed the cabinet, concrete, gate, guidance and safety paint without pink materials. All protected local hashes were preserved; the six new cabinet importers acquired documented formatting/default-platform normalization.
+
+The first stale-assembly 305-test result was not candidate acceptance. Managed smoke error/warning counts were zero; the range host log separately retained one native Curl error42. Editor build warnings remain documented. The scene still looks like sparse greybox art. No separate-PC LAN, ten-player, manual-input or performance claim. Full evidence and limits are in NATIVE_ACCEPTANCE_B7E078.md.
+
+
+## 2026-11-09: original brick perimeter candidate
+
+Added six provenance-checked runtime files adapting original AST-GEO-MOD-001 into shared 32 m facade strips with foundations, three LODs and one owned brick material. Existing outer wall objects and colliders remain untouched; rendered mission selection alone replaces their visibility. Importers/read-only build gate and six native EditMode plus sixteen PlayMode cases cover source preservation, basis/UV settings, bounds, rollback and cleanup. No accepted material or local generated metadata is rewritten.
+
+Independent review caught exposed coping overlap in the first straight packet; final endpoint trimming removes the broad intersection within the original envelope and retains the existing outer notch. All 36 float32 coping corner/LOD combinations pass; conservative ideal-double all-horizontal residual is below 8e-8 m². Original tiny source cap triangles required a measured 1e-14 squared-area test guard and explicit normalization, not arbitrary topology deletion. Exported per-corner tangents and handedness passed independent checks; Unity must still verify its import. Final triangles 2092/832/390, raw packet 5,957,571 bytes. Fresh Blender previews were inspected.
+
+Actual pure-core 310/310 passes with unchanged source/lock hashes. Static 110 assets/9 assemblies/127 GUIDs, 96 attribute assertions, 33 metadata fixtures and 75-file C#9 syntax pass. Expected native 346/110 plus build, both loopbacks and actual in-game visual review remain pending. Same-PC accepted b7e evidence is separately documented; no separate-PC LAN, 10-player, performance or final-art claim.

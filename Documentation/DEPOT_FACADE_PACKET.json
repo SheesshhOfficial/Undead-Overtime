@@ -1,0 +1,44 @@
+{
+  "asset_id": "AST-GEO-MOD-001",
+  "source_blend_sha256": "dd65e7112fc238fc97e8926a86538a8ea01d39c7137f15ae97bc0b10e0d54465",
+  "scope": "Six selected original facade runtime binaries only; no private sources or reference pixels.",
+  "offline_validation": "Blender FBX roundtrip, exact texture/channel checks, independent topology/tangent/36-corner-combination review and actual Blender preview inspection passed with documented numerical tolerances; native Unity unrun.",
+  "files": [
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD0.fbx",
+      "bytes": 158748,
+      "sha256": "aea9cb15eb531cb65aa4c052dc8289d30b942c2c2fee66af15263a9bc92001b7",
+      "git_blob_sha1": "e7c40dd9fa028c5230fc7caca893c4e96a7cf859"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD1.fbx",
+      "bytes": 74828,
+      "sha256": "e3e3a7748d84e92ab110ec6eadf798382f84eb0ef024322af59d93506a9b8bf7",
+      "git_blob_sha1": "f7196f8acc8b2a3f0f3c8b6b225feff7f70ee884"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD2.fbx",
+      "bytes": 41548,
+      "sha256": "4a9794712d89478dc6c935374cb44b0b2f7ca503f7a284422abec9cdc8f907cc",
+      "git_blob_sha1": "e6dbe36d40ace2000ffadbc3f4f49843828b2b13"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_basecolor.png",
+      "bytes": 1968363,
+      "sha256": "912801f127b69af74321db3dcdd163aeab2dee30c91995b9002b6276640345bb",
+      "git_blob_sha1": "6ae591fef819a8e21a29cff2b9ec3e9014ede366"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_metallic_smoothness.png",
+      "bytes": 720040,
+      "sha256": "1d2af95fdf81530d3a3859e95b210d1f8c2fa66ac8706c536de44a8318ce4a63",
+      "git_blob_sha1": "9039eaafe99f43a13cc03ae08e9f36c7d381b16e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_normal_opengl.png",
+      "bytes": 2994044,
+      "sha256": "74269de99f93142b6782f9e6ce382eec37e9dfba2377d0e74a012826e8bd7a36",
+      "git_blob_sha1": "e0bb488506197f78680d0c48102d6b25c3801b8a"
+    }
+  ]
+}

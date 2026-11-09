@@ -13,7 +13,7 @@ namespace UndeadOvertime.LanPrototype
         private HostCoopMission hostMission;
         private CoopMissionSessionReplica missionReplica;
         private DepotMissionPresentation missionPresentation;
-        private DepotPerimeterPresentation missionPerimeter;
+        private DepotBrickPerimeter missionPerimeter;
         private MissionFrame missionFrame;
         private Material missionPartitionMaterial, missionControlMaterial, missionExtractionMaterial;
         private ulong powerSequence;
@@ -73,7 +73,7 @@ namespace UndeadOvertime.LanPrototype
             Material concrete = PresentationEnabled ? DepotFloorPresentation.LoadConcreteMaterial() : null;
             missionPresentation = new DepotMissionPresentation(generated, sessionId, roundId, PresentationEnabled,
                 missionPartitionMaterial, missionControlMaterial, missionExtractionMaterial, concrete);
-            if (PresentationEnabled) missionPerimeter = new DepotPerimeterPresentation(generated, concrete);
+            if (PresentationEnabled) missionPerimeter = DepotBrickPerimeter.Create(generated, concrete);
         }
         private void BeginMissionRound(double now)
         {

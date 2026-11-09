@@ -189,3 +189,11 @@ Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/UO_DepotConsole_LOD2
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_basecolor.png -filter -diff -merge -text
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_normal_opengl.png -filter -diff -merge -text
 Assets/UndeadOvertime/Resources/UndeadOvertime/DepotConsole/cabinet_metallic_smoothness.png -filter -diff -merge -text
+
+# Six selected original depot facade runtime files are ordinary Git, not LFS.
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD0.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD1.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD2.fbx -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_basecolor.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_normal_opengl.png -filter -diff -merge -text
+Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_metallic_smoothness.png -filter -diff -merge -text

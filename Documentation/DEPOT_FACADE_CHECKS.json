@@ -1,0 +1,216 @@
+{
+  "scope": "Cloud source/FBX/Blender evidence only, not native Unity acceptance.",
+  "success": true,
+  "core": {
+    "result_file": "DEPOT_FACADE_CORE_RESULT.json",
+    "passed": 310,
+    "failed": 0,
+    "executed": true
+  },
+  "static": {
+    "source_assets": 110,
+    "assemblies": 9,
+    "metadata_guids": 127,
+    "git_attribute_assertions": 96,
+    "malformed_metadata_fixtures_rejected": 33,
+    "csharp9_syntax_files": 75,
+    "syntax_errors": 0,
+    "unity_binding_checked": false
+  },
+  "authored_native_inventory": {
+    "EditMode": 346,
+    "PlayMode": 110,
+    "new_facade_EditMode": 6,
+    "new_facade_PlayMode": 16,
+    "executed_for_this_candidate": false
+  },
+  "assets": {
+    "selected_binary_count": 6,
+    "selected_bytes": 5957571,
+    "file_hashes": [
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD0.fbx",
+        "bytes": 158748,
+        "sha256": "aea9cb15eb531cb65aa4c052dc8289d30b942c2c2fee66af15263a9bc92001b7",
+        "git_blob_sha1": "e7c40dd9fa028c5230fc7caca893c4e96a7cf859"
+      },
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD1.fbx",
+        "bytes": 74828,
+        "sha256": "e3e3a7748d84e92ab110ec6eadf798382f84eb0ef024322af59d93506a9b8bf7",
+        "git_blob_sha1": "f7196f8acc8b2a3f0f3c8b6b225feff7f70ee884"
+      },
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/UO_DepotFacade32m_LOD2.fbx",
+        "bytes": 41548,
+        "sha256": "4a9794712d89478dc6c935374cb44b0b2f7ca503f7a284422abec9cdc8f907cc",
+        "git_blob_sha1": "e6dbe36d40ace2000ffadbc3f4f49843828b2b13"
+      },
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_basecolor.png",
+        "bytes": 1968363,
+        "sha256": "912801f127b69af74321db3dcdd163aeab2dee30c91995b9002b6276640345bb",
+        "git_blob_sha1": "6ae591fef819a8e21a29cff2b9ec3e9014ede366"
+      },
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_metallic_smoothness.png",
+        "bytes": 720040,
+        "sha256": "1d2af95fdf81530d3a3859e95b210d1f8c2fa66ac8706c536de44a8318ce4a63",
+        "git_blob_sha1": "9039eaafe99f43a13cc03ae08e9f36c7d381b16e"
+      },
+      {
+        "path": "Assets/UndeadOvertime/Resources/UndeadOvertime/DepotFacade/brick_normal_opengl.png",
+        "bytes": 2994044,
+        "sha256": "74269de99f93142b6782f9e6ce382eec37e9dfba2377d0e74a012826e8bd7a36",
+        "git_blob_sha1": "e0bb488506197f78680d0c48102d6b25c3801b8a"
+      }
+    ],
+    "source_blend_sha256": "dd65e7112fc238fc97e8926a86538a8ea01d39c7137f15ae97bc0b10e0d54465",
+    "source_files_identity_checked": 34,
+    "source_unchanged": true,
+    "lod_triangles": [
+      2092,
+      832,
+      390
+    ],
+    "material_triangle_counts": [
+      [
+        684,
+        1408
+      ],
+      [
+        264,
+        568
+      ],
+      [
+        120,
+        270
+      ]
+    ],
+    "unity_expected_bounds_m": [
+      0,
+      0,
+      -0.18,
+      32,
+      4,
+      0.18
+    ],
+    "material_slots": [
+      "brick",
+      "borrowed accepted concrete"
+    ],
+    "uv0_original_pbr": true,
+    "uv1_positive_area_overlap_pairs": [
+      0,
+      0,
+      0
+    ],
+    "native_baked_lightmap_padding_verified": false,
+    "closed_wall_components_per_lod": [
+      24,
+      24,
+      24
+    ],
+    "open_foundation_boundary_edges": [
+      8,
+      8,
+      6
+    ],
+    "whole_strip_welded_manifold_claimed": false,
+    "texture_resolution": [
+      2048,
+      1024
+    ],
+    "brick_base_and_normal_source_bytes_preserved": true,
+    "packed_metallic_rgb_max": 0,
+    "packed_smoothness_alpha_error": 0,
+    "concrete_duplicated": false
+  },
+  "independent_review": {
+    "source_lifecycle_blockers": 0,
+    "first_straight_packet_corner_overlap_m2": [
+      0.0552245,
+      0.0552245,
+      0.0575995
+    ],
+    "final_float32_world_coping_corner_combinations": 36,
+    "final_float32_world_coping_overlap_above_1e_minus_12_m2": 0,
+    "ideal_float64_transform_horizontal_triangle_pair_residual_max_m2": 7.680957025968382e-08,
+    "halfspace_tolerance_m": 3e-06,
+    "notes": "Float32-world coping result and conservative ideal-double all-horizontal result use different arithmetic/scope. No universal exact-zero claim. Hidden mating caps may coincide. Existing exterior notch retained.",
+    "normal_face_dot_min": 0.99929833,
+    "tangent_U_dot_min": 0.99999022,
+    "reconstructed_V_dot_min": 0.99983889,
+    "UV_determinant_min": 4.660292e-07,
+    "projected_derivative_squared_length_min": 0.97163284,
+    "small_original_geometry_cross_squared_min": 8.6873298e-13,
+    "native_geometry_guard_cross_squared": 1e-14,
+    "explicit_small_face_normalization": true
+  },
+  "render_review": {
+    "renderer": "Blender 4.3.2, fresh FBX imports",
+    "inspected": [
+      "front",
+      "rear",
+      "foundation/seam",
+      "three LODs",
+      "four-wall overview",
+      "inner corner",
+      "coping corner closeup"
+    ],
+    "observations": "Original brick and concrete render with joined inner corner and no visible broad coping overlap. The existing small exterior notch remains. Not the native Unity shader/tangent import or in-game view.",
+    "previews": [
+      {
+        "file": "Facade_Coping_Corner_FreshFBX.png",
+        "bytes": 1823976,
+        "sha256": "b258cd1c5ee6bdc0bf85b8c8eeec9d788ab58906d64a3bf73b312b20a14aa387"
+      },
+      {
+        "file": "Facade_FourWall_Overview_FreshFBX.png",
+        "bytes": 3553959,
+        "sha256": "cfd84e7e8ceece7a9a4f5a9d63f92534720b233cdb604581dff60d5217735a13"
+      },
+      {
+        "file": "Facade_Front_FreshFBX.png",
+        "bytes": 1882699,
+        "sha256": "83084e627358424864792a34f456140464c97d042242013e140d6ca9c10e7912"
+      },
+      {
+        "file": "Facade_Inner_Corner_FreshFBX.png",
+        "bytes": 3018163,
+        "sha256": "3d0a935e1c8a55d8d17ac2937182d8930abeb6c2c10c2fa52aaab9ad95c2798d"
+      },
+      {
+        "file": "Facade_Rear_FreshFBX.png",
+        "bytes": 2308518,
+        "sha256": "45bf98bbd953eb070972e35bb316e6df8ac75cd2d6066e7172ea96ba0a7628ab"
+      },
+      {
+        "file": "Facade_Seam_Foundation_FreshFBX.png",
+        "bytes": 3602996,
+        "sha256": "f618ec56119d2e858fbf3fde5a19badb4720d95bcb97101577c74e065bec5923"
+      },
+      {
+        "file": "Facade_Three_LODs_FreshFBX.png",
+        "bytes": 5149043,
+        "sha256": "747f87292e20df2fe4185ea2ae384e18d53f5ac902727605e9af62514d3358a5"
+      }
+    ]
+  },
+  "preservation": {
+    "physics_layout_changed": false,
+    "core_gameplay_or_protocol_changed": false,
+    "existing_material_files_modified": false,
+    "floor_or_cabinet_metadata_modified_in_cloud": false,
+    "user_pc_touched": false,
+    "branches_or_backups_created": false
+  },
+  "pending": [
+    "Native Unity import and compilation",
+    "Full 346/110 native suites",
+    "Windows build",
+    "Default range and expanded mission two-process loopback",
+    "Actual native FPS/TPS/corner/forced-LOD capture",
+    "Separate-PC LAN, ten-player, manual gameplay and performance remain beyond this acceptance"
+  ]
+}

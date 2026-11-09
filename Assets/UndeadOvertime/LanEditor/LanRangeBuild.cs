@@ -13,6 +13,7 @@ namespace UndeadOvertime.LanPrototype.Editor
         {
             DepotFloorImport.ValidateMaterialAssets();
             DepotConsoleImport.ValidateAssets();
+            DepotFacadeImport.ValidateAssets();
             string directory = Path.GetFullPath(Path.Combine("Builds", "LanRange"));
             Directory.CreateDirectory(directory);
             BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions

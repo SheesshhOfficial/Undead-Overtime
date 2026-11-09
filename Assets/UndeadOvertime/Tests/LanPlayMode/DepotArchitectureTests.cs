@@ -178,16 +178,19 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.StartHosting("127.0.0.1", port), Is.True);
             for (int i = 0; i < 120 && !range.IsConnected; i++) yield return null;
             Assert.That(range.IsConnected, Is.True); Assert.That(range.BeginRound(), Is.True);
-            Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(6));
+            Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(2));
+            Assert.That(root.GetComponentsInChildren<DepotBrickPerimeter>().Length, Is.EqualTo(1));
             Assert.That(root.GetComponentsInChildren<DepotSafetyMarkings>().Length, Is.EqualTo(1));
             Assert.That(range.CurrentMission.Mission.Phase, Is.EqualTo(CoopMissionPhase.RestorePower));
             Assert.That(range.ReturnToLobby(), Is.True); Assert.That(root.GetComponentsInChildren<DepotWallSurface>(), Is.Empty);
             yield return null; yield return null;
             Assert.That(root.GetComponentsInChildren<DepotWallSurface>(true), Is.Empty);
             Assert.That(root.GetComponentsInChildren<DepotSafetyMarkings>(true), Is.Empty);
+            Assert.That(root.GetComponentsInChildren<DepotBrickPerimeter>(true), Is.Empty);
             foreach (string name in new[] { "North wall", "South wall", "West wall", "East wall" })
                 Assert.That(root.transform.Find("LAN range generated geometry/" + name).GetComponent<Renderer>().enabled, Is.True);
-            Assert.That(range.BeginRound(), Is.True); Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(6));
+            Assert.That(range.BeginRound(), Is.True); Assert.That(root.GetComponentsInChildren<DepotWallSurface>().Length, Is.EqualTo(2));
+            Assert.That(root.GetComponentsInChildren<DepotBrickPerimeter>().Length, Is.EqualTo(1));
             Assert.That(range.MissionGateOpen, Is.False);
         }
     }
