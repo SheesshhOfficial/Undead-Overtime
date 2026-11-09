@@ -699,14 +699,17 @@ namespace UndeadOvertime.LanPrototype
             if (!IsBuilt || !PresentationEnabled) return;
             LocalDamageFeedbackState feedback = DamageFeedback;
             DrawDamageBorder(feedback);
+            DrawTeamStatus();
             string damageText = DamageText(feedback);
+            string compactTeam = CompactTeamStatus;
             if (captured && TryGetLocalMember(out RangeMember hud))
             {
                 string navigation = MissionNavigationText;
-                GUILayout.BeginArea(new Rect(14, 14, 590, (navigation.Length > 0 ? 205 : 180) + (damageText.Length > 0 ? 25 : 0)), GUI.skin.box);
+                GUILayout.BeginArea(new Rect(14, 14, 590, (navigation.Length > 0 ? 205 : 180) + (damageText.Length > 0 ? 25 : 0) + (compactTeam.Length > 0 ? 25 : 0)), GUI.skin.box);
                 GUILayout.Label("UNDEAD OVERTIME | " + (viewMode == PlayerViewMode.FirstPerson ? "FIRST PERSON" : "THIRD PERSON"));
                 GUILayout.Label("Health " + hud.Health + "/100  |  Ammo " + hud.Ammo + "/12" + (hud.Reloading ? "  RELOADING" : ""));
                 if (damageText.Length > 0) GUILayout.Label(damageText);
+                if (compactTeam.Length > 0) GUILayout.Label(compactTeam);
                 if (snapshot.Horde.Phase != HordePhase.Disabled)
                     GUILayout.Label("Wave " + snapshot.Horde.Wave + "/" + snapshot.Horde.Total + "  " + snapshot.Horde.Phase +
                         (snapshot.Horde.Phase == HordePhase.Intermission ? "  " + Math.Ceiling(snapshot.Horde.IntermissionSeconds) + "s" : ""));
@@ -719,7 +722,8 @@ namespace UndeadOvertime.LanPrototype
                 GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
                 return;
             }
-            GUILayout.BeginArea(new Rect(14, 14, 760, 500), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(14, 14, Mathf.Min(760, Screen.width - 28), Mathf.Clamp(Screen.height - TeamHudHeight - 42, 160, 500)), GUI.skin.box);
+            menuScroll = GUILayout.BeginScrollView(menuScroll);
             GUILayout.Label(MissionMode ? "UNDEAD OVERTIME | DEPOT ESCAPE MISSION" : "UNDEAD OVERTIME | LAN transport firing range");
             if (MissionMode) GUILayout.Label(MissionObjectiveText);
             string menuNavigation = MissionNavigationText;
@@ -727,6 +731,7 @@ namespace UndeadOvertime.LanPrototype
             GUILayout.Label("Host-owned walking, targets, infected and bounded co-op waves. Prototype art.");
             GUILayout.Label(status);
             if (damageText.Length > 0) GUILayout.Label(damageText);
+            if (compactTeam.Length > 0) GUILayout.Label(compactTeam);
             if (!IsBusy)
             {
                 GUILayout.Label("Host binds this exact local IP. Client enters host IP. Default is loopback.");
@@ -771,12 +776,14 @@ namespace UndeadOvertime.LanPrototype
                 GUILayout.EndHorizontal();
                 SetDamageBorderEnabled(GUILayout.Toggle(DamageBorderEnabled, "Damage border (text feedback stays on)"));
                 SetInfectedDamagePulseEnabled(GUILayout.Toggle(InfectedDamagePulseEnabled, "Infected damage tint"));
+                SetTeamStatusEnabled(GUILayout.Toggle(TeamStatusEnabled, "Team health and rescue panel"));
                 if (TryGetLocalMember(out RangeMember player) && player.Health == 0)
-                    GUILayout.Label("DOWNED: a living teammate must hold E nearby to revive you. After rescue, capture controls again.");
+                    GUILayout.Label("DOWNED: " + TeamRescueAdvice);
                 GUILayout.Label("WASD walk | Mouse shoot | R reload | Hold E revive | V first/third person | Esc menu.");
                 GUILayout.Label(MissionMode ? "Mission: Host/Join, Start round, capture controls, approach console and hold F. Clear waves, then gather at the blue exit." : "Start: Host/Join, host Start round, choose Start waves or Start infected, then Capture mouse.");
                 GUILayout.Label("Flat ground only; no jump/prediction yet. Teammates and infected are placeholder capsules.");
             }
+            GUILayout.EndScrollView();
             GUILayout.EndArea();
             if (captured) GUI.Label(new Rect(Screen.width / 2f - 5, Screen.height / 2f - 10, 20, 20), "+");
         }

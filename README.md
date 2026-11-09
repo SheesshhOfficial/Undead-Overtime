@@ -4,20 +4,17 @@ Unity prototype for a planned Windows solo and 1–10-player LAN co-op zombie sh
 
 ## Current acceptance state
 
-The accepted native depot baseline is **b7e07802**: clean compilation, **340 EditMode /94 PlayMode**, one Windows build and successful default-range **and opt-in mission** two-process loopbacks. It includes original concrete/cabinet art, loading-bay markings, objective guidance and tested mission replay. [Exact native evidence and limits](Documentation/NATIVE_ACCEPTANCE_B7E078.md).
+The latest accepted native depot baseline is **a063050**: clean compilation, **383 EditMode / 112 PlayMode**, a Windows build, same-PC range and mission two-process loopbacks, and actual dormant depot FPS/TPS/overview images inspected. This includes the original floor, cabinet and brick perimeter. Explicit forced-LOD corner captures, damage-combat visual review, separate-PC LAN, ten-player scale and performance remain unverified. [Exact a063050 acceptance and limits](Documentation/NATIVE_ACCEPTANCE_A063050.md). The earlier [b7e078 evidence](Documentation/NATIVE_ACCEPTANCE_B7E078.md) remains historical.
+
 Select **Depot mission** before Host/Join on every peer; restore power with F, survive three waves, then gather at extraction. Range mode remains the default. [Mission controls and authority](Documentation/PLAYABLE_DEPOT_MISSION.md).
 
-**Current cloud candidate replaces only the rendered mission perimeter with original brick wall kit strips**, including concrete foundations, three LODs and mitered corner joints. Existing wall physics, gate, power and extraction remain unchanged. This new facade still requires its own native import, suite, build, loopback and visual acceptance. [Facade scope and checks](Documentation/DEPOT_FACADE.md). Do not overwrite the accepted floor/cabinet material, metadata or settings changes on the local PC.
-
-A later presentation-only candidate adds host-confirmed local health-loss text and an optional subtle damage border. It changes no combat authority or packets; its cloud checks and pending combined native batch are described in [local damage feedback](Documentation/LOCAL_DAMAGE_FEEDBACK.md).
-
-A validation-only pass now checks modelled teams of 1–10 through the full host mission and repeated disconnect/rejoin/reset cycles. **347 pure-core tests pass**; this is not ten-player network or Unity acceptance. The pending combined native inventory is 383 EditMode /112 PlayMode. [Scope, exact results and limits](Documentation/MISSION_TEAM_SIZE_VALIDATION.md).
+Subsequent cloud-only candidates add [infected locomotion observations](Documentation/INFECTED_PRESENTATION_FOUNDATION.md), [optional infected damage tint](Documentation/INFECTED_DAMAGE_FEEDBACK.md), and [teammate health/rescue status](Documentation/SURVIVOR_TEAM_STATUS.md). They remain pending native batch acceptance. Do not overwrite accepted floor/cabinet/facade materials, metadata or settings on the local PC. Capsules remain the runtime characters; privately prepared Mixamo sources are not integrated skins.
 
 ## Playable prototype
 
 Use **Unity 6000.6.5f1** and open `Assets/UndeadOvertime/Scenes/LanRange.unity`.
 
-The isolated LAN arena supports host/join, planar movement, host-authoritative shooting/reload, single infected or three bounded waves (2/3/4 enemies), damage/downing, timed teammate revive, intermissions and round reset. Current camera/control work adds a local FPS/TPS switch and clearer HUD. The accepted original floor, cabinet and concrete surfaces are textured; the later brick facade candidate awaits native validation. Many other models remain temporary primitives. The city, production characters/animation, story, audio and polish are not integrated. The accepted opt-in mission and current validation candidate are described above.
+The isolated LAN arena supports host/join, planar movement, host-authoritative shooting/reload, single infected or three bounded waves (2/3/4 enemies), damage/downing, timed teammate revive, intermissions and round reset. Current camera/control work adds a local FPS/TPS switch and clearer HUD. The accepted original floor, cabinet and concrete surfaces are textured; the original brick perimeter is also accepted at a063050. Many other models remain temporary primitives. The city, production characters/animation, story, audio and polish are not integrated. The accepted opt-in mission and current validation candidate are described above.
 
 Quick start: enter Play Mode → Host on `127.0.0.1:7777` → Start round → Start waves → Capture mouse. WASD moves, mouse aims/fires, R reloads, E revives, V switches view, Esc releases capture. Join a second process before the host starts a round. See [the hands-on guide](Documentation/LAN_CONTROLS.md).
 

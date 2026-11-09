@@ -5,10 +5,12 @@ import hashlib
 import re
 from pathlib import Path
 
+from validate_private_content import validate_repository
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "Assets" / "UndeadOvertime"
-errors = []
+errors = validate_repository(ROOT)
 
 
 def check(condition, message):
