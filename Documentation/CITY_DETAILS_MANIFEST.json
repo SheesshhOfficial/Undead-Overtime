@@ -7,7 +7,7 @@
   "detail_root_transform": 7000000001,
   "first_file_id": 7000000000,
   "last_file_id": 7000009209,
-  "scene_status": "Staged additive prefab; existing CityMap and unsaved native scene untouched. Integration waits for an authorized saved snapshot.",
+  "scene_status": "921-object authored detail group integrated into exact user-saved CityMap; native import/visual acceptance pending.",
   "meshes": [
     {
       "name": "Sign_Diner",
@@ -1449,7 +1449,7 @@
     "blender_authoring_export": "completed",
     "native_import": "not run",
     "unity_play_tests_build": "not run",
-    "scene_integration": "held; existing native scene has unsaved edits",
+    "scene_integration": "authored and byte-preservation verified; native execution pending",
     "serialized_dependency_integrity": {
       "status": "PASS",
       "native_meshes": 69,
@@ -1459,5 +1459,22 @@
       "failures": 0,
       "warning_count": 0
     }
+  },
+  "scene_integration": {
+    "saved_source_sha256": "5a7d057b47ba610862bec6669f51540ab4ac60d082aaeccbd588fad76c5db88f",
+    "saved_source_bytes": 5714628,
+    "integrated_sha256": "061e4ccec63a014758ebbdb157227a9d8f94a56352ca143f645f4ca61f49c63f",
+    "integrated_bytes": 8248019,
+    "original_documents": 9118,
+    "added_documents": 3972,
+    "total_documents": 13090,
+    "original_gameobjects": 2287,
+    "added_gameobjects": 921,
+    "preserved_original_documents": true,
+    "only_original_change": "Append detail transform 7000000001 to city root 1001 child list",
+    "original_bytes_recoverable_by_removing_only_insertions": true,
+    "render_settings_changed": false,
+    "native_execution": "not yet performed",
+    "guarded_git_fixture": "Passed: ignored-file collision stops, saved scene and unrelated dirty file preserved through guarded fast-forward; no Unity execution"
   }
 }

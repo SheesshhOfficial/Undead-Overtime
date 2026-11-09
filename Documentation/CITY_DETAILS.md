@@ -1,8 +1,8 @@
-# City detail pass: staged, additive environment
+# City detail pass: additive environment
 
-This pass prepares `Assets/UndeadOvertime/Environment/City/Details/CityDetails.prefab`. It does **not** replace or regenerate `Assets/Scenes/CityMap.unity` and does not save or reload the user's open scene.
+This pass provides `Assets/UndeadOvertime/Environment/City/Details/CityDetails.prefab` and an authored copy in `Assets/Scenes/CityMap.unity`. The scene copy is expanded editable geometry under the existing city root, not runtime generation. The reusable prefab is also retained; do not add a second copy to this scene.
 
-The prefab is an editable hierarchy of authored geometry, shared meshes/materials and simple colliders. It contains no scripts, camera, light, mission logic or runtime generation. Its intended parent is the existing CityMap root, with local position/rotation zero and scale one, after the user's current scene edits have been preserved and integration is authorized.
+The prefab is an editable hierarchy of authored geometry, shared meshes/materials and simple colliders. It contains no scripts, camera, light, mission logic or runtime generation. The scene detail group's parent is the existing CityMap root, with local position/rotation zero and scale one.
 
 ## Authored detail
 
@@ -25,9 +25,11 @@ The legacy depot-sign candidate is deliberately not included because two exact t
 
 ## Integration and preservation
 
-The open native CityMap contains unsaved user edits. No instruction to save was assumed, and this pass does not change that scene. Preserve those edits before any exact-scene cloud merge. The intended next step is to obtain the confirmed user-saved scene, compare it with its source revision, append the detail group and preserve every existing object/property, including the user's lighting changes. Do not apply a whole-scene replacement from an older cloud snapshot.
+The user-saved CityMap was received with SHA-256 `5a7d057b47ba610862bec6669f51540ab4ac60d082aaeccbd588fad76c5db88f`. The integration adds 921 objects under `11 CITY DETAILS | Street life and landmarks`. All 9,118 existing serialized documents are retained. The only edit to an existing document is the new child entry in city root transform 1001. Removing that entry and the new documents restores the exact saved input byte-for-byte, including user lighting and road changes.
 
-The prefab is staging data, not evidence that these details are already present in the user's open CityMap. Native import/rendering, collision, navigation and performance remain pending. No Play Mode, build, LAN run or test suite was run for this pass. A Blender preview is only an authoring preview.
+`CITY_DETAILS_INTEGRATION.json` records exact source/result hashes and counts. Native import and visual acceptance are a separate stage; the source integration itself is not evidence that the user's editor already displays this revision. No Play Mode, build, LAN run or test suite was run for this pass. A Blender preview is only an authoring preview.
+
+`Tools/apply_city_details_sync.py` is a narrowly guarded execution handoff for the recorded saved scene and native main revision. It refuses changed scene bytes, unexpected branch/HEAD, staged scene edits and overlaps with other dirty files. It preserves all unrelated local index/content states, never resets/stashes/discards work, and does not control Unity or save an open scene. The local executor must confirm idle, clean Edit Mode immediately before running it and again before any refresh/reopen. If the user starts editing again, stop rather than reloading.
 
 ## File integrity performed
 
