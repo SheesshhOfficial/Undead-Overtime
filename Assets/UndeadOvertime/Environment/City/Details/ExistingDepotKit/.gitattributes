@@ -1,0 +1,2 @@
+# Only these reviewed original runtime PNGs use ordinary Git.
+Textures/concrete_metallic_smoothness.png -filter -diff -merge -text

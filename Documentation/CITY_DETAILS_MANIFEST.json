@@ -1,0 +1,1463 @@
+{
+  "source": "Original new Blender detail kit; plus references to existing original city meshes. Existing depot kit is staged separately.",
+  "date": "2026-11-09",
+  "new_objects": 921,
+  "new_meshes": 63,
+  "new_mesh_triangles": 26117,
+  "detail_root_transform": 7000000001,
+  "first_file_id": 7000000000,
+  "last_file_id": 7000009209,
+  "scene_status": "Staged additive prefab; existing CityMap and unsaved native scene untouched. Integration waits for an authorized saved snapshot.",
+  "meshes": [
+    {
+      "name": "Sign_Diner",
+      "guid": "8ff54d7faf30b2048b049e063dcb1753",
+      "triangles": 764,
+      "materials": [
+        "Red",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Laundry",
+      "guid": "8eda8d96aad6a8c1c682fef674fafd58",
+      "triangles": 556,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Market",
+      "guid": "52c2256e47c6fec4adca0740ed2b3e02",
+      "triangles": 736,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Police",
+      "guid": "5f315e828269942a25d0470031dd0e42",
+      "triangles": 296,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Fire",
+      "guid": "df1d1dde1fb7a4bebbf499852ac942ec",
+      "triangles": 772,
+      "materials": [
+        "Red",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Civic",
+      "guid": "07ee1e0213070750ede267b6f019ed8f",
+      "triangles": 336,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Hospital",
+      "guid": "b784f64e1d254226f935d3faef297290",
+      "triangles": 788,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Clinic",
+      "guid": "6297dd8d958366089155050f4da2fccd",
+      "triangles": 240,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_School",
+      "guid": "26ccbbe3e6b0a690eab630af9ea2843c",
+      "triangles": 740,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Supply",
+      "guid": "b9a35037fb737fb512f9989265796ef0",
+      "triangles": 872,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Fuel",
+      "guid": "beb03b9f39fbbed253ec8cbe1232796b",
+      "triangles": 428,
+      "materials": [
+        "Red",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Freight",
+      "guid": "5fd9dd756e5a1f807192053ff7b53136",
+      "triangles": 868,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Terminal",
+      "guid": "1903a62c6bc318ac5ee7dfbc5d783f2d",
+      "triangles": 952,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Ferry",
+      "guid": "782f21cb527093d0e19bdc7f752a4572",
+      "triangles": 672,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Broadcast",
+      "guid": "623fb954df7b5cf229baf0bf8ea1e05a",
+      "triangles": 972,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Power",
+      "guid": "f7659ad44cc6e3ac121313a507bfa1f8",
+      "triangles": 856,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Water",
+      "guid": "69c4250d14d93ba40b05dc448627c4d1",
+      "triangles": 688,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Motel",
+      "guid": "142bb51332cbe277813b2c54477f43f0",
+      "triangles": 236,
+      "materials": [
+        "Red",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Parking",
+      "guid": "dec7b2f9b73e4fa8b0d82f69c9943d6a",
+      "triangles": 400,
+      "materials": [
+        "SignBlue",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Refuge",
+      "guid": "e675f76378a49cf2508dc5f3752f92c5",
+      "triangles": 848,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Quarantine",
+      "guid": "471bb8b2d56ed9e6ec59afb28e642958",
+      "triangles": 996,
+      "materials": [
+        "SafetyOrange",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Sign_Exit",
+      "guid": "ec3861508b07d7c505b02f178bf04b9a",
+      "triangles": 756,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "StreetBin",
+      "guid": "3ab648468d0d86339cfe7399874d11b0",
+      "triangles": 84,
+      "materials": [
+        "Green",
+        "Black"
+      ]
+    },
+    {
+      "name": "NewspaperBox",
+      "guid": "dde43394920f729ca9243ffdfba0f96f",
+      "triangles": 248,
+      "materials": [
+        "SignBlue",
+        "Glass",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Bollard",
+      "guid": "2656ff35f25d1ee8698eeda847fbbf54",
+      "triangles": 48,
+      "materials": [
+        "RoadYellow",
+        "Black"
+      ]
+    },
+    {
+      "name": "Planter",
+      "guid": "e8ead0b716f2adc6c3dc1c58059bb757",
+      "triangles": 84,
+      "materials": [
+        "PlanterConcrete",
+        "Earth",
+        "Leaves"
+      ]
+    },
+    {
+      "name": "BusShelter",
+      "guid": "5321b0026f968691d694c956ac96db0e",
+      "triangles": 448,
+      "materials": [
+        "Metal",
+        "SignGreen",
+        "GlassLight",
+        "Bark",
+        "White"
+      ]
+    },
+    {
+      "name": "BusStopPole",
+      "guid": "0890f9c6718b66152e782f7063a6df09",
+      "triangles": 308,
+      "materials": [
+        "Metal",
+        "SignBlue",
+        "White",
+        "Paper"
+      ]
+    },
+    {
+      "name": "TrafficCone",
+      "guid": "1e86420d2f9f48bcbf1f21538af5ae15",
+      "triangles": 60,
+      "materials": [
+        "Black",
+        "SafetyOrange",
+        "RoadWhite"
+      ]
+    },
+    {
+      "name": "RoadBarricade",
+      "guid": "af369d1ed4d3d626d37df98e2dfb024a",
+      "triangles": 96,
+      "materials": [
+        "RoadWhite",
+        "SafetyOrange",
+        "Metal",
+        "Black"
+      ]
+    },
+    {
+      "name": "Pallet_OriginalCity",
+      "guid": "486715a23cd48a3caf4e9b9159701a13",
+      "triangles": 96,
+      "materials": [
+        "Bark",
+        "Sand"
+      ]
+    },
+    {
+      "name": "ShippingCrate",
+      "guid": "9e450718eb4955e791e9870dfd1501b7",
+      "triangles": 108,
+      "materials": [
+        "Sand",
+        "Bark"
+      ]
+    },
+    {
+      "name": "TrashBagCluster",
+      "guid": "9274f2f90cc295224d49424562cea8ad",
+      "triangles": 192,
+      "materials": [
+        "Black"
+      ]
+    },
+    {
+      "name": "RoofVent",
+      "guid": "29765b3865b6cd1e1a75205a84b31261",
+      "triangles": 144,
+      "materials": [
+        "Metal",
+        "Black",
+        "Concrete"
+      ]
+    },
+    {
+      "name": "FireEscape",
+      "guid": "aa6b323818cf243660995b285c36ac7d",
+      "triangles": 888,
+      "materials": [
+        "Metal"
+      ]
+    },
+    {
+      "name": "LoadingDockSteps",
+      "guid": "24bfe6aa76f30d919b465534e31f6d17",
+      "triangles": 60,
+      "materials": [
+        "Concrete"
+      ]
+    },
+    {
+      "name": "Manhole",
+      "guid": "2874e8b77ec0964c6e650ae09cbd95d9",
+      "triangles": 84,
+      "materials": [
+        "Metal",
+        "Black"
+      ]
+    },
+    {
+      "name": "RoadPatch0",
+      "guid": "1aa206d7805e31ed4cc43e2004459156",
+      "triangles": 7,
+      "materials": [
+        "FreshAsphalt"
+      ]
+    },
+    {
+      "name": "RoadPatch1",
+      "guid": "998d6a7f36257a85d72bf14c800f38a3",
+      "triangles": 7,
+      "materials": [
+        "FreshAsphalt"
+      ]
+    },
+    {
+      "name": "RoadPatch2",
+      "guid": "506be5a3bcaa47bd52f30b452d643f68",
+      "triangles": 7,
+      "materials": [
+        "FreshAsphalt"
+      ]
+    },
+    {
+      "name": "ParkingBayRow",
+      "guid": "187357d25dbfb014a09bff23d8bde935",
+      "triangles": 228,
+      "materials": [
+        "RoadWhite",
+        "Concrete"
+      ]
+    },
+    {
+      "name": "EntryInfill",
+      "guid": "140beb66523c6328bf2bda3d2804d0d2",
+      "triangles": 12,
+      "materials": [
+        "DepotConcrete"
+      ]
+    },
+    {
+      "name": "LotAsphalt",
+      "guid": "534a3e8a233cf1dda766f0ae7af59ed5",
+      "triangles": 12,
+      "materials": [
+        "Asphalt"
+      ]
+    },
+    {
+      "name": "PlazaPaving",
+      "guid": "52ae8ca31a835f3f9b0ce13b8a1c519a",
+      "triangles": 12,
+      "materials": [
+        "Sidewalk"
+      ]
+    },
+    {
+      "name": "LawnInfill",
+      "guid": "60b753c957652ce959d4d5ceb103ab75",
+      "triangles": 12,
+      "materials": [
+        "Grass"
+      ]
+    },
+    {
+      "name": "DarkPaving",
+      "guid": "01775a5da54588936693d0abf1dbe088",
+      "triangles": 12,
+      "materials": [
+        "FreshAsphalt"
+      ]
+    },
+    {
+      "name": "Street_ALDER_AVE",
+      "guid": "f1b38d3649a25358b04a92175441cff9",
+      "triangles": 396,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_ASH_STREET",
+      "guid": "7391057065fae7410a06cd6e9217d67c",
+      "triangles": 520,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_FREIGHT_WAY",
+      "guid": "78cf6c9a5aaaf47c6fb27d337a977394",
+      "triangles": 492,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_CENTRAL_AVE",
+      "guid": "17a0c4d89e11577ecd165c71b9416ff4",
+      "triangles": 472,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_CIVIC_MILE",
+      "guid": "9a32409efc55853988e1a19e1dac8378",
+      "triangles": 340,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_MERIDIAN_ST",
+      "guid": "fa2eb6ece4bf81369b2e663b26eacd30",
+      "triangles": 492,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_SOUTHBANK_RD",
+      "guid": "d53bb22839c0bba14d29764fe60afedd",
+      "triangles": 692,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_DOCK_STREET",
+      "guid": "7bb75f6327ba4905344b4de4457d4337",
+      "triangles": 576,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_LAKEFRONT_DR",
+      "guid": "6f789628472f07f24dcdd3633ad47b82",
+      "triangles": 584,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_1ST_STREET",
+      "guid": "ee0855c1847d91c1389e00822b980d7c",
+      "triangles": 472,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_2ND_STREET",
+      "guid": "51fb46d52d9a8d83cd9aec42be93b15a",
+      "triangles": 512,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_3RD_STREET",
+      "guid": "aaa29df7595a69afe608dd95f7638ec6",
+      "triangles": 604,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_4TH_STREET",
+      "guid": "ff5b8ed8b66bb291d41341bb1cc902c3",
+      "triangles": 480,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_5TH_STREET",
+      "guid": "9a10ed5c0c19cc93f1d810b114362a86",
+      "triangles": 488,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_6TH_STREET",
+      "guid": "e2048a22ebc158874681b9e28a7c39f4",
+      "triangles": 504,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "Street_7TH_STREET",
+      "guid": "4ddf3de602a7eb51f5ceeda573fbc07f",
+      "triangles": 440,
+      "materials": [
+        "SignGreen",
+        "Metal",
+        "White"
+      ]
+    },
+    {
+      "name": "StreetNamePole",
+      "guid": "472fb3f0272ec258ef3d22f13d21b91a",
+      "triangles": 24,
+      "materials": [
+        "Metal"
+      ]
+    }
+  ],
+  "prefab": "Assets/UndeadOvertime/Environment/City/Details/CityDetails.prefab",
+  "prefab_guid": "e903111bd6116ee1429028b63770159b",
+  "existing_original_modules": [
+    "AST-GEO-MOD-002 corner",
+    "AST-GEO-MOD-003 doorway"
+  ],
+  "source_blend_sha256": "d59804a65873a2959ecf45a920ca9295843bbf4d609ef4c5f8a7635d68b699bd",
+  "source_fbx_sha256": "9e9f45820b7d2ccc721c241a3b9c08c9afb44c0a3a6d1c65c474050ad657019a",
+  "runtime_files": [
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/CityDetails.prefab",
+      "bytes": 2533404,
+      "sha256": "12089f44e44f0bda50bfe5d81dfb024d8b029f20910561b2c5e711973153ae8e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/CityDetails.prefab.meta",
+      "bytes": 151,
+      "sha256": "7255b3b0ccad17716fa33f94f3f11e765314cfe5fcbb14f49d66f4dd4d139031"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/.gitattributes",
+      "bytes": 131,
+      "sha256": "ee001d10bd033a3a877a543aad88bce0232839651c284b891f1186b6d5bf7e1f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Materials/DepotBrick.mat",
+      "bytes": 1760,
+      "sha256": "e8b091f74a09a2d7e520622a7811906bb46bbc9aa20c8b2d1e0379fe21f2e0af"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Materials/DepotBrick.mat.meta",
+      "bytes": 188,
+      "sha256": "6c4781212bfb25030d3989b88bdde748f2aa70758f13a8e8419145a7c847e434"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Materials/DepotConcrete.mat",
+      "bytes": 1763,
+      "sha256": "f779b399da5cab7f7c55ea733ec0eace27320c708dc591f519d911d34212f131"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Materials/DepotConcrete.mat.meta",
+      "bytes": 188,
+      "sha256": "7ba5b23f7b63757f04dab339b08ce8595910e672e603154111a6a08dd6adf13d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Materials.meta",
+      "bytes": 172,
+      "sha256": "14c9634353feda400ec555a0e1250b653735e2abe0e5d8b9026b15b48f55f523"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Meshes/DepotCorner.asset",
+      "bytes": 191705,
+      "sha256": "20376c2428c00f55574785ee9bae8b5310a9532c9d6f12a390d190d3978b3635"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Meshes/DepotCorner.asset.meta",
+      "bytes": 188,
+      "sha256": "e731e77fd6f67001b70977e7f802db3fb8d4f5b32fc987dad063696b68fae374"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Meshes/DepotDoorway.asset",
+      "bytes": 410101,
+      "sha256": "b6d94bf11339157f053bdea067bc9a638a2de4eb0299bb99fd1484ccac842ca4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Meshes/DepotDoorway.asset.meta",
+      "bytes": 188,
+      "sha256": "1c8dda32ba9a2fef87fecdd32cac16a7f2c0d5741cd824f690d6ab5c23e1547c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Meshes.meta",
+      "bytes": 172,
+      "sha256": "52f81508321e9eeeb7b3e34d03f13c47934d413f39e5cfa00af7dca656957023"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Provenance/AST-GEO-MOD-002_PROVENANCE.md",
+      "bytes": 1876,
+      "sha256": "ffcd6dafa7255cf1c7e62aad417a1eb6f91928aafc423a216119b41df7d371a5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Provenance/AST-GEO-MOD-002_PROVENANCE.md.meta",
+      "bytes": 155,
+      "sha256": "4216150c7f2e3085ffc5495a2b22906d16bb293e45ead8bff720857cfde99b24"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Provenance/AST-GEO-MOD-003_PROVENANCE.md",
+      "bytes": 2193,
+      "sha256": "5fcb142b3f2e17c21d3320e5052d61409c19618f2c2eaf66fddea75d8c38ecff"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Provenance/AST-GEO-MOD-003_PROVENANCE.md.meta",
+      "bytes": 155,
+      "sha256": "fb59f0fc6852d03d0b174f95f96ad4a996f4425afeb1095ad20d758d61a07b63"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Provenance.meta",
+      "bytes": 172,
+      "sha256": "5ba77a910bdb136efc66ce515496e9a2710125159cb869018a83af7b593e7223"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Textures/concrete_metallic_smoothness.png",
+      "bytes": 55055,
+      "sha256": "eeb8f4e14012459ceb0f1c7f00b81da9fdab21fe6f751301f8edd924deda363f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Textures/concrete_metallic_smoothness.png.meta",
+      "bytes": 2384,
+      "sha256": "b6e07d7b0da51cf8c99beafa3763253dd6babd8bd42a4ff84ccbd788bb29ee8d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit/Textures.meta",
+      "bytes": 172,
+      "sha256": "1e11d36714567bc4108cded631a1c1658de646d82b38892e5456e2fdc5e0fa4a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/ExistingDepotKit.meta",
+      "bytes": 172,
+      "sha256": "ecac5c71bb62ef7fac68f80c45f533ab538fdbbc221c1095becdf984795eadb2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/Canvas.mat",
+      "bytes": 1351,
+      "sha256": "7b2cb3d8c0fb761b5e5aa063ab585eca162b1211506fa94fe0a61e6130cd83aa"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/Canvas.mat.meta",
+      "bytes": 185,
+      "sha256": "9667670661f38797f71e68590533b5b8e12a39ee77348afb319e07457a057874"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/FreshAsphalt.mat",
+      "bytes": 1363,
+      "sha256": "b6b19ceb130eb9e28c4a1c52770442931a43ab33b43ef16371045d0d59e0040b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/FreshAsphalt.mat.meta",
+      "bytes": 185,
+      "sha256": "a33063b340f0dfedd65a58d55f0a4a0e973a3ca1d514a2d2169d5fe9292d6387"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/Paper.mat",
+      "bytes": 1350,
+      "sha256": "fe086781bcaf72d21a61e83ccc0617a928339a8f9afbd5f32d9203e4b4e2780f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/Paper.mat.meta",
+      "bytes": 185,
+      "sha256": "549ac79186a97c82bb7ef3aa4857ebaa4292c152b9831a87bbf750e8c6cecdad"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/PlanterConcrete.mat",
+      "bytes": 1360,
+      "sha256": "ab224de21300ac27ab5204adaa4ed5100f01e1b8ae2d1460d9cc3713deb1be46"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/PlanterConcrete.mat.meta",
+      "bytes": 185,
+      "sha256": "53e865274f3df0902ce28571c5bad42536839d866f98c9818d2bdc929e87b8c1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SafetyOrange.mat",
+      "bytes": 1357,
+      "sha256": "003e1a4f3f9afebd73b535a0f2ea8911d83bf0a167a8e84bd9f1c0284e0e76d2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SafetyOrange.mat.meta",
+      "bytes": 185,
+      "sha256": "2a04b751e6739cd7ec6557f478f79b98f0cd37042bc9f14c1d8710ef01d599c5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SignBlue.mat",
+      "bytes": 1355,
+      "sha256": "20fbea34f472845bc47e2e462e16bfb466fcf4f5d61e1b3b13b504cee97209cd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SignBlue.mat.meta",
+      "bytes": 185,
+      "sha256": "9c3cd11f14ef3afe6aab2a30c0fc45e10d9d37e12acf36214d6c8af3da990607"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SignGreen.mat",
+      "bytes": 1356,
+      "sha256": "c770611d14f1980b153099207687375ab38d2695a5d6145f532b633028653f82"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials/SignGreen.mat.meta",
+      "bytes": 185,
+      "sha256": "1f67755ea34b54b8836da0d46947b2e41903da16133b1c762df8effb548eb55b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Materials.meta",
+      "bytes": 169,
+      "sha256": "5bfcaf8dceb178ab06a373fde00943bc2f790e4c10ca590688e41d620d2eb811"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Bollard.asset",
+      "bytes": 11024,
+      "sha256": "10e1f4cdcb50228086980ec5d87d5c574fe1171f7201fbefd79042719c4afcee"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Bollard.asset.meta",
+      "bytes": 185,
+      "sha256": "d5a879da77eae2682e6088eb024b2b0c1b703fd9d3e9ad1f7fede513351dfcdd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/BusShelter.asset",
+      "bytes": 87718,
+      "sha256": "713f851553f77f4afc6f8648f75323315cafe2257ebc2ed04ef467cb15e16879"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/BusShelter.asset.meta",
+      "bytes": 185,
+      "sha256": "ac37b0bf68dd50617d291815c3d9d9717d16d4cc3e84c40d472060068b338ecd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/BusStopPole.asset",
+      "bytes": 64092,
+      "sha256": "3d9a144438d2e5df4cb232f06dbdd23d3650f45216dc1457a8bcef09c1ac557d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/BusStopPole.asset.meta",
+      "bytes": 185,
+      "sha256": "f0606ae5f384e8807ba8ce3ed05241ae8b6c6800a1fee69825849a9df5605d03"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/DarkPaving.asset",
+      "bytes": 4714,
+      "sha256": "fefa5642af160f8515338fd31122023762fc4a2df38323182739f5fdec4c402f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/DarkPaving.asset.meta",
+      "bytes": 185,
+      "sha256": "515af010f183113fc993bfc6a0d2082d2a4f7dd21c82f1fd56bf9fa4f1aa993e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/EntryInfill.asset",
+      "bytes": 4715,
+      "sha256": "a0211ce35905ecf5fb6b05b014dca633c90e468f6dcbb4f7daeb6a2e8fa233fe"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/EntryInfill.asset.meta",
+      "bytes": 185,
+      "sha256": "a0d4a3d8c63f95556fbae5d2651168dca8fc57c302a238f80f7cdda480bddc75"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/FireEscape.asset",
+      "bytes": 127376,
+      "sha256": "c186e619662306201f35ac893aa4d3cee7fff2c9d1a4007cc5a5ef862c8a2f61"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/FireEscape.asset.meta",
+      "bytes": 185,
+      "sha256": "c2fb2ede008e2ec86fd9e293ceb6e093f76127463dd45aa4ab6bde744136dea4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LawnInfill.asset",
+      "bytes": 4714,
+      "sha256": "685072f652f6d251829f89a16208f2e98a4ba531a971f53fa975fc8b8eb48396"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LawnInfill.asset.meta",
+      "bytes": 185,
+      "sha256": "d485dad1b894c657cb145441d981cea89d1e354ea0395fbb44060f606ac5d53e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LoadingDockSteps.asset",
+      "bytes": 11456,
+      "sha256": "1bacb07a32a2bf04a0b71a3800e17dd085ca7940f380d26fe047e804e608016d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LoadingDockSteps.asset.meta",
+      "bytes": 185,
+      "sha256": "419d55c38eca8ae8a0b1b3fae96975e0a93eb385c9d8473d05ea94a99bf37ca9"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LotAsphalt.asset",
+      "bytes": 4714,
+      "sha256": "c436fbb5b5b9639ee276da2a3a8ecb27edcb14e4fb50824b44237e71f0cd7e7e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/LotAsphalt.asset.meta",
+      "bytes": 185,
+      "sha256": "7c4dc43a44c49c9690b70c23aa7c069dfe81d7c73818d81817a90ad34346a4f5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Manhole.asset",
+      "bytes": 16069,
+      "sha256": "c287fbbc1db4388cdf783073745176f3dd292f465fc47a62c5b3718481755bc2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Manhole.asset.meta",
+      "bytes": 185,
+      "sha256": "2841af886c389a257089e8b383e3d44c949d0536499cc4639abcd5e12910b697"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/NewspaperBox.asset",
+      "bytes": 52107,
+      "sha256": "3d535174d177647927c4dbdd6a7a6196a408bdf2e4f02c861b80482dab475569"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/NewspaperBox.asset.meta",
+      "bytes": 185,
+      "sha256": "daaa0f99790e98c97003b19e4deeb9b98c5cea509eda53483ce72e45be195529"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Pallet_OriginalCity.asset",
+      "bytes": 16731,
+      "sha256": "afa5f387ae523556187482f31a31669796290a0dfa739030b9f9c97896ee7c19"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Pallet_OriginalCity.asset.meta",
+      "bytes": 185,
+      "sha256": "deb81094ddd4addb3bbc3ef914573d224bea77d6718b7d5c257486366f80bf23"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/ParkingBayRow.asset",
+      "bytes": 35254,
+      "sha256": "ae02632f068f3bf2d16850e0d641484d057e917ad492c934a7f78b4ca80daf1f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/ParkingBayRow.asset.meta",
+      "bytes": 185,
+      "sha256": "f62ed85982b7cbced6c3d3d743d7c54d8356882ec63c65f50fec73c174337860"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Planter.asset",
+      "bytes": 15278,
+      "sha256": "2df0fcba4140609e1ed226b9c915668e2bffc2aa9fa90c3df105b555ab1f8661"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Planter.asset.meta",
+      "bytes": 185,
+      "sha256": "3cc34917e6f907573abcf97056c0f6264e89f6ca6d67d9f75b13d51fd932d023"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/PlazaPaving.asset",
+      "bytes": 4715,
+      "sha256": "39b1a2387f3060702d954a4923098fc64b9edb436e47cb73bf7aa873f6353125"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/PlazaPaving.asset.meta",
+      "bytes": 185,
+      "sha256": "45b6db86a0cc880ebda3f96955c8a2e0a18ab4bc92a27caf60618ba75cc2a14c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadBarricade.asset",
+      "bytes": 17189,
+      "sha256": "eaf11340a49c6e0906742bfcc4de018f099cc38797a9edad9462895e177e4fdf"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadBarricade.asset.meta",
+      "bytes": 185,
+      "sha256": "0ee6784ca2b47fd1b0cbf778647e3cfcd74fe2f084b5208d95b50ce945f39a91"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch0.asset",
+      "bytes": 3742,
+      "sha256": "fa4bec1d36a97e2b509c8e8571b4b4d570c8cf66a4e63b846978f6959ade4d13"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch0.asset.meta",
+      "bytes": 185,
+      "sha256": "fc3602765aaae4a3fdb2184d86e81f9ba56dad51f581fdd63fbd601c099f9171"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch1.asset",
+      "bytes": 3740,
+      "sha256": "d9fcfe28bde4686b2766a594abe7786f74ac525003b8ed3d9be9177a9d8c7566"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch1.asset.meta",
+      "bytes": 185,
+      "sha256": "658cf585dd9a0c7b1b12ee37366a43dd7c36e568e564c45f8b5416d5b093f729"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch2.asset",
+      "bytes": 3732,
+      "sha256": "a036fc2b0b7c82bf0b24c9221f83ba8efd3bfa1479c14f632015e8393f224043"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoadPatch2.asset.meta",
+      "bytes": 185,
+      "sha256": "c0b308d2687e0d59a74b824476f7b3884c210d5d21949415daff997a5ef895d1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoofVent.asset",
+      "bytes": 24448,
+      "sha256": "f2634e0d0549ed51e873a7b80d89ad9faffb3104d2881921414072f63e2196d2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/RoofVent.asset.meta",
+      "bytes": 185,
+      "sha256": "bca8639aee9c947a6b4d2cff6d27d979e85a125c5ed0d6b10a7e594d981d47d2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/ShippingCrate.asset",
+      "bytes": 18412,
+      "sha256": "57b803e90ad864014f3f4f1da62d726e48187bbdd01aad165c4cd8b324ad10f5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/ShippingCrate.asset.meta",
+      "bytes": 185,
+      "sha256": "8260d3e0789f8805e2ff7db304b8af16adfad5b5503054878152bcc39c27172e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Broadcast.asset",
+      "bytes": 200351,
+      "sha256": "afb689af34d44ac4e6792e1e9857f8be58c505c4e8928c9f646c67de12c27b89"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Broadcast.asset.meta",
+      "bytes": 185,
+      "sha256": "7965559bdc3d4df905384488dfaca6131f4fd32c94ca8a113bd5c949132c9533"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Civic.asset",
+      "bytes": 70594,
+      "sha256": "ab83731d06e7edd952c2304f2a4d5d73dfd1b059e3ff7a25f6578bd50c799067"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Civic.asset.meta",
+      "bytes": 185,
+      "sha256": "b660d58f680f09e41e8a2e0cbe04484b30ecd1e9d44b4d159dd27d2baf83bf89"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Clinic.asset",
+      "bytes": 50947,
+      "sha256": "f65478f9c48cd9e63b558adb35488259af45a980017fee544830508a53effc91"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Clinic.asset.meta",
+      "bytes": 185,
+      "sha256": "984835db86b958fcc0506f33276ca360f615590f763f2b263d8637643578a673"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Diner.asset",
+      "bytes": 157911,
+      "sha256": "d5f487c6bc58aa36a0b4e39d1f6aa323a5085827aa25a0b26b759da9a8c851ea"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Diner.asset.meta",
+      "bytes": 185,
+      "sha256": "bed00a6344466973fb0b625f909bfbadd327115cdf5064d0bc70ae11cbc3f9de"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Exit.asset",
+      "bytes": 156214,
+      "sha256": "5a35f24ae5278817021f97ace76c38cb6c28c4b72e8695e829cbdc517071caaf"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Exit.asset.meta",
+      "bytes": 185,
+      "sha256": "26597cc8910b46df599bf79d956356b81104abfd6fc019daf217ae99699fd0f1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Ferry.asset",
+      "bytes": 139143,
+      "sha256": "d76bfd033b19c3f893299ae6680b5297602408d5f38eb2f42f3892003ceafd9c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Ferry.asset.meta",
+      "bytes": 185,
+      "sha256": "b2fcd294a3dd1dd0af94c808a74a9d1106b182f9bff6010fc48c59f96e250193"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Fire.asset",
+      "bytes": 159542,
+      "sha256": "3cffd11e0fcf53ea3ffa8a968fd214bcd141abec85ff9d73162aa8f0f51b1699"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Fire.asset.meta",
+      "bytes": 185,
+      "sha256": "79a18b7acd440c6b11c917f78eeb0a052e3ac77f4021476a7ed24acbf3f3aeb4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Freight.asset",
+      "bytes": 179129,
+      "sha256": "d353750ddcc74cc7e403eb44f945670ef937348f5fed3b54a1b06d74fd232e7a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Freight.asset.meta",
+      "bytes": 185,
+      "sha256": "7a79c771050eb73180d4c340421d556cae595f0a5aecf10b09659a1480b478a8"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Fuel.asset",
+      "bytes": 89366,
+      "sha256": "7cc8028d6492e0dbee96c75185307b16df401050a91c1178b6a428f2a346eadc"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Fuel.asset.meta",
+      "bytes": 185,
+      "sha256": "6c62809c6b9cb9c70ff53ab20ece645861de53f251d391dea999e748f4506738"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Hospital.asset",
+      "bytes": 162810,
+      "sha256": "e1a43f0567cc7fb16394d034d7904d76c055e7a69328990047b13a140e6f1781"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Hospital.asset.meta",
+      "bytes": 185,
+      "sha256": "6b7a74cd440e591cd85e34307ea1eb0d0635fb329a05377589e3cfd76196185e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Laundry.asset",
+      "bytes": 115417,
+      "sha256": "ce06782120c0f1549b53c185ed72652bc9d5c66327f6f3c73b2ab7355d961edf"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Laundry.asset.meta",
+      "bytes": 185,
+      "sha256": "6f4752073ed4045f2650be9189f91bc6f2e9254c287f582565925d200c13d04c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Market.asset",
+      "bytes": 152136,
+      "sha256": "014bb82c9bad311feedf03d4e3087dd98b8742d2a8861ccf654c402eaf90a0bc"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Market.asset.meta",
+      "bytes": 185,
+      "sha256": "2b37508153d9ff49d05c60bba0ada08e2b4f75167f7db9419cf0e9dce3ae8e9a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Motel.asset",
+      "bytes": 50194,
+      "sha256": "7a08500e45a83cc9bba6d82d618343af36fdb549718071a2b170b5e3c6ee6926"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Motel.asset.meta",
+      "bytes": 185,
+      "sha256": "a5cd7214dcb0aab8524a3c7c4cd542b32ba470c870e9876618c573aa65e94ce2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Parking.asset",
+      "bytes": 83593,
+      "sha256": "64ec6cd0b4746fa8f818c47ee58c8d005f0c3c191329246d9854b24e44596e2a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Parking.asset.meta",
+      "bytes": 185,
+      "sha256": "e345179752b7985470cfd3cff6e8e3080291cf248ac9bda8fe86f72a1c5b1501"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Police.asset",
+      "bytes": 62431,
+      "sha256": "af38b367888aead2167faba5d6e14e38d07c7085cf6ac54d1e9f86d58279bf89"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Police.asset.meta",
+      "bytes": 185,
+      "sha256": "ffcc88af4e29f042ce7ba581471ee94050edbda0ed3fb199ef762cd65d6458e2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Power.asset",
+      "bytes": 176679,
+      "sha256": "87121917dd8854ee26fdf4735e77c7973970d714126a6e0cbb724354ad882042"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Power.asset.meta",
+      "bytes": 185,
+      "sha256": "0f94a50d9128dc22f3a36d6edf73abb70b317da42f0813fa515d4cead593fb7f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Quarantine.asset",
+      "bytes": 205180,
+      "sha256": "b5622f6c9449506d6e0ebd9c11ea69ae6b5e39ff7f9485e22777dbdb5f48b26f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Quarantine.asset.meta",
+      "bytes": 185,
+      "sha256": "d75b6e81b20d47dc6c43f2c8110226a083b788eb26347a404acbfdb71e0a2046"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Refuge.asset",
+      "bytes": 174984,
+      "sha256": "3affa963c40d3dfb241cf82cffce755128283b9ec3cc552cdbb7fb60d2d38d5f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Refuge.asset.meta",
+      "bytes": 185,
+      "sha256": "6bc00e2d4ce838889e97fe5fd9e5ce0458691d2d1f1ca59f1dcb3a471d6826ac"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_School.asset",
+      "bytes": 153016,
+      "sha256": "2db0760ab36f407c5f4b5a32a18b3855a70cd3fe3cddbb223343552aa7a49b82"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_School.asset.meta",
+      "bytes": 185,
+      "sha256": "f059820643bb4c00c0a5901ff8b765d4fc40018eb519cd256558b1d2bdb4e572"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Supply.asset",
+      "bytes": 179944,
+      "sha256": "01f4e3bb7f3f59b6c078b386d6c6e9b972da3c8510272f855bd7d59bd9ee1672"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Supply.asset.meta",
+      "bytes": 185,
+      "sha256": "6b80378f8682da58feee515887b9a0125da15676987f0500474007eb8bd90ad7"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Terminal.asset",
+      "bytes": 196266,
+      "sha256": "a904eef16efb1cd1fecb3b02dcdcbb2f8cd0d5ae1d5f1f0f3d5febfe41625089"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Terminal.asset.meta",
+      "bytes": 185,
+      "sha256": "5660d7a38b5e05d041c63f299d669751cf0b283dd0b147c51f509b1273560fc6"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Water.asset",
+      "bytes": 142343,
+      "sha256": "96b508ec4f53810286fc6fa3ba30e22348a0ebb41208eb621efdd74742e4e961"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Sign_Water.asset.meta",
+      "bytes": 185,
+      "sha256": "4460a314cabb9a15125143613f1d7c54c140390c2ee4f701bc2b6a93d706b466"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/StreetBin.asset",
+      "bytes": 16592,
+      "sha256": "0ad495b8dc22c8d78894615714276af15d393c716c9c0cd9651346a13e66588a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/StreetBin.asset.meta",
+      "bytes": 185,
+      "sha256": "439fc0efa880fb2576ecdde993846e6ae2267b4b0e279e897f2f8ce2a02c220b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/StreetNamePole.asset",
+      "bytes": 6927,
+      "sha256": "1ae662aded715f986a5448eb9d99f846cf18431982ccacf4e12161a0053c69bf"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/StreetNamePole.asset.meta",
+      "bytes": 185,
+      "sha256": "b71a18baef46c6d6a3d138a1293f479ab38f7ddb0a1081b2d48aeb782ee7d836"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_1ST_STREET.asset",
+      "bytes": 98290,
+      "sha256": "c4d80d63a85abe1662e41b19c3f2ebdeb1c07c4445bc4acc878be05bf01d2b6c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_1ST_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "9f84c187d50a1ffe03fa81504d49ec273df0cfee1ce6a337d141ef4b0a35452e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_2ND_STREET.asset",
+      "bytes": 106450,
+      "sha256": "28829618f027df647e0d08198020ba76837ae596e3bae027555780cb45874f7e"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_2ND_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "4e186ae2bb2249d726bb5a463d8c46350ca1faa4b32a4d100ebd764ab087344b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_3RD_STREET.asset",
+      "bytes": 125218,
+      "sha256": "0b0c17fe038bb81e749463a06b32c840880a8c65a174a55e29d597c24cec550b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_3RD_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "a8058b2ad08a9b0dc09d01cb1725007762bb2c6b16db19c46631c4796aa566d0"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_4TH_STREET.asset",
+      "bytes": 99922,
+      "sha256": "ee9fd8bc8b8a414249c0562d0439af71b3a5c45961fe9dc7e53e84cb9beb9395"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_4TH_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "01d015a96e26eefd2d28a82fe0c1a5550f806145b302ca9f3dfc9bd792cd0f6a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_5TH_STREET.asset",
+      "bytes": 101554,
+      "sha256": "258d486ef6d612f7211a220e47d13aee385d7b3752364ebe2a4181057d2c373c"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_5TH_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "ca395716d3bbd6f5f945031acb84f31a75d75f4bad352ddd3afe05abd581398d"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_6TH_STREET.asset",
+      "bytes": 104818,
+      "sha256": "f822a787af1fa45203dc54ede5fd5238b92177ef9ecda2f945e28afb474e77e5"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_6TH_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "8b8f3b84f6baa19f7eb03bf5c1e2d4cb75259974df1d888468dd2573d32c9e24"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_7TH_STREET.asset",
+      "bytes": 91762,
+      "sha256": "dac733e14a8c139585391ba56d0b5f79faea098cacbeeb7e63bfbd3e38bdef79"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_7TH_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "7bd80212d709b2128a3681bbc7ed97021509d4897a727ac35627c31ee2db5091"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_ALDER_AVE.asset",
+      "bytes": 82785,
+      "sha256": "ed7dbd79c470e9ccfac1688b24e3e0efe9cadbdc18cb718f4a5f9c6165282da9"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_ALDER_AVE.asset.meta",
+      "bytes": 185,
+      "sha256": "2fb5ddecae914f79a8df1cd5f391920e1d5ac6deb94b29c3f41671d3303ea16b"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_ASH_STREET.asset",
+      "bytes": 108082,
+      "sha256": "9ed7d907d110812903d2a7ad25f4f064f796a87067fce5ef38d01286c99492c0"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_ASH_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "0cc748ac86fc3adeafbe0c89673f78adafd4662c7d94030b91e825ddc0198711"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_CENTRAL_AVE.asset",
+      "bytes": 98291,
+      "sha256": "3d9ae08e183c4d539cd4d23c24ea428c84f23e6738b0ebc605e9530b79cdd3b3"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_CENTRAL_AVE.asset.meta",
+      "bytes": 185,
+      "sha256": "4d98db85c354c717b5056a67f32dff60c042b923c158132dd04e9b98766c1833"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_CIVIC_MILE.asset",
+      "bytes": 71357,
+      "sha256": "e9d5ed61fe3581e22358ed878a6e0b96d63f796e2eda4e0d1c6d8534ddb40468"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_CIVIC_MILE.asset.meta",
+      "bytes": 185,
+      "sha256": "9f945020f2ad8b13b59f3603e55f3cad014b8a97179d10d5f247768f21e2cbed"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_DOCK_STREET.asset",
+      "bytes": 119507,
+      "sha256": "9c6e55eb67afcd91de55bd45ac416be461c7b2ff6c079f12007ef1e141e3b46a"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_DOCK_STREET.asset.meta",
+      "bytes": 185,
+      "sha256": "368920d0e3b0b893393e07709984897076769c3880a49ddce256a06657472ea4"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_FREIGHT_WAY.asset",
+      "bytes": 102371,
+      "sha256": "6aae44d419d921473d0285cc5a44501154137011da190206eaa86619bddff544"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_FREIGHT_WAY.asset.meta",
+      "bytes": 185,
+      "sha256": "5809f71be005883ad1b56c0d7a738f55c47141594d721900d26d78597c8b10fd"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_LAKEFRONT_DR.asset",
+      "bytes": 121140,
+      "sha256": "790936c05e167896dfff3d024f93538686bff7d799a00e219d8323f1e0572eb1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_LAKEFRONT_DR.asset.meta",
+      "bytes": 185,
+      "sha256": "c1a16680ba9037827c3d43242f1f1c2415d4c859f7fc2c0ea64b72be360db0f7"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_MERIDIAN_ST.asset",
+      "bytes": 102371,
+      "sha256": "256b5836adc1bba8b3a4666f8533d5e4ed097229820f9ed61b66d668e37ba0bf"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_MERIDIAN_ST.asset.meta",
+      "bytes": 185,
+      "sha256": "bf2d3df7f304a0b8573c081b2348f5b0cb073b2a4fe9b4c66aaf54f4e48508c7"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_SOUTHBANK_RD.asset",
+      "bytes": 143172,
+      "sha256": "afe701c1e91f3b9ad1ce7edc46d2aa85e55bea4d7acf36b00d679de40c10d183"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/Street_SOUTHBANK_RD.asset.meta",
+      "bytes": 185,
+      "sha256": "aaeb5ec7761b8553d424340e3da0e43ee25c74adfa9057b4cad37793656770e1"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/TrafficCone.asset",
+      "bytes": 11917,
+      "sha256": "0f65d80d2774b7bfa1d0e00809d4ffe0be388392d9dd85d0242ce1f139fdf1f2"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/TrafficCone.asset.meta",
+      "bytes": 185,
+      "sha256": "47d6d68cee4ec655c2a2f1c18e15992bbdc89ed2fef1b8aa05b4f60dee23fc8f"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/TrashBagCluster.asset",
+      "bytes": 29950,
+      "sha256": "1f4cfa1d416420112f01c7a8f3483cb19b796abafe8070860ec3aff4b1b858a0"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes/TrashBagCluster.asset.meta",
+      "bytes": 185,
+      "sha256": "771e2e768fd5fdee30dccd32da34723891ede162a832e2e3562bb993206030bb"
+    },
+    {
+      "path": "Assets/UndeadOvertime/Environment/City/Details/Meshes.meta",
+      "bytes": 169,
+      "sha256": "d3a61cbb94964f0faaadf44c396ef8d193a695fd96efd433062df238806f0039"
+    }
+  ],
+  "checks": {
+    "blender_authoring_export": "completed",
+    "native_import": "not run",
+    "unity_play_tests_build": "not run",
+    "scene_integration": "held; existing native scene has unsaved edits",
+    "serialized_dependency_integrity": {
+      "status": "PASS",
+      "native_meshes": 69,
+      "prefab_mesh_renderers": 906,
+      "resolved_guid_references": 3089,
+      "duplicate_ids": 0,
+      "failures": 0,
+      "warning_count": 0
+    }
+  }
+}
