@@ -40,3 +40,7 @@ Most buildings are exterior shells. The three staging shelters are the only deli
 The approximate RTX 20-series / 4 GB target is a design goal, not a verified minimum. Shared meshes/materials, LODs, simple box collisions and no per-prop realtime lights reduce initial cost, but actual editor/game draw calls, memory and frame time must be measured later.
 
 The combined native pass should first inspect import/reference/rendering correctness and screenshot the map in Edit Mode, then cover collision/navigation/LOD/performance once gameplay is integrated. Do not reset, stash, overwrite or include the user's pre-existing local metadata/material/settings changes. Keep the same main branch and preserve the original scenes.
+
+## Editor daylight follow-up
+
+The scene registered and opened cleanly on the native PC after a normal synchronous AssetDatabase refresh. The initial far-away Scene View overview was obscured by exponential fog. The lighting follow-up disables fog for this editable layout, assigns the scene sun explicitly, uses balanced sky/equator/ground ambient fill and softer directional shadows. It changes CityMap only. The corrected native visual capture remains the acceptance step; no Play Mode, build, gameplay or performance acceptance is implied.
