@@ -183,7 +183,7 @@ namespace UndeadOvertime.LanPrototype
             }
             ConfigureSessionProtocol(); manager.gameObject.SetActive(true); ResetMissionSession();
             stopping = false; snapshot = null; localSlot = -1; sequence = 0; connectDeadline = 0;
-            infectedPresentation.Reset();
+            ResetInfectedPresentation();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; nextSnapshotAt = 0; handlersRegistered = false;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             for (int i = 0; i < 3; i++) health[i] = 100;
@@ -260,7 +260,7 @@ namespace UndeadOvertime.LanPrototype
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1;
-            damageFeedback.Reset(); infectedPresentation.Reset(); ApplyVisuals();
+            damageFeedback.Reset(); ResetInfectedPresentation(); ApplyVisuals();
             if (manager != null)
             {
                 if (handlersRegistered && manager.CustomMessagingManager != null)
@@ -280,7 +280,7 @@ namespace UndeadOvertime.LanPrototype
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1;
-            damageFeedback.Reset(); infectedPresentation.Reset(); ApplyVisuals();
+            damageFeedback.Reset(); ResetInfectedPresentation(); ApplyVisuals();
         }
         public bool BeginRound()
         {
@@ -395,7 +395,7 @@ namespace UndeadOvertime.LanPrototype
             if (!waitForRelease && mouse.leftButton.isPressed && now >= nextLocalShotAt)
             { nextLocalShotAt = now + HostFireGate.FireInterval; SendAction(RangeAction.Fire, aim); }
         }
-        private void LateUpdate() { if (IsBuilt) UpdateView(); }
+        private void LateUpdate() { if (IsBuilt) { UpdateView(); UpdateInfectedDamageVisuals(); } }
         private void UpdateView()
         {
             if (!TryGetLocalMember(out RangeMember player)) return;
@@ -770,6 +770,7 @@ namespace UndeadOvertime.LanPrototype
                 SetMouseSensitivity(GUILayout.HorizontalSlider(sensitivity, .03f, .35f, GUILayout.Width(140)));
                 GUILayout.EndHorizontal();
                 SetDamageBorderEnabled(GUILayout.Toggle(DamageBorderEnabled, "Damage border (text feedback stays on)"));
+                SetInfectedDamagePulseEnabled(GUILayout.Toggle(InfectedDamagePulseEnabled, "Infected damage tint"));
                 if (TryGetLocalMember(out RangeMember player) && player.Health == 0)
                     GUILayout.Label("DOWNED: a living teammate must hold E nearby to revive you. After rescue, capture controls again.");
                 GUILayout.Label("WASD walk | Mouse shoot | R reload | Hold E revive | V first/third person | Esc menu.");

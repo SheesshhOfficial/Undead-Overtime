@@ -40,6 +40,8 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.CurrentSnapshot.EnemyCount, Is.EqualTo(1));
             Assert.That(range.TryGetInfectedLocomotion(0, out InfectedLocomotionState state), Is.False);
             Assert.That(state.IsVisible, Is.False);
+            Assert.That(range.TryGetInfectedDamagePulse(0, out double pulse), Is.False); Assert.That(pulse, Is.Zero);
+            range.SetInfectedDamagePulseEnabled(false); range.SetInfectedDamagePulseEnabled(true);
             Assert.That(root.GetComponentsInChildren<Renderer>(true), Is.Empty);
             Assert.That(root.GetComponentsInChildren<MeshFilter>(true), Is.Empty);
             Assert.That(root.GetComponentsInChildren<Animator>(true), Is.Empty);
@@ -97,6 +99,31 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(found, Is.EqualTo(range.PresentationEnabled));
             if (found) { Assert.That(state.IsMoving, Is.False); Assert.That(state.Speed, Is.Zero); }
             range.StopSession(); Assert.That(range.TryGetInfectedLocomotion(0, out _), Is.False);
+            Assert.That(range.TryGetInfectedDamagePulse(0, out _), Is.False);
+        }
+        [UnityTest]
+        public IEnumerator ActualHostDamageFeedsOnlyTheLiveEnemyAndToggleClearsWithoutGameplayChanges()
+        {
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+                Assert.Ignore("Requires graphics-enabled Unity to exercise infected feedback.");
+            yield return StartEncounter(true);
+            Assert.That(range.TryGetInfectedDamagePulse(0, out double initial), Is.True); Assert.That(initial, Is.Zero);
+            Assert.That(range.TryGetLocalMember(out RangeMember member), Is.True);
+            AimVector enemy = range.CurrentSnapshot.Enemy(0).Position;
+            Vector3 toward = new Vector3((float)(enemy.X - member.Position.X), (float)(enemy.Y - member.Position.Y), (float)(enemy.Z - member.Position.Z));
+            Assert.That(range.SendAction(RangeAction.Fire, toward.normalized), Is.True);
+            for (int i = 0; i < 60 && range.CurrentSnapshot.Enemy(0).Health == 100; i++) yield return null;
+            Assert.That(range.CurrentSnapshot.Enemy(0).Health, Is.EqualTo(75));
+            Assert.That(range.TryGetInfectedDamagePulse(0, out double pulse), Is.True); Assert.That(pulse, Is.GreaterThan(0));
+            Assert.That(range.TryGetInfectedDamagePulse(255, out _), Is.False);
+            byte[] before = LanRangeProtocol.Encode(range.CurrentSnapshot);
+            range.SetInfectedDamagePulseEnabled(false);
+            Assert.That(range.TryGetInfectedDamagePulse(0, out _), Is.False);
+            range.SetInfectedDamagePulseEnabled(true);
+            Assert.That(range.TryGetInfectedDamagePulse(0, out _), Is.False, "Re-enabling must wait for a quiet new baseline.");
+            Assert.That(LanRangeProtocol.Encode(range.CurrentSnapshot), Is.EqualTo(before));
+            yield return null;
+            range.StopSession(); Assert.That(range.TryGetInfectedDamagePulse(0, out _), Is.False);
         }
     }
 }
