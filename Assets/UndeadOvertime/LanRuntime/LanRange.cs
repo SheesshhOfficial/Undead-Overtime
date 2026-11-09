@@ -183,6 +183,7 @@ namespace UndeadOvertime.LanPrototype
             }
             ConfigureSessionProtocol(); manager.gameObject.SetActive(true); ResetMissionSession();
             stopping = false; snapshot = null; localSlot = -1; sequence = 0; connectDeadline = 0;
+            infectedPresentation.Reset();
             members.Clear(); fireGate = null; moveGate = null; encounter = null; nextSnapshotAt = 0; handlersRegistered = false;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             for (int i = 0; i < 3; i++) health[i] = 100;
@@ -258,7 +259,8 @@ namespace UndeadOvertime.LanPrototype
             connectDeadline = 0;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
-            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; damageFeedback.Reset(); ApplyVisuals();
+            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1;
+            damageFeedback.Reset(); infectedPresentation.Reset(); ApplyVisuals();
             if (manager != null)
             {
                 if (handlersRegistered && manager.CustomMessagingManager != null)
@@ -277,7 +279,8 @@ namespace UndeadOvertime.LanPrototype
             connectDeadline = 0; stopping = false; ReleaseControls();
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
-            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; damageFeedback.Reset(); ApplyVisuals();
+            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1;
+            damageFeedback.Reset(); infectedPresentation.Reset(); ApplyVisuals();
         }
         public bool BeginRound()
         {
@@ -661,6 +664,7 @@ namespace UndeadOvertime.LanPrototype
             if (encounterChanged && state.Encounter.Phase == EncounterPhase.Cleared) status = "Infected cleared. Return to lobby for a fresh round.";
             if (encounterChanged && state.Encounter.Phase == EncounterPhase.Failed) status = "Encounter failed. Host can return to lobby and restart.";
             damageFeedback.Observe(state, manager.LocalClientId, Time.realtimeSinceStartupAsDouble);
+            ObserveInfectedPresentation(state);
             snapshot = state; localSlot = -1;
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId == manager.LocalClientId) localSlot = state.Member(i).Slot;
             if (changed) { sequence = 0; yaw = 0; pitch = 0; nextLocalShotAt = nextLocalMoveAt = 0; ReleaseControls(); }
