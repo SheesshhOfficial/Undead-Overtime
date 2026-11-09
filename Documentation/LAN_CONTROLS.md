@@ -56,3 +56,8 @@ Supported Unity eval selected the existing public host/round/view APIs; `capture
 The initial Debug.Log-only eval returned null; an old/truncated Console view hid the marker and that attempt stopped before host/capture. A later direct-return expression fixed evidence retrieval without changing source. This was not a gameplay failure. Successful captures are Logs/capture-fps.png (237,913 bytes, 14:38:08Z) and Logs/capture-tps.png (263,548 bytes, 14:38:28Z) on the execution PC. These are local evidence paths, not public download links.
 
 Cleanup left the editor stopped/ready, scene clean and nine pre-existing generated hashes unchanged. Networking's session runInBackground change returned to original false. No manual input, final visual polish or real-LAN acceptance is implied.
+
+
+## Damage awareness candidate
+
+Host-confirmed health loss now drives temporary `HIT: -N HP` text and a subtle non-directional red edge pulse while controls are captured. The connected menu has a **Damage border (text feedback stays on)** option. This is session-only and does not affect combat; text remains on. Downing uses the existing revive instructions rather than a pulse. Native visual and input acceptance of this addition is pending. See [the exact scope and checks](LOCAL_DAMAGE_FEEDBACK.md).

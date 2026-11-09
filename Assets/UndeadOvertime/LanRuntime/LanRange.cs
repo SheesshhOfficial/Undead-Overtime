@@ -258,7 +258,7 @@ namespace UndeadOvertime.LanPrototype
             connectDeadline = 0;
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
-            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; ApplyVisuals();
+            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; damageFeedback.Reset(); ApplyVisuals();
             if (manager != null)
             {
                 if (handlersRegistered && manager.CustomMessagingManager != null)
@@ -277,7 +277,7 @@ namespace UndeadOvertime.LanPrototype
             connectDeadline = 0; stopping = false; ReleaseControls();
             if (session.Phase != SessionPhase.Stopped) session.TryStop(session.Host);
             ClearMissionRound();
-            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; ApplyVisuals();
+            members.Clear(); fireGate = null; moveGate = null; encounter = null; snapshot = null; localSlot = -1; damageFeedback.Reset(); ApplyVisuals();
         }
         public bool BeginRound()
         {
@@ -660,6 +660,7 @@ namespace UndeadOvertime.LanPrototype
                 status = state.Phase == SessionPhase.Playing ? "Host round active. Capture controls to aim/fire." : "Connected to host lobby.";
             if (encounterChanged && state.Encounter.Phase == EncounterPhase.Cleared) status = "Infected cleared. Return to lobby for a fresh round.";
             if (encounterChanged && state.Encounter.Phase == EncounterPhase.Failed) status = "Encounter failed. Host can return to lobby and restart.";
+            damageFeedback.Observe(state, manager.LocalClientId, Time.realtimeSinceStartupAsDouble);
             snapshot = state; localSlot = -1;
             for (int i = 0; i < state.MemberCount; i++) if (state.Member(i).PeerId == manager.LocalClientId) localSlot = state.Member(i).Slot;
             if (changed) { sequence = 0; yaw = 0; pitch = 0; nextLocalShotAt = nextLocalMoveAt = 0; ReleaseControls(); }
@@ -692,12 +693,16 @@ namespace UndeadOvertime.LanPrototype
         private void OnGUI()
         {
             if (!IsBuilt || !PresentationEnabled) return;
+            LocalDamageFeedbackState feedback = DamageFeedback;
+            DrawDamageBorder(feedback);
+            string damageText = DamageText(feedback);
             if (captured && TryGetLocalMember(out RangeMember hud))
             {
                 string navigation = MissionNavigationText;
-                GUILayout.BeginArea(new Rect(14, 14, 590, navigation.Length > 0 ? 205 : 180), GUI.skin.box);
+                GUILayout.BeginArea(new Rect(14, 14, 590, (navigation.Length > 0 ? 205 : 180) + (damageText.Length > 0 ? 25 : 0)), GUI.skin.box);
                 GUILayout.Label("UNDEAD OVERTIME | " + (viewMode == PlayerViewMode.FirstPerson ? "FIRST PERSON" : "THIRD PERSON"));
                 GUILayout.Label("Health " + hud.Health + "/100  |  Ammo " + hud.Ammo + "/12" + (hud.Reloading ? "  RELOADING" : ""));
+                if (damageText.Length > 0) GUILayout.Label(damageText);
                 if (snapshot.Horde.Phase != HordePhase.Disabled)
                     GUILayout.Label("Wave " + snapshot.Horde.Wave + "/" + snapshot.Horde.Total + "  " + snapshot.Horde.Phase +
                         (snapshot.Horde.Phase == HordePhase.Intermission ? "  " + Math.Ceiling(snapshot.Horde.IntermissionSeconds) + "s" : ""));
@@ -717,6 +722,7 @@ namespace UndeadOvertime.LanPrototype
             if (menuNavigation.Length > 0) GUILayout.Label(menuNavigation);
             GUILayout.Label("Host-owned walking, targets, infected and bounded co-op waves. Prototype art.");
             GUILayout.Label(status);
+            if (damageText.Length > 0) GUILayout.Label(damageText);
             if (!IsBusy)
             {
                 GUILayout.Label("Host binds this exact local IP. Client enters host IP. Default is loopback.");
@@ -759,6 +765,7 @@ namespace UndeadOvertime.LanPrototype
                 GUILayout.Label("Mouse sensitivity " + sensitivity.ToString("0.00"));
                 SetMouseSensitivity(GUILayout.HorizontalSlider(sensitivity, .03f, .35f, GUILayout.Width(140)));
                 GUILayout.EndHorizontal();
+                SetDamageBorderEnabled(GUILayout.Toggle(DamageBorderEnabled, "Damage border (text feedback stays on)"));
                 if (TryGetLocalMember(out RangeMember player) && player.Health == 0)
                     GUILayout.Label("DOWNED: a living teammate must hold E nearby to revive you. After rescue, capture controls again.");
                 GUILayout.Label("WASD walk | Mouse shoot | R reload | Hold E revive | V first/third person | Esc menu.");

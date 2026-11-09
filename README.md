@@ -9,6 +9,8 @@ Select **Depot mission** before Host/Join on every peer; restore power with F, s
 
 **Current cloud candidate replaces only the rendered mission perimeter with original brick wall kit strips**, including concrete foundations, three LODs and mitered corner joints. Existing wall physics, gate, power and extraction remain unchanged. This new facade still requires its own native import, suite, build, loopback and visual acceptance. [Facade scope and checks](Documentation/DEPOT_FACADE.md). Do not overwrite the accepted floor/cabinet material, metadata or settings changes on the local PC.
 
+A later presentation-only candidate adds host-confirmed local health-loss text and an optional subtle damage border. It changes no combat authority or packets; its cloud checks and pending combined native batch are described in [local damage feedback](Documentation/LOCAL_DAMAGE_FEEDBACK.md).
+
 ## Playable prototype
 
 Use **Unity 6000.6.5f1** and open `Assets/UndeadOvertime/Scenes/LanRange.unity`.

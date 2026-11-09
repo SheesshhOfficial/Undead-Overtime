@@ -46,6 +46,12 @@ namespace UndeadOvertime.LanPrototype.Tests
             double deadline = Time.realtimeSinceStartupAsDouble + 20;
             while (range.CurrentSnapshot.Member(0).Health == 100 && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.InRange(1, 90));
+            Assert.That(range.DamageFeedback.DamagePulse, Is.GreaterThan(0));
+            Assert.That(range.DamageFeedback.LastDamage, Is.EqualTo(HostInfectedEncounter.MeleeDamage));
+            string damageText = range.DamageFeedbackText;
+            Assert.That(damageText, Is.EqualTo("HIT: -10 HP"));
+            range.SetDamageBorderEnabled(false);
+            Assert.That(range.DamageFeedbackText, Is.EqualTo(damageText), "Disabling the visual border must retain text feedback.");
             Assert.That((range.CurrentSnapshot.Encounter.Position - HostInfectedEncounter.Spawn).LengthSquared, Is.GreaterThan(1));
             for (int i = 0; i < 4; i++)
             {
@@ -58,6 +64,8 @@ namespace UndeadOvertime.LanPrototype.Tests
             int hp = range.CurrentSnapshot.Member(0).Health;
             yield return new WaitForSecondsRealtime(1.1f);
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(hp));
+            Assert.That(range.DamageFeedback.DamagePulse, Is.Zero);
+            Assert.That(range.DamageFeedbackText, Is.Empty);
             Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.BeginRound(), Is.True);
             Assert.That(range.CurrentSnapshot.Encounter.Phase, Is.EqualTo(EncounterPhase.Dormant));
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
@@ -70,6 +78,9 @@ namespace UndeadOvertime.LanPrototype.Tests
             while (range.CurrentSnapshot.Member(0).Health > 0 && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.Zero);
             Assert.That(range.CurrentSnapshot.Encounter.Phase, Is.EqualTo(EncounterPhase.Failed));
+            Assert.That(range.DamageFeedback.IsDowned, Is.True);
+            Assert.That(range.DamageFeedback.DamagePulse, Is.Zero);
+            Assert.That(range.DamageFeedbackText, Is.Empty);
             AimVector before = range.CurrentSnapshot.Member(0).Position;
             range.SendAction(RangeAction.Move, Vector3.forward); range.SendAction(RangeAction.Fire, AimAtEnemy());
             yield return new WaitForSecondsRealtime(.4f);
@@ -78,6 +89,8 @@ namespace UndeadOvertime.LanPrototype.Tests
             Assert.That(range.CurrentSnapshot.Encounter.Health, Is.EqualTo(100));
             Assert.That(range.ReturnToLobby(), Is.True); Assert.That(range.BeginRound(), Is.True);
             Assert.That(range.CurrentSnapshot.Member(0).Health, Is.EqualTo(100));
+            Assert.That(range.DamageFeedback.IsDowned, Is.False);
+            Assert.That(range.DamageFeedback.DamagePulse, Is.Zero);
             Assert.That(range.StartEncounter(), Is.True);
         }
         [UnityTest]
