@@ -1,0 +1,1816 @@
+{
+  "name": "Undead Overtime full city environment pass",
+  "date": "2026-11-09",
+  "scene": "Assets/Scenes/CityMap.unity",
+  "source": "UndeadOvertime_City_Source.blend",
+  "native_status": "Authored; Unity import and visual acceptance pending; no gameplay integration claimed.",
+  "provenance": "Original geometry authored in Blender from this script. Shared public original depot brick/concrete textures reused. No purchased, Mixamo or third-party source assets included.",
+  "size_m": {
+    "street_grid": [
+      960,
+      720
+    ],
+    "ground": [
+      1270,
+      1040
+    ]
+  },
+  "districts": [
+    "02 Freight Ward",
+    "03 Ash Street",
+    "04 Civic Mile",
+    "05 St Alder Medical Quarter",
+    "06 Southbank Works",
+    "07 Breakwater"
+  ],
+  "building_instances": 111,
+  "scene_objects": 2285,
+  "mesh_count": 79,
+  "unique_mesh_triangles": 22412,
+  "lod_groups": 111,
+  "buildings": [
+    {
+      "name": "Ash Street Diner",
+      "archetype": "Diner",
+      "x": -440,
+      "z": -322,
+      "rotation": 0,
+      "district": "Block A1 | Ash Street"
+    },
+    {
+      "name": "Coin Laundry",
+      "archetype": "Laundromat",
+      "x": -397,
+      "z": -319,
+      "rotation": 0,
+      "district": "Block A1 | Ash Street"
+    },
+    {
+      "name": "Corner Market",
+      "archetype": "CornerStore",
+      "x": -443,
+      "z": -278,
+      "rotation": 0,
+      "district": "Block A1 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -397,
+      "z": -278,
+      "rotation": 0,
+      "district": "Block A1 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -323,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A2 | Ash Street"
+    },
+    {
+      "name": "Duplex",
+      "archetype": "Duplex",
+      "x": -277,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A2 | Ash Street"
+    },
+    {
+      "name": "Ranch",
+      "archetype": "Ranch",
+      "x": -323,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A2 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -277,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A2 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -203,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A3 | Ash Street"
+    },
+    {
+      "name": "Duplex",
+      "archetype": "Duplex",
+      "x": -157,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A3 | Ash Street"
+    },
+    {
+      "name": "Ranch",
+      "archetype": "Ranch",
+      "x": -203,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A3 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -157,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A3 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -83,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A4 | Ash Street"
+    },
+    {
+      "name": "CornerStore",
+      "archetype": "CornerStore",
+      "x": -37,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A4 | Ash Street"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -83,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A4 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -37,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A4 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": 37,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A5 | Ash Street"
+    },
+    {
+      "name": "CornerStore",
+      "archetype": "CornerStore",
+      "x": 83,
+      "z": -324,
+      "rotation": 0,
+      "district": "Block A5 | Ash Street"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": 37,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A5 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": 83,
+      "z": -276,
+      "rotation": 180,
+      "district": "Block A5 | Ash Street"
+    },
+    {
+      "name": "Freight Ward Depot",
+      "archetype": "Warehouse",
+      "x": 180,
+      "z": -285,
+      "rotation": 0,
+      "district": "Block A6 | Freight Ward"
+    },
+    {
+      "name": "Freight Distribution Warehouse",
+      "archetype": "Warehouse",
+      "x": 300,
+      "z": -285,
+      "rotation": 0,
+      "district": "Block A7 | Freight Ward"
+    },
+    {
+      "name": "Factory",
+      "archetype": "Factory",
+      "x": 402,
+      "z": -285,
+      "rotation": 0,
+      "district": "Block A8 | Freight Ward"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 448,
+      "z": -282,
+      "rotation": 90,
+      "district": "Block A8 | Freight Ward"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -443,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B1 | Ash Street"
+    },
+    {
+      "name": "Duplex",
+      "archetype": "Duplex",
+      "x": -397,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B1 | Ash Street"
+    },
+    {
+      "name": "Ranch",
+      "archetype": "Ranch",
+      "x": -443,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B1 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -397,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B1 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -323,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B2 | Ash Street"
+    },
+    {
+      "name": "Duplex",
+      "archetype": "Duplex",
+      "x": -277,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B2 | Ash Street"
+    },
+    {
+      "name": "Ranch",
+      "archetype": "Ranch",
+      "x": -323,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B2 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -277,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B2 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -203,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B3 | Ash Street"
+    },
+    {
+      "name": "Duplex",
+      "archetype": "Duplex",
+      "x": -157,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B3 | Ash Street"
+    },
+    {
+      "name": "Ranch",
+      "archetype": "Ranch",
+      "x": -203,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B3 | Ash Street"
+    },
+    {
+      "name": "Rowhouse",
+      "archetype": "Rowhouse",
+      "x": -157,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B3 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -83,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B4 | Ash Street"
+    },
+    {
+      "name": "CornerStore",
+      "archetype": "CornerStore",
+      "x": -37,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B4 | Ash Street"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -83,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B4 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -37,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B4 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": 37,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B5 | Ash Street"
+    },
+    {
+      "name": "CornerStore",
+      "archetype": "CornerStore",
+      "x": 83,
+      "z": -204,
+      "rotation": 0,
+      "district": "Block B5 | Ash Street"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": 37,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B5 | Ash Street"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": 83,
+      "z": -156,
+      "rotation": 180,
+      "district": "Block B5 | Ash Street"
+    },
+    {
+      "name": "Factory",
+      "archetype": "Factory",
+      "x": 162,
+      "z": -165,
+      "rotation": 0,
+      "district": "Block B6 | Freight Ward"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 208,
+      "z": -162,
+      "rotation": 90,
+      "district": "Block B6 | Freight Ward"
+    },
+    {
+      "name": "Warehouse",
+      "archetype": "Warehouse",
+      "x": 282,
+      "z": -165,
+      "rotation": 0,
+      "district": "Block B7 | Freight Ward"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 328,
+      "z": -162,
+      "rotation": 90,
+      "district": "Block B7 | Freight Ward"
+    },
+    {
+      "name": "Factory",
+      "archetype": "Factory",
+      "x": 402,
+      "z": -165,
+      "rotation": 0,
+      "district": "Block B8 | Freight Ward"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 448,
+      "z": -162,
+      "rotation": 90,
+      "district": "Block B8 | Freight Ward"
+    },
+    {
+      "name": "Civic Mile Police Headquarters",
+      "archetype": "Police",
+      "x": -300,
+      "z": -50,
+      "rotation": 0,
+      "district": "Block C2 | Civic Mile"
+    },
+    {
+      "name": "Municipal Hall",
+      "archetype": "CivicHall",
+      "x": -180,
+      "z": -55,
+      "rotation": 0,
+      "district": "Block C3 | Civic Mile"
+    },
+    {
+      "name": "Civic Mile Fire and Rescue",
+      "archetype": "FireStation",
+      "x": -60,
+      "z": -52,
+      "rotation": 0,
+      "district": "Block C4 | Civic Mile"
+    },
+    {
+      "name": "OfficeMidrise",
+      "archetype": "OfficeMidrise",
+      "x": 36,
+      "z": -84,
+      "rotation": 0,
+      "district": "Block C5 | Civic Mile"
+    },
+    {
+      "name": "BrickTower",
+      "archetype": "BrickTower",
+      "x": 83,
+      "z": -83,
+      "rotation": 0,
+      "district": "Block C5 | Civic Mile"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": 36,
+      "z": -35,
+      "rotation": 180,
+      "district": "Block C5 | Civic Mile"
+    },
+    {
+      "name": "Tower",
+      "archetype": "Tower",
+      "x": 84,
+      "z": -35,
+      "rotation": 180,
+      "district": "Block C5 | Civic Mile"
+    },
+    {
+      "name": "Breakwater Logistics",
+      "archetype": "Warehouse",
+      "x": 180,
+      "z": -45,
+      "rotation": 0,
+      "district": "Block C6 | Breakwater"
+    },
+    {
+      "name": "Breakwater Quarantine Terminal",
+      "archetype": "Terminal",
+      "x": 300,
+      "z": -48,
+      "rotation": 0,
+      "district": "Block C7 | Breakwater"
+    },
+    {
+      "name": "OfficeMidrise",
+      "archetype": "OfficeMidrise",
+      "x": -444,
+      "z": 36,
+      "rotation": 0,
+      "district": "Block D1 | Civic Mile"
+    },
+    {
+      "name": "BrickTower",
+      "archetype": "BrickTower",
+      "x": -397,
+      "z": 37,
+      "rotation": 0,
+      "district": "Block D1 | Civic Mile"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -444,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D1 | Civic Mile"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -396,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D1 | Civic Mile"
+    },
+    {
+      "name": "OfficeMidrise",
+      "archetype": "OfficeMidrise",
+      "x": -324,
+      "z": 36,
+      "rotation": 0,
+      "district": "Block D2 | Civic Mile"
+    },
+    {
+      "name": "BrickTower",
+      "archetype": "BrickTower",
+      "x": -277,
+      "z": 37,
+      "rotation": 0,
+      "district": "Block D2 | Civic Mile"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -324,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D2 | Civic Mile"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -276,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D2 | Civic Mile"
+    },
+    {
+      "name": "OfficeMidrise",
+      "archetype": "OfficeMidrise",
+      "x": -204,
+      "z": 36,
+      "rotation": 0,
+      "district": "Block D3 | Civic Mile"
+    },
+    {
+      "name": "BrickTower",
+      "archetype": "BrickTower",
+      "x": -157,
+      "z": 37,
+      "rotation": 0,
+      "district": "Block D3 | Civic Mile"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -204,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D3 | Civic Mile"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -156,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D3 | Civic Mile"
+    },
+    {
+      "name": "OfficeMidrise",
+      "archetype": "OfficeMidrise",
+      "x": -84,
+      "z": 36,
+      "rotation": 0,
+      "district": "Block D4 | Civic Mile"
+    },
+    {
+      "name": "BrickTower",
+      "archetype": "BrickTower",
+      "x": -37,
+      "z": 37,
+      "rotation": 0,
+      "district": "Block D4 | Civic Mile"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -84,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D4 | Civic Mile"
+    },
+    {
+      "name": "Tower",
+      "archetype": "Tower",
+      "x": -36,
+      "z": 85,
+      "rotation": 180,
+      "district": "Block D4 | Civic Mile"
+    },
+    {
+      "name": "Meridian Broadcast Tower",
+      "archetype": "Tower",
+      "x": 48,
+      "z": 70,
+      "rotation": 0,
+      "district": "Block D5 | Civic Mile"
+    },
+    {
+      "name": "Breakwater Logistics",
+      "archetype": "Warehouse",
+      "x": 180,
+      "z": 75,
+      "rotation": 0,
+      "district": "Block D6 | Breakwater"
+    },
+    {
+      "name": "Breakwater Logistics",
+      "archetype": "Warehouse",
+      "x": 300,
+      "z": 75,
+      "rotation": 0,
+      "district": "Block D7 | Breakwater"
+    },
+    {
+      "name": "Lakeside Ferry Administration",
+      "archetype": "Terminal",
+      "x": 420,
+      "z": 75,
+      "rotation": 0,
+      "district": "Block D8 | Breakwater"
+    },
+    {
+      "name": "St Alder School",
+      "archetype": "School",
+      "x": -420,
+      "z": 168,
+      "rotation": 0,
+      "district": "Block E1 | St Alder Medical Quarter"
+    },
+    {
+      "name": "St Alder Memorial Hospital",
+      "archetype": "Hospital",
+      "x": -300,
+      "z": 185,
+      "rotation": 0,
+      "district": "Block E2 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Medical Clinic",
+      "archetype": "Clinic",
+      "x": -202,
+      "z": 180,
+      "rotation": 0,
+      "district": "Block E3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Staff Housing",
+      "archetype": "Apartment",
+      "x": -158,
+      "z": 190,
+      "rotation": 0,
+      "district": "Block E3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -84,
+      "z": 157,
+      "rotation": 0,
+      "district": "Block E4 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Clinic",
+      "archetype": "Clinic",
+      "x": -36,
+      "z": 157,
+      "rotation": 0,
+      "district": "Block E4 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -84,
+      "z": 204,
+      "rotation": 180,
+      "district": "Block E4 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -36,
+      "z": 204,
+      "rotation": 180,
+      "district": "Block E4 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Southbank Supply Supermarket",
+      "archetype": "Supermarket",
+      "x": 60,
+      "z": 192,
+      "rotation": 0,
+      "district": "Block E5 | Southbank Works"
+    },
+    {
+      "name": "Factory",
+      "archetype": "Factory",
+      "x": 162,
+      "z": 195,
+      "rotation": 0,
+      "district": "Block E6 | Southbank Works"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 208,
+      "z": 198,
+      "rotation": 90,
+      "district": "Block E6 | Southbank Works"
+    },
+    {
+      "name": "Warehouse",
+      "archetype": "Warehouse",
+      "x": 282,
+      "z": 195,
+      "rotation": 0,
+      "district": "Block E7 | Southbank Works"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 328,
+      "z": 198,
+      "rotation": 90,
+      "district": "Block E7 | Southbank Works"
+    },
+    {
+      "name": "Southbank Fuel Mart",
+      "archetype": "Laundromat",
+      "x": 420,
+      "z": 202,
+      "rotation": 180,
+      "district": "Block E8 | Southbank Works"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -444,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F1 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -396,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F1 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -444,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F1 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -396,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F1 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -324,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F2 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -276,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F2 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -324,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F2 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -276,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F2 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -204,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -156,
+      "z": 277,
+      "rotation": 0,
+      "district": "Block F3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Walkup",
+      "archetype": "Walkup",
+      "x": -204,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Apartment",
+      "archetype": "Apartment",
+      "x": -156,
+      "z": 324,
+      "rotation": 180,
+      "district": "Block F3 | St Alder Medical Quarter"
+    },
+    {
+      "name": "Warehouse",
+      "archetype": "Warehouse",
+      "x": 42,
+      "z": 315,
+      "rotation": 0,
+      "district": "Block F5 | Southbank Works"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 88,
+      "z": 318,
+      "rotation": 90,
+      "district": "Block F5 | Southbank Works"
+    },
+    {
+      "name": "Southbank Power Station",
+      "archetype": "Factory",
+      "x": 163,
+      "z": 312,
+      "rotation": 0,
+      "district": "Block F6 | Southbank Works"
+    },
+    {
+      "name": "Water Treatment Control",
+      "archetype": "Laundromat",
+      "x": 300,
+      "z": 331,
+      "rotation": 180,
+      "district": "Block F7 | Southbank Works"
+    },
+    {
+      "name": "Factory",
+      "archetype": "Factory",
+      "x": 402,
+      "z": 315,
+      "rotation": 0,
+      "district": "Block F8 | Southbank Works"
+    },
+    {
+      "name": "Service office",
+      "archetype": "Laundromat",
+      "x": 448,
+      "z": 318,
+      "rotation": 90,
+      "district": "Block F8 | Southbank Works"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Rowhouse_LOD0",
+      "triangles": 210,
+      "vertices": 422,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "GlassLight",
+        "Glass",
+        "Metal"
+      ]
+    },
+    {
+      "name": "Rowhouse_LOD1",
+      "triangles": 150,
+      "vertices": 302,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Ranch_LOD0",
+      "triangles": 150,
+      "vertices": 302,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Brick",
+        "Trim",
+        "GlassLight",
+        "Glass",
+        "Metal"
+      ]
+    },
+    {
+      "name": "Ranch_LOD1",
+      "triangles": 102,
+      "vertices": 206,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Brick",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Duplex_LOD0",
+      "triangles": 258,
+      "vertices": 518,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Brick",
+        "Trim",
+        "GlassLight",
+        "Glass",
+        "Metal"
+      ]
+    },
+    {
+      "name": "Duplex_LOD1",
+      "triangles": 150,
+      "vertices": 302,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Brick",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Walkup_LOD0",
+      "triangles": 508,
+      "vertices": 1016,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Walkup_LOD1",
+      "triangles": 240,
+      "vertices": 480,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Apartment_LOD0",
+      "triangles": 916,
+      "vertices": 1832,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Apartment_LOD1",
+      "triangles": 336,
+      "vertices": 672,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "CornerStore_LOD0",
+      "triangles": 340,
+      "vertices": 680,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass",
+        "Green"
+      ]
+    },
+    {
+      "name": "CornerStore_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Diner_LOD0",
+      "triangles": 216,
+      "vertices": 432,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass",
+        "Red"
+      ]
+    },
+    {
+      "name": "Diner_LOD1",
+      "triangles": 96,
+      "vertices": 192,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Laundromat_LOD0",
+      "triangles": 220,
+      "vertices": 440,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass",
+        "Green"
+      ]
+    },
+    {
+      "name": "Laundromat_LOD1",
+      "triangles": 96,
+      "vertices": 192,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "MotelWing_LOD0",
+      "triangles": 344,
+      "vertices": 688,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "MotelWing_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "OfficeMidrise_LOD0",
+      "triangles": 1360,
+      "vertices": 2720,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "OfficeMidrise_LOD1",
+      "triangles": 480,
+      "vertices": 960,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Tower_LOD0",
+      "triangles": 2444,
+      "vertices": 4888,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Tower_LOD1",
+      "triangles": 768,
+      "vertices": 1536,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "BrickTower_LOD0",
+      "triangles": 1640,
+      "vertices": 3280,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "BrickTower_LOD1",
+      "triangles": 576,
+      "vertices": 1152,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Warehouse_LOD0",
+      "triangles": 392,
+      "vertices": 784,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "Glass",
+        "GlassLight"
+      ]
+    },
+    {
+      "name": "Warehouse_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Factory_LOD0",
+      "triangles": 504,
+      "vertices": 1008,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "Glass",
+        "GlassLight"
+      ]
+    },
+    {
+      "name": "Factory_LOD1",
+      "triangles": 192,
+      "vertices": 384,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Supermarket_LOD0",
+      "triangles": 328,
+      "vertices": 656,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass",
+        "Green"
+      ]
+    },
+    {
+      "name": "Supermarket_LOD1",
+      "triangles": 96,
+      "vertices": 192,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Clinic_LOD0",
+      "triangles": 496,
+      "vertices": 992,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Clinic_LOD1",
+      "triangles": 192,
+      "vertices": 384,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Hospital_LOD0",
+      "triangles": 1584,
+      "vertices": 3168,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Hospital_LOD1",
+      "triangles": 384,
+      "vertices": 768,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "School_LOD0",
+      "triangles": 468,
+      "vertices": 936,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "School_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "WarmBrick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Police_LOD0",
+      "triangles": 568,
+      "vertices": 1136,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Police_LOD1",
+      "triangles": 192,
+      "vertices": 384,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "FireStation_LOD0",
+      "triangles": 368,
+      "vertices": 736,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "Glass",
+        "GlassLight"
+      ]
+    },
+    {
+      "name": "FireStation_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "Brick",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "CivicHall_LOD0",
+      "triangles": 688,
+      "vertices": 1376,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "CivicHall_LOD1",
+      "triangles": 192,
+      "vertices": 384,
+      "materials": [
+        "Limestone",
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Terminal_LOD0",
+      "triangles": 484,
+      "vertices": 968,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Metal",
+        "GlassLight",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Terminal_LOD1",
+      "triangles": 144,
+      "vertices": 288,
+      "materials": [
+        "Concrete",
+        "DarkRoof",
+        "Trim",
+        "Glass"
+      ]
+    },
+    {
+      "name": "Cube",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Concrete"
+      ]
+    },
+    {
+      "name": "Road",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Asphalt"
+      ]
+    },
+    {
+      "name": "Sidewalk",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Sidewalk"
+      ]
+    },
+    {
+      "name": "Grass",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Grass"
+      ]
+    },
+    {
+      "name": "Earth",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Earth"
+      ]
+    },
+    {
+      "name": "Water",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Water"
+      ]
+    },
+    {
+      "name": "MarkWhite",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "RoadWhite"
+      ]
+    },
+    {
+      "name": "MarkYellow",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "RoadYellow"
+      ]
+    },
+    {
+      "name": "MetalBox",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Metal"
+      ]
+    },
+    {
+      "name": "RustBox",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Rust"
+      ]
+    },
+    {
+      "name": "RedBox",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Red"
+      ]
+    },
+    {
+      "name": "WoodBox",
+      "triangles": 12,
+      "vertices": 24,
+      "materials": [
+        "Bark"
+      ]
+    },
+    {
+      "name": "StreetLamp",
+      "triangles": 54,
+      "vertices": 118,
+      "materials": [
+        "Metal",
+        "Glow"
+      ]
+    },
+    {
+      "name": "TrafficSignal",
+      "triangles": 78,
+      "vertices": 166,
+      "materials": [
+        "Metal",
+        "Black",
+        "Red",
+        "Green"
+      ]
+    },
+    {
+      "name": "Tree",
+      "triangles": 85,
+      "vertices": 177,
+      "materials": [
+        "Bark",
+        "Leaves"
+      ]
+    },
+    {
+      "name": "TreeAmber",
+      "triangles": 85,
+      "vertices": 177,
+      "materials": [
+        "Bark",
+        "LeavesAmber"
+      ]
+    },
+    {
+      "name": "Bench",
+      "triangles": 48,
+      "vertices": 96,
+      "materials": [
+        "Bark",
+        "Metal"
+      ]
+    },
+    {
+      "name": "Dumpster",
+      "triangles": 24,
+      "vertices": 48,
+      "materials": [
+        "Green",
+        "Black"
+      ]
+    },
+    {
+      "name": "Hydrant",
+      "triangles": 42,
+      "vertices": 94,
+      "materials": [
+        "Red"
+      ]
+    },
+    {
+      "name": "JerseyBarrier",
+      "triangles": 36,
+      "vertices": 72,
+      "materials": [
+        "Concrete",
+        "RoadYellow"
+      ]
+    },
+    {
+      "name": "CargoContainer",
+      "triangles": 288,
+      "vertices": 576,
+      "materials": [
+        "Rust",
+        "Metal",
+        "Blue"
+      ]
+    },
+    {
+      "name": "SedanBlue",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "Blue",
+        "Glass",
+        "Metal",
+        "Black",
+        "Glow"
+      ]
+    },
+    {
+      "name": "SedanWhite",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "White",
+        "Glass",
+        "Metal",
+        "Black",
+        "Glow"
+      ]
+    },
+    {
+      "name": "SedanRed",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "Red",
+        "Glass",
+        "Metal",
+        "Black",
+        "Glow"
+      ]
+    },
+    {
+      "name": "PoliceCar",
+      "triangles": 180,
+      "vertices": 360,
+      "materials": [
+        "Black",
+        "Glass",
+        "Metal",
+        "Glow",
+        "Red"
+      ]
+    },
+    {
+      "name": "DeliveryTruck",
+      "triangles": 84,
+      "vertices": 168,
+      "materials": [
+        "White",
+        "Blue",
+        "Glass",
+        "Black"
+      ]
+    },
+    {
+      "name": "WaterTower",
+      "triangles": 120,
+      "vertices": 264,
+      "materials": [
+        "Metal",
+        "Rust"
+      ]
+    },
+    {
+      "name": "Silo",
+      "triangles": 96,
+      "vertices": 224,
+      "materials": [
+        "Concrete",
+        "Metal"
+      ]
+    },
+    {
+      "name": "Stack",
+      "triangles": 72,
+      "vertices": 168,
+      "materials": [
+        "Brick",
+        "Metal"
+      ]
+    },
+    {
+      "name": "GasCanopy",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "Trim",
+        "Red",
+        "Concrete",
+        "Black"
+      ]
+    },
+    {
+      "name": "FenceSegment",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "Metal"
+      ]
+    },
+    {
+      "name": "RoadCrosswalk",
+      "triangles": 108,
+      "vertices": 216,
+      "materials": [
+        "RoadWhite"
+      ]
+    },
+    {
+      "name": "RoadCenterline",
+      "triangles": 264,
+      "vertices": 528,
+      "materials": [
+        "RoadYellow",
+        "RoadWhite"
+      ]
+    },
+    {
+      "name": "ParkingStalls",
+      "triangles": 168,
+      "vertices": 336,
+      "materials": [
+        "RoadWhite"
+      ]
+    },
+    {
+      "name": "BridgeRamp",
+      "triangles": 4,
+      "vertices": 10,
+      "materials": [
+        "Asphalt",
+        "Concrete"
+      ]
+    }
+  ],
+  "structural_check": "Serialized IDs unique; scene GUID dependencies resolve to existing/new assets or baseline URP scripts; native mesh vertex/index buffers bounded. This is not Unity import/compile/render acceptance.",
+  "source_blend_sha256": "61df032f135c7d676c39e196eef10ff52c03a908123f21df80c20fff428656a2",
+  "source_fbx_sha256": "074e5bd7bd714c27df3cf721db7baf59b606aeb30f6c697480141e2586aa50a4"
+}
