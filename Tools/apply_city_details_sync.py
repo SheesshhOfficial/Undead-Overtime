@@ -25,8 +25,8 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def git(*args, check=True):
-    p = subprocess.run(["git", *args], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def git(*args, check=True, input_bytes=None):
+    p = subprocess.run(["git", *args], input=input_bytes, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if check and p.returncode:
         raise RuntimeError("git " + " ".join(args) + ": " + p.stderr.decode(errors="replace"))
     return p
@@ -50,7 +50,7 @@ def state(path):
     if p.is_symlink():
         working = {"symlink": os.readlink(p)}
     elif p.is_file():
-        working = {"sha256": digest(p.read_bytes()), "bytes": p.stat().st_size}
+        working = {"sha256": digest(p.read_bytes()), "bytes": p.stat().st_size, "mode": p.stat().st_mode}
     elif not p.exists():
         working = {"missing": True}
     else:
@@ -100,9 +100,31 @@ def run():
         raise RuntimeError("Unmerged index entries exist")
     hook_config = git("config", "--path", "--get", "core.hooksPath", check=False)
     hooks = Path(hook_config.stdout.decode().strip()) if hook_config.returncode == 0 else Path(text("rev-parse", "--git-path", "hooks"))
-    for name in ("post-merge", "reference-transaction"):
-        if (hooks / name).is_file():
-            raise RuntimeError("Review active Git hook before guarded sync: " + str(hooks / name))
+    if (hooks / "reference-transaction").is_file():
+        raise RuntimeError("Review active reference-transaction hook before guarded sync")
+    post_merge = hooks / "post-merge"
+    if post_merge.is_file():
+        # This is the exact native hook already read and reviewed, not a bypass.
+        standard = r'''#!/bin/sh
+command -v git-lfs >/dev/null 2>&1 || { printf >&2 "\n%s\n\n" "This repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting the 'post-merge' file in the hooks directory (set by 'core.hookspath'; usually '.git/hooks')."; exit 2; }
+git lfs post-merge "$@"'''
+        if post_merge.read_text().strip() != standard:
+            raise RuntimeError("The native post-merge hook differs from the reviewed standard Git LFS hook")
+        git("lfs", "version")
+        # Official Git LFS post-merge only changes lockable-file write flags.
+        # Refuse lockable files and incoming lockable attribute declarations.
+        candidates = set(git("ls-files", "-z", "--cached", "--others", "--exclude-standard").stdout.split(b"\0"))
+        target_paths = [x for x in git("ls-tree", "-r", "--name-only", "-z", a.target).stdout.split(b"\0") if x]
+        candidates.update(target_paths)
+        for raw_path in target_paths:
+            if raw_path.split(b"/")[-1] == b".gitattributes":
+                attrs = git("show", a.target + ":" + raw_path.decode("utf-8")).stdout
+                if b"lockable" in attrs:
+                    raise RuntimeError("Incoming lockable attributes need review: " + raw_path.decode("utf-8"))
+        attrs = git("check-attr", "-z", "--stdin", "lockable", input_bytes=b"\0".join(sorted(x for x in candidates if x)) + b"\0").stdout.split(b"\0")
+        for i in range(0, len(attrs) - 2, 3):
+            if attrs[i + 2] not in (b"unspecified", b"unset"):
+                raise RuntimeError("Lockable file needs review before normal Git LFS hook: " + attrs[i].decode("utf-8"))
 
     scene = Path(SCENE)
     if scene.is_symlink() or not scene.is_file():
